@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220">
+  <!-- Shield shape -->
+  <path d="M100 10 L185 45 L185 130 Q185 175 100 210 Q15 175 15 130 L15 45 Z" fill="#2a6e00" stroke="#1a4500" stroke-width="2"/>
+  <!-- Inner shield base -->
+  <path d="M100 22 L172 52 L172 128 Q172 168 100 198 Q28 168 28 128 L28 52 Z" fill="#ffe000" stroke="#cc9900" stroke-width="1.5"/>
+  <!-- Green inner area -->
+  <path d="M100 34 L160 60 L160 126 Q160 160 100 186 Q40 160 40 126 L40 60 Z" fill="#2a6e00"/>
+  <!-- Globe circle -->
+  <circle cx="100" cy="112" r="34" fill="#1a6bbf" stroke="#0d4d8a" stroke-width="1.5"/>
+  <!-- Globe lines (latitude/longitude) -->
+  <ellipse cx="100" cy="112" rx="20" ry="34" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.8"/>
+  <ellipse cx="100" cy="112" rx="34" ry="14" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.8"/>
+  <line x1="66" y1="112" x2="134" y2="112" stroke="rgba(255,255,255,0.4)" stroke-width="0.8"/>
+  <!-- India map simplified -->
+  <path d="M92 96 L108 96 L112 108 L108 118 L100 124 L92 118 L88 108 Z" fill="#4caf50" opacity="0.85"/>
+  <!-- Person/figure on top of globe -->
+  <circle cx="100" cy="75" r="7" fill="#ffcc00" stroke="#cc9900" stroke-width="1"/>
+  <path d="M100 82 L100 95" stroke="#ffcc00" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M93 86 L107 86" stroke="#ffcc00" stroke-width="2" stroke-linecap="round"/>
+  <path d="M100 95 L94 104" stroke="#ffcc00" stroke-width="2" stroke-linecap="round"/>
+  <path d="M100 95 L106 104" stroke="#ffcc00" stroke-width="2" stroke-linecap="round"/>
+  <!-- Laptop/computer at bottom of person -->
+  <rect x="88" y="147" width="24" height="15" rx="2" fill="#333" stroke="#555" stroke-width="0.5"/>
+  <rect x="91" y="149" width="18" height="10" fill="#4db6ac"/>
+  <text x="100" y="157" font-family="Arial, sans-serif" font-size="5" font-weight="bold" fill="#fff" text-anchor="middle">SIET</text>
+  <rect x="85" y="162" width="30" height="2" rx="1" fill="#555"/>
+  <!-- Wheat/laurel branches -->
+  <!-- Left branch -->
+  <path d="M30 130 Q20 110 25 90" fill="none" stroke="#8B6914" stroke-width="2"/>
+  <ellipse cx="26" cy="92" rx="5" ry="8" fill="#4caf50" transform="rotate(-30 26 92)"/>
+  <ellipse cx="23" cy="105" rx="5" ry="8" fill="#4caf50" transform="rotate(-20 23 105)"/>
+  <ellipse cx="22" cy="118" rx="5" ry="8" fill="#4caf50" transform="rotate(-10 22 118)"/>
+  <!-- Right branch -->
+  <path d="M170 130 Q180 110 175 90" fill="none" stroke="#8B6914" stroke-width="2"/>
+  <ellipse cx="174" cy="92" rx="5" ry="8" fill="#4caf50" transform="rotate(30 174 92)"/>
+  <ellipse cx="177" cy="105" rx="5" ry="8" fill="#4caf50" transform="rotate(20 177 105)"/>
+  <ellipse cx="178" cy="118" rx="5" ry="8" fill="#4caf50" transform="rotate(10 178 118)"/>
+  <!-- Top decorative elements -->
+  <polygon points="100,12 104,22 100,20 96,22" fill="#ffcc00"/>
+  <circle cx="100" cy="11" r="4" fill="#ffcc00" stroke="#cc9900" stroke-width="1"/>
+  <!-- Bottom text area -->
+  <rect x="20" y="195" width="160" height="22" rx="4" fill="#1a4500" opacity="0.85"/>
+  <text x="100" y="204" font-family="Arial, sans-serif" font-size="5" font-weight="bold" fill="#ffe000" text-anchor="middle" letter-spacing="0.5">POWERING THE YOUTH</text>
+  <text x="100" y="212" font-family="Arial, sans-serif" font-size="5" font-weight="bold" fill="#ffe000" text-anchor="middle" letter-spacing="0.5">EMPOWERING THE NATION</text>
+</svg>
