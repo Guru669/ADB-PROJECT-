@@ -99,7 +99,7 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json("Wrong password");
 
-    const token = jwt.sign({ id: user._id, role: user.role }, "secret", { expiresIn: '24h' });
+    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '24h' });
     const userToReturn = user.toObject();
     delete userToReturn.password;
     res.json({ token, user: userToReturn });
