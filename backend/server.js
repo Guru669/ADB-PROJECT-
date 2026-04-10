@@ -19,6 +19,21 @@ mongoose
 
 app.use("/api/auth", authRoutes);
 
+// Root route
+app.get("/", (req, res) => {
+  res.json({ 
+    message: "Student Portfolio Management System API",
+    version: "1.0.0",
+    status: "running",
+    endpoints: {
+      auth: "/api/auth",
+      login: "/api/auth/login",
+      register: "/api/auth/register",
+      students: "/api/auth/students"
+    }
+  });
+});
+
 const port = Number(process.env.PORT) || 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
