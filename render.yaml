@@ -1,0 +1,31 @@
+# Render Deployment Configuration
+services:
+  # Backend Service
+  - type: web
+    name: adb-project-backend
+    runtime: node
+    plan: free
+    env: node
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: MONGODB_URI
+        value: mongodb+srv://gprasanth3110_db_user:Guru123@cluster0.3ibmatv.mongodb.net/studentPortfolio
+      - key: PORT
+        value: 5000
+      - key: JWT_SECRET
+        value: your_secure_jwt_secret_here
+    autoDeploy: true
+
+  # Frontend Service
+  - type: web
+    name: adb-project-frontend
+    runtime: node
+    plan: free
+    env: node
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npm start
+    envVars:
+      - key: REACT_APP_API_BASE_URL
+        value: https://adb-project-backend.onrender.com
+    autoDeploy: true
