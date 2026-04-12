@@ -964,7 +964,7 @@ function Home() {
               position: 'relative'
             }}>
               <button
-                onClick={() => setShowLoginPanel(false)}
+                onClick={() => navigate('/')}
                 style={{
                   position: 'absolute',
                   top: '15px',
@@ -1194,7 +1194,7 @@ function Home() {
               position: 'relative'
             }}>
               <button
-                onClick={() => setShowRegisterPanel(false)}
+                onClick={() => navigate('/')}
                 style={{
                   position: 'absolute',
                   top: '15px',
