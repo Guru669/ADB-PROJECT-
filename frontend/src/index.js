@@ -22,10 +22,14 @@ console.error = (...args) => {
 const OriginalWebSocket = window.WebSocket;
 window.WebSocket = function(url, protocols) {
   if (typeof url === 'string' && url.includes('onrender.com')) {
-    console.log("Blocking problematic WebSocket HMR connection to prevent reload loops...");
+    if (!window.__websocket_blocked) {
+      console.debug("Problematic WebSocket HMR connection intercepted and silenced.");
+      window.__websocket_blocked = true;
+    }
     return {
       close: () => {},
       send: () => {},
+      readyState: 3, 
       addEventListener: () => {},
       removeEventListener: () => {}
     };

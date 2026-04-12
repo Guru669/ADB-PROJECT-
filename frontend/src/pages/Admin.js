@@ -197,6 +197,7 @@ function Admin() {
                 </div>
                 <div style={{ display: 'flex', gap: '12px' }} className="admin-actions">
                     <button style={{ ...styles.btn, backgroundColor: '#16a34a', color: 'white' }} onClick={handleBackup}>Backup Database</button>
+                    <button style={{ ...styles.btn, backgroundColor: '#1e293b', color: 'white' }} onClick={deleteAllStudents}>Master Purge</button>
                     <button style={{ ...styles.btn, backgroundColor: '#dc2626', color: 'white' }} onClick={handleLogout}>Logout</button>
                 </div>
             </div>

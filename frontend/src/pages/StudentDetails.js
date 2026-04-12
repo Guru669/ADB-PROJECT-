@@ -6,10 +6,12 @@ function StudentDetails() {
     const { studentId } = useParams();
     const navigate = useNavigate();
     const [student, setStudent] = useState(null);
-    const [darkMode] = useState(false); // Initializing to false for professional light theme
+    const [isLoading, setIsLoading] = useState(true);
+    const [darkMode] = useState(false);
 
     useEffect(() => {
         const fetchStudentData = async () => {
+            setIsLoading(true);
             // First try localStorage
             const allStudentsLocal = JSON.parse(localStorage.getItem('allStudents') || '[]');
             const foundLocal = allStudentsLocal.find(s => s.studentId === studentId);
@@ -20,7 +22,6 @@ function StudentDetails() {
 
             // Always attempt to fetch from backend to ensure data is up to date
             try {
-                // Fetch ONLY this specific student - Much faster and prevents QuotaExceededError
                 const response = await fetch(`${API_URL}/api/auth/students/${studentId}`);
                 if (response.ok) {
                     const data = await response.json();
@@ -28,6 +29,8 @@ function StudentDetails() {
                 }
             } catch (err) {
                 console.error("Error fetching student details:", err);
+            } finally {
+                setIsLoading(false);
             }
         };
 
@@ -185,6 +188,18 @@ function StudentDetails() {
             }
         }
     `;
+
+    if (isLoading) {
+        return (
+            <div style={{...styles.container, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <div style={{textAlign: 'center'}}>
+                    <div style={{width: '50px', height: '50px', border: '5px solid #eef0f2', borderTopColor: '#0b4f00', borderRadius: '50%', animation: 'spin 1s infinite linear', margin: '0 auto 15px'}}></div>
+                    <p style={{fontWeight: '700', color: '#0b4f00'}}>Synchronizing Dossier...</p>
+                </div>
+                <style>{`@keyframes spin { from {transform:rotate(0deg);} to {transform:rotate(360deg);} }`}</style>
+            </div>
+        );
+    }
 
     if (!student) {
         return (
