@@ -499,7 +499,19 @@ function Dashboard() {
                   <div style={{ width: '200px', height: '200px', backgroundColor: '#f8fafc', border: '2px solid #0b4f00', borderRadius: '50%', overflow: 'hidden', marginBottom: '10px' }}>
                     {profileForm.profilePhoto ? <img src={profileForm.profilePhoto} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ fontSize: '100px', textAlign: 'center', lineHeight: '200px' }}>???</div>}
                   </div>
-                  <input id="profile-photo-input" type="file" accept="image/*" onChange={handleProfilePhotoChange} style={{ display: 'none' }} />
+                  <input 
+                    id="profile-photo-input" 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={handleProfilePhotoChange} 
+                    style={{ 
+                      display: 'none',
+                      visibility: 'hidden',
+                      position: 'absolute',
+                      width: '0',
+                      height: '0'
+                    }} 
+                  />
                   <div className="mobile-stack mobile-nav-buttons" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                     <button
                       type="button"
@@ -729,7 +741,13 @@ function Dashboard() {
                 type="file"
                 accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.webp"
                 onChange={handleCertificateFileChange}
-                style={{ display: 'none' }}
+                style={{ 
+                  display: 'none',
+                  visibility: 'hidden',
+                  position: 'absolute',
+                  width: '0',
+                  height: '0'
+                }}
               />
               <button
                 type="button"
@@ -786,7 +804,13 @@ function Dashboard() {
                 type="file"
                 accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.webp"
                 onChange={handleProjectFileChange}
-                style={{ display: 'none' }}
+                style={{ 
+                  display: 'none',
+                  visibility: 'hidden',
+                  position: 'absolute',
+                  width: '0',
+                  height: '0'
+                }}
               />
               <div>
                 <button
@@ -857,7 +881,13 @@ function Dashboard() {
                 type="file"
                 accept=".pdf,.doc,.docx"
                 onChange={handleJournalFileChange}
-                style={{ display: 'none' }}
+                style={{ 
+                  display: 'none',
+                  visibility: 'hidden',
+                  position: 'absolute',
+                  width: '0',
+                  height: '0'
+                }}
               />
               <div>
                 <button
