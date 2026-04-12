@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AnalyticsDashboard from "../components/AnalyticsDashboard";
+import { API_URL } from '../config/api';
 
 function Admin() {
     const navigate = useNavigate();
@@ -21,7 +22,7 @@ function Admin() {
     const fetchAllData = async () => {
         try {
             // Fetch students from backend
-            const response = await fetch('http://localhost:5000/api/auth/students');
+            const response = await fetch(`${API_URL}/api/auth/students`);
             if (response.ok) {
                 const fetchedStudents = await response.json();
                 const sortedStudents = fetchedStudents.sort((a, b) => (a.fullName || '').localeCompare(b.fullName || ''));
@@ -75,36 +76,36 @@ function Admin() {
     const deleteStudent = async (email) => {
         if (window.confirm(`Are you sure you want to delete the student with email ${email}? This action cannot be undone.`)) {
             try {
-                const response = await fetch(`http://localhost:5000/api/auth/students/${email}`, {
+                const response = await fetch(`${API_URL}/api/auth/students/${email}`, {
                     method: 'DELETE'
                 });
                 if (response.ok) {
-                    alert("Student deleted successfully.");
-                    fetchAllData();
+                    await fetchAllData();
+                    alert('Student deleted successfully');
                 } else {
-                    alert("Failed to delete student from database.");
+                    alert('Failed to delete student');
                 }
-            } catch (err) {
-                console.error("Delete error:", err);
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('Error deleting student');
             }
         }
     };
 
     const deleteAllStudents = async () => {
-        if (window.confirm("Are you absolutely sure you want to delete ALL students from the DATABASE? This action cannot be undone.")) {
-            try {
-                const response = await fetch('http://localhost:5000/api/auth/students', {
-                    method: 'DELETE'
-                });
-                if (response.ok) {
-                    alert("All students have been deleted from the database.");
-                    fetchAllData();
-                } else {
-                    alert("Failed to delete all students.");
-                }
-            } catch (err) {
-                console.error("Delete all error:", err);
+        if (!confirm('Are you sure you want to delete all students? This action cannot be undone.')) return;
+        try {
+            const response = await fetch(`${API_URL}/api/auth/students`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                alert("All students have been deleted from the database.");
+                fetchAllData();
+            } else {
+                alert("Failed to delete all students.");
             }
+        } catch (err) {
+            console.error("Delete all error:", err);
         }
     };
 

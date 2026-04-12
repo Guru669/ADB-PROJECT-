@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from '../config/api';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -130,7 +131,7 @@ function Dashboard() {
     setIsSavingProfile(true);
     setProfileMessage('');
     try {
-      const profResponse = await fetch('http://localhost:5000/api/auth/update-profile', {
+      const profResponse = await fetch(`${API_URL}/api/auth/update-profile`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -192,7 +193,7 @@ function Dashboard() {
   const savePortfolioUpdates = async (updatedPortfolio) => {
     if (!user?.email) return false;
     try {
-      const response = await fetch('http://localhost:5000/api/auth/update-portfolio', {
+      const response = await fetch(`${API_URL}/api/auth/update-portfolio`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

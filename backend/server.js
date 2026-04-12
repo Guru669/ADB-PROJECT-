@@ -15,13 +15,16 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 mongoose
   .connect(mongoUri)
   .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log(err));
+  .catch((err) => {
+    console.error("MongoDB Connection Error:", err);
+    process.exit(1);
+  });
 
 app.use("/api/auth", authRoutes);
 
 // Root route
 app.get("/", (req, res) => {
-  res.json({ 
+  res.json({
     message: "Student Portfolio Management System API",
     version: "1.0.0",
     status: "running",
@@ -34,8 +37,13 @@ app.get("/", (req, res) => {
   });
 });
 
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.json({ status: "healthy", timestamp: new Date().toISOString() });
+});
+
 const port = Number(process.env.PORT) || 5000;
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on port ${port}`);
 });
 

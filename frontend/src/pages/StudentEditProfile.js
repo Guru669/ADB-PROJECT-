@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from '../config/api';
 
 function StudentEditProfile() {
   const navigate = useNavigate();
@@ -98,7 +99,7 @@ function StudentEditProfile() {
     try {
       // Update server (both profile info and portfolio photo)
       // First update profile
-      const profResponse = await fetch('http://localhost:5000/api/auth/update-profile', {
+      const profResponse = await fetch(`${API_URL}/api/auth/update-profile`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -117,7 +118,7 @@ function StudentEditProfile() {
 
       // Then update portfolio photo if changed
       const currentPortfolio = user.portfolio || {};
-      const portResponse = await fetch('http://localhost:5000/api/auth/update-portfolio', {
+      const portResponse = await fetch(`${API_URL}/api/auth/update-portfolio`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

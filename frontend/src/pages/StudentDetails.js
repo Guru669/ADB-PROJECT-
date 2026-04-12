@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { API_URL } from '../config/api';
 
 function StudentDetails() {
     const { studentId } = useParams();
@@ -19,7 +20,7 @@ function StudentDetails() {
 
             // Always attempt to fetch from backend to ensure data is up to date
             try {
-                const response = await fetch('http://localhost:5000/api/auth/students');
+                const response = await fetch(`${API_URL}/api/auth/students`);
                 if (response.ok) {
                     const data = await response.json();
                     localStorage.setItem('allStudents', JSON.stringify(data));

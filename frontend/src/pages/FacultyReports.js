@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FacultySidebar from '../components/FacultySidebar';
+import { API_URL } from '../config/api';
 
 function FacultyReports() {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ function FacultyReports() {
 
   const generateReports = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/students');
+      const response = await fetch(`${API_URL}/api/auth/students`);
       if (!response.ok) return;
       const students = await response.json();
       localStorage.setItem('allStudents', JSON.stringify(students));
