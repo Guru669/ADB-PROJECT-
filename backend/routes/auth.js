@@ -145,6 +145,16 @@ router.get("/students", async (req, res) => {
   }
 });
 
+router.get("/students/:studentId", async (req, res) => {
+  try {
+    const student = await User.findOne({ studentId: req.params.studentId, role: 'student' }).select("-password");
+    if (!student) return res.status(404).json({ message: "Student not found" });
+    res.json(student);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 router.delete("/students/:email", async (req, res) => {
   try {
     await User.findOneAndDelete({ email: req.params.email, role: 'student' });

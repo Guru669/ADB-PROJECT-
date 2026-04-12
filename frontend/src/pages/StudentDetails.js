@@ -20,30 +20,11 @@ function StudentDetails() {
 
             // Always attempt to fetch from backend to ensure data is up to date
             try {
-                const response = await fetch(`${API_URL}/api/auth/students`);
+                // Fetch ONLY this specific student - Much faster and prevents QuotaExceededError
+                const response = await fetch(`${API_URL}/api/auth/students/${studentId}`);
                 if (response.ok) {
                     const data = await response.json();
-                    
-                    // Ultra-slim sync for localStorage (avoid QuotaExceededError)
-                    try {
-                        const ultraSlimStudents = data.map(s => ({
-                            fullName: s.fullName,
-                            studentId: s.studentId,
-                            department: s.department,
-                            section: s.section,
-                            email: s.email,
-                            portfolio: { isPublic: s.portfolio?.isPublic }
-                        }));
-                        localStorage.removeItem('allStudents');
-                        localStorage.setItem('allStudents', JSON.stringify(ultraSlimStudents));
-                    } catch (e) {
-                        console.warn("Storage quota exceeded. Caching failed.");
-                    }
-
-                    const foundBackend = data.find(s => s.studentId === studentId);
-                    if (foundBackend) {
-                        setStudent(foundBackend);
-                    }
+                    setStudent(data);
                 }
             } catch (err) {
                 console.error("Error fetching student details:", err);
