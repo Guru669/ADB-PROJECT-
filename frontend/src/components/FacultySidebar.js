@@ -6,10 +6,10 @@ function FacultySidebar({ darkMode, onLogout }) {
   const location = useLocation();
 
   const menuItems = [
-    { id: 'dashboard', label: 'Students List', icon: '👥', path: '/staff-dashboard' },
-    { id: 'analytics', label: 'Analytics', icon: '📈', path: '/faculty-analytics' },
-    { id: 'reports', label: 'Reports', icon: '📄', path: '/faculty-reports' },
-    { id: 'settings', label: 'Settings', icon: '⚙️', path: '/faculty-settings' },
+    { id: 'dashboard', label: 'Students List', icon: '', path: '/staff-dashboard' },
+    { id: 'analytics', label: 'Analytics', icon: '', path: '/faculty-analytics' },
+    { id: 'reports', label: 'Reports', icon: '', path: '/faculty-reports' },
+    { id: 'settings', label: 'Settings', icon: '', path: '/faculty-settings' },
   ];
 
   const styles = {
@@ -190,7 +190,7 @@ function FacultySidebar({ darkMode, onLogout }) {
       
       <div style={styles.footer}>
         <button style={styles.logoutBtn} onClick={onLogout}>
-          🚪 Logout
+          Logout
         </button>
       </div>
     </div>

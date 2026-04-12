@@ -332,7 +332,7 @@ function FacultySettings() {
 
         <div style={styles.main} className="settings-main">
           <div style={styles.sectionCard}>
-            <h3 style={styles.sectionTitle}>👤 Account Info</h3>
+            <h3 style={styles.sectionTitle}>Account Info</h3>
             <div style={{ color: darkMode ? '#ddd' : '#666' }}>
               <p><strong>Name:</strong> {settings.account.name}</p>
               <p><strong>Email:</strong> {settings.account.email}</p>
@@ -342,7 +342,7 @@ function FacultySettings() {
           </div>
 
           <div style={styles.sectionCard}>
-            <h3 style={styles.sectionTitle}>🔔</h3>
+            <h3 style={styles.sectionTitle}>Notifications</h3>
             <div style={styles.settingItem}>
               <span style={styles.settingLabel}>Email Alerts</span>
               <div

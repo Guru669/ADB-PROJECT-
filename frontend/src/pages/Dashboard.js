@@ -612,7 +612,7 @@ function Dashboard() {
             <div style={styles.card}>
               <div style={{ display: 'flex', gap: '30px', flexWrap: 'wrap', alignItems: 'center' }} className="profile-header">
                 <div style={{ width: '180px', height: '180px', backgroundColor: '#f8fafc', border: '2px solid #0b4f00', borderRadius: '50%', overflow: 'hidden' }} className="profile-photo-wrap">
-                  {profileForm.profilePhoto ? <img src={profileForm.profilePhoto} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ fontSize: '100px', textAlign: 'center', lineHeight: '180px' }}>👤</div>}
+                  {profileForm.profilePhoto ? <img src={profileForm.profilePhoto} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ fontSize: '100px', textAlign: 'center', lineHeight: '180px' }}>S</div>}
                 </div>
                 <div style={{ flex: 1 }}>
                   <h2 style={{ fontSize: '38px', fontWeight: '800', letterSpacing: '-1px', marginBottom: '10px', color: '#173828' }} className="profile-name">{profileForm.fullName || 'Student'}</h2>

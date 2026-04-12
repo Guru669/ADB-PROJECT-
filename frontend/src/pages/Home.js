@@ -697,7 +697,7 @@ function Home() {
                       <img src={currentUser.photo} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     ) : (
                       <span style={{ fontSize: '16px', fontWeight: 'bold', color: '#0b4f00' }}>
-                        {currentUser?.name?.charAt(0).toUpperCase() || '👤'}
+                        {currentUser?.name?.charAt(0).toUpperCase() || 'S'}
                       </span>
                     )}
                   </div>
@@ -718,7 +718,7 @@ function Home() {
                     e.target.style.boxShadow = '0 4px 15px rgba(255, 230, 0, 0.4)';
                   }}
                 >
-                  🚀 Go to Dashboard
+                  Go to Dashboard
                 </button>
               </div>
             ) : (
@@ -1012,7 +1012,7 @@ function Home() {
                     color: activeLoginTab === 'student' ? '#ffe600' : '#495057'
                   }}
                 >
-                  👨‍🎓 Student
+                  Student
                 </button>
                 <button
                   onClick={() => setActiveLoginTab('staff')}
@@ -1023,7 +1023,7 @@ function Home() {
                     color: activeLoginTab === 'staff' ? '#ffe600' : '#495057'
                   }}
                 >
-                  👨‍🏫 Staff/Faculty
+                  Staff/Faculty
                 </button>
               </div>
               <div style={{ textAlign: 'center', marginBottom: '15px', fontSize: '12px', color: '#666' }}>
@@ -1117,7 +1117,7 @@ function Home() {
                     e.target.style.boxShadow = '0 4px 15px rgba(11, 79, 0, 0.3)';
                   }}
                 >
-                  {isLoggingIn ? 'Signing in...' : 'Sign In →'}
+                  {isLoggingIn ? 'Signing in...' : 'Sign In'}
                 </button>
               </form>
               <div style={{ marginTop: '30px', textAlign: 'center' }}>

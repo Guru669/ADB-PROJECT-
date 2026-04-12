@@ -251,7 +251,7 @@ function FacultyReports() {
           </div>
           <div className="mobile-nav-buttons" style={{display: 'flex', gap: '12px'}}>
             <button style={{...styles.btnPrimary, background: '#ffffff', color: '#1e293b', border: '1px solid #e2e8f0'}} onClick={() => navigate('/faculty-analytics')}>Analyze Trends</button>
-            <button style={styles.btnPrimary} onClick={generateReports}>🔄 Re-Generate</button>
+            <button style={styles.btnPrimary} onClick={generateReports}>Re-Generate</button>
           </div>
         </header>
 
@@ -311,7 +311,7 @@ function FacultyReports() {
                 style={{...styles.btnPrimary, width: '100%', display: 'flex', justifyContent: 'center', gap: '10px'}}
                 onClick={() => downloadCSV(report)}
               >
-                💾 Export Spreadsheet (.csv)
+                Export Spreadsheet (.csv)
               </button>
             </div>
           ))}

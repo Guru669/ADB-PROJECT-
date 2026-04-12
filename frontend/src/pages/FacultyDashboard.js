@@ -163,7 +163,7 @@ function FacultyDashboard() {
           </div>
         </div>
         <div className="mobile-nav-buttons" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-           <button style={{...styles.btnPrimary, background: '#fff', color: '#1e293b', marginTop: 0, width: 'auto', border: '1px solid #e2e8f0'}} onClick={toggleDarkMode}>{darkMode ? '☀️ Light' : '🌙 Dark'}</button>
+           <button style={{...styles.btnPrimary, background: '#fff', color: '#1e293b', marginTop: 0, width: 'auto', border: '1px solid #e2e8f0'}} onClick={toggleDarkMode}>{darkMode ? 'Light' : 'Dark'}</button>
            <button style={{...styles.btnPrimary, marginTop: 0, width: 'auto'}} onClick={() => navigate('/faculty-analytics')}>Analytics Hub</button>
         </div>
       </header>
@@ -213,7 +213,7 @@ function FacultyDashboard() {
                 {s.portfolio?.profilePhoto ? (
                   <img src={s.portfolio.profilePhoto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '16px' }} />
                 ) : (
-                  s.fullName?.[0] || '👤'
+                  s.fullName?.[0] || 'S'
                 )}
               </div>
               <div style={styles.cardName}>{s.fullName}</div>
@@ -223,7 +223,7 @@ function FacultyDashboard() {
                 <div><span style={styles.metaItem}>CGPA:</span><span style={{...styles.metaVal, color: '#16a34a'}}>{s.cgpa || 'N/A'}</span></div>
                 <div><span style={styles.metaItem}>Year:</span><span style={styles.metaVal}>{s.currentYear}</span></div>
                 <div><span style={styles.metaItem}>Projects:</span><span style={styles.metaVal}>{s.portfolio?.projects?.length || 0}</span></div>
-                <div><span style={styles.metaItem}>Status:</span><span style={styles.metaVal}>{s.portfolio?.isPublic ? '🌐' : '🔒'}</span></div>
+                <div><span style={styles.metaItem}>Status:</span><span style={styles.metaVal}>{s.portfolio?.isPublic ? 'Public' : 'Private'}</span></div>
               </div>
 
               <button style={styles.btnPrimary} onClick={() => navigate(`/student-details/${s.studentId || s._id}`)}>
