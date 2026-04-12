@@ -351,7 +351,8 @@ function Home() {
     },
     navButtons: {
       display: 'flex',
-      gap: '15px'
+      gap: '15px',
+      alignItems: 'center'
     },
     btnLogin: {
       padding: '10px 25px',
@@ -938,6 +939,7 @@ function Home() {
           />
           {/* Login Panel */}
           <div
+            className="mobile-form-panel"
             style={{
               position: 'fixed',
               top: 0,
@@ -1167,12 +1169,13 @@ function Home() {
           />
           {/* Register Panel */}
           <div
+            className="mobile-form-panel"
             style={{
               position: 'fixed',
               top: 0,
               right: 0,
               width: '100vw',
-          maxWidth: '500px',
+              maxWidth: '500px',
               height: '100vh',
               backgroundColor: '#fff',
               zIndex: 1000,

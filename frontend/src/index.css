@@ -544,4 +544,10 @@ textarea {
     word-break: break-word !important;
     white-space: normal !important;
   }
+
+  /* Mobile form panel */
+  .mobile-form-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
 }
