@@ -142,7 +142,10 @@ function FacultyDashboard() {
     
     btnPrimary: {
        marginTop: '20px', width: '100%', padding: '12px', background: '#14532d', color: '#fff', border: 'none', borderRadius: '12px', fontWeight: '700', cursor: 'pointer', transition: 'filter 0.2s'
-    }
+    },
+    logoWrap: { display: 'flex', alignItems: 'center', gap: '16px' },
+    logo: { width: '80px', height: '80px', objectFit: 'contain' },
+    statusText: { fontSize: '14px', color: '#64748b', marginTop: '4px' }
   };
 
   const uniqueDepts = Array.from(new Set(students.map(s => s.department).filter(Boolean))).sort();
