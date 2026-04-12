@@ -151,7 +151,7 @@ function Dashboard() {
         })
       });
 
-      const portResponse = await fetch('http://localhost:5000/api/auth/update-portfolio', {
+      const portResponse = await fetch(`${API_URL}/api/auth/update-portfolio`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
