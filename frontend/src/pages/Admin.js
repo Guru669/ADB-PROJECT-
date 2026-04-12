@@ -28,8 +28,21 @@ function Admin() {
                 const sortedStudents = fetchedStudents.sort((a, b) => (a.fullName || '').localeCompare(b.fullName || ''));
                 setStudents(sortedStudents);
                 
-                // Sync with localStorage so other legacy components don't break
-                localStorage.setItem('allStudents', JSON.stringify(fetchedStudents));
+                // Ultra-slim sync for localStorage (avoid QuotaExceededError)
+                try {
+                    const ultraSlimStudents = fetchedStudents.map(s => ({
+                        fullName: s.fullName,
+                        studentId: s.studentId,
+                        department: s.department,
+                        section: s.section,
+                        email: s.email,
+                        portfolio: { isPublic: s.portfolio?.isPublic }
+                    }));
+                    localStorage.removeItem('allStudents');
+                    localStorage.setItem('allStudents', JSON.stringify(ultraSlimStudents));
+                } catch (e) {
+                    console.warn("Storage quota exceeded. Caching failed.");
+                }
 
                 // Calculate stats
                 const activePortfolios = fetchedStudents.filter(s => s.portfolio && (s.portfolio.bio || s.portfolio.skills?.length > 0)).length;

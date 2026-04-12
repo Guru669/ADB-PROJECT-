@@ -23,7 +23,23 @@ function StudentDetails() {
                 const response = await fetch(`${API_URL}/api/auth/students`);
                 if (response.ok) {
                     const data = await response.json();
-                    localStorage.setItem('allStudents', JSON.stringify(data));
+                    
+                    // Ultra-slim sync for localStorage (avoid QuotaExceededError)
+                    try {
+                        const ultraSlimStudents = data.map(s => ({
+                            fullName: s.fullName,
+                            studentId: s.studentId,
+                            department: s.department,
+                            section: s.section,
+                            email: s.email,
+                            portfolio: { isPublic: s.portfolio?.isPublic }
+                        }));
+                        localStorage.removeItem('allStudents');
+                        localStorage.setItem('allStudents', JSON.stringify(ultraSlimStudents));
+                    } catch (e) {
+                        console.warn("Storage quota exceeded. Caching failed.");
+                    }
+
                     const foundBackend = data.find(s => s.studentId === studentId);
                     if (foundBackend) {
                         setStudent(foundBackend);
