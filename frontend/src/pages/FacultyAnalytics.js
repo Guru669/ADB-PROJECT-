@@ -35,6 +35,7 @@ function FacultyAnalytics() {
               fullName, studentId, department, section, email,
               portfolio: { isPublic: portfolio?.isPublic, profilePhoto: portfolio?.profilePhoto }
             }));
+            localStorage.removeItem('allStudents'); // Clear old heavy data first
             localStorage.setItem('allStudents', JSON.stringify(slimStudents));
           } catch (e) {
             console.warn("Storage quota exceeded. Caching failed.");

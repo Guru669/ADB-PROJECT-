@@ -51,6 +51,7 @@ function FacultyDashboard() {
             email: s.email,
             portfolio: { isPublic: s.portfolio?.isPublic, profilePhoto: s.portfolio?.profilePhoto }
           }));
+          localStorage.removeItem('allStudents'); // Purge legacy heavy data
           localStorage.setItem('allStudents', JSON.stringify(slimStudents));
         } catch (e) {
           console.warn("localStorage quota exceeded. Student cache may be incomplete.");
