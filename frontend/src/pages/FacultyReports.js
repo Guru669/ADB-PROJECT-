@@ -260,22 +260,11 @@ function FacultyReports() {
             <p style={{color: darkMode ? '#94a3b8' : '#64748b', marginTop: '4px'}}>Executive documents and auditing tools</p>
           </div>
           <div className="mobile-nav-buttons" style={{display: 'flex', gap: '12px', alignItems: 'center'}}>
-            <button 
-              className="mobile-logout-only" 
-              style={{...styles.btnPrimary, background: '#64748b', color: '#fff', width: 'auto'}} 
-              onClick={() => navigate('/faculty-settings')}
-            >
-              Settings
-            </button>
-            <button 
-              className="mobile-logout-only" 
-              style={{...styles.btnPrimary, background: '#dc2626', color: '#fff', width: 'auto'}} 
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
             <button style={{...styles.btnPrimary, background: '#ffffff', color: '#1e293b', border: '1px solid #e2e8f0'}} onClick={() => navigate('/faculty-analytics')}>Analyze Trends</button>
             <button style={styles.btnPrimary} onClick={generateReports}>Re-Generate</button>
+            <button style={{...styles.btnPrimary, background: '#fff', color: '#1e293b', border: '1px solid #e2e8f0'}} onClick={toggleDarkMode}>
+              {darkMode ? 'Light' : 'Dark'}
+            </button>
           </div>
         </header>
 

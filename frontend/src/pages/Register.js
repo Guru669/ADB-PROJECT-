@@ -182,30 +182,58 @@ function Register() {
         },
         homeBtn: {
             position: 'absolute',
-            left: '16px',
-            top: '16px',
-            padding: '10px 16px',
-            background: 'linear-gradient(90deg, #18442f 0%, #14532d 100%)',
-            color: '#fff',
-            border: 'none',
+            right: '24px',
+            top: '24px',
+            padding: '10px 22px',
+            background: 'rgba(24, 68, 47, 0.95)',
+            color: '#ffe600',
+            border: '1px solid rgba(255, 230, 0, 0.3)',
             borderRadius: '999px',
             fontWeight: '700',
             cursor: 'pointer',
             fontSize: '14px',
-            zIndex: 20
+            zIndex: 100,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            backdropFilter: 'blur(8px)',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.15)',
+            transition: 'all 0.3s ease'
         }
     };
 
     const responsiveStyles = `
       @media (max-width: 850px) {
+        body { background: #fff !important; }
         .register-wrapper {
           grid-template-columns: 1fr !important;
+          width: 100% !important;
+          border-radius: 0 !important;
+          box-shadow: none !important;
+          border: none !important;
+          margin: 0 !important;
         }
         .register-side-panel {
-          padding: 18px !important;
+          padding: 60px 24px 30px !important;
+          text-align: center;
+          align-items: center;
         }
         .register-form-panel {
-          padding: 22px 16px !important;
+          padding: 30px 20px 60px !important;
+          background: #fff;
+        }
+        .register-grid {
+          grid-template-columns: 1fr !important;
+        }
+        .mobile-home-btn {
+          top: auto !important;
+          bottom: 20px !important;
+          left: 20px !important;
+          right: auto !important;
+          padding: 12px 24px !important;
+          font-size: 15px !important;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.2) !important;
+          border: 1px solid rgba(255, 230, 0, 0.4) !important;
         }
       }
     `;
@@ -213,8 +241,8 @@ function Register() {
     return (
         <div style={styles.page}>
             <style>{responsiveStyles}</style>
-            <button type="button" style={styles.homeBtn} onClick={() => navigate('/')}>
-                Home
+            <button type="button" style={styles.homeBtn} className="mobile-home-btn" onClick={() => navigate('/')}>
+                ← Back
             </button>
             <div className="mobile-grid-1 register-wrapper" style={styles.wrapper}>
                 <div className="mobile-card register-side-panel" style={styles.sidePanel}>
@@ -259,9 +287,9 @@ function Register() {
                     {error && <div className="mobile-compact-card" style={{ color: '#dc3545', textAlign: 'center', marginBottom: '12px', padding: '8px' }}>{error}</div>}
 
                     <form onSubmit={handleSubmit}>
-                        <div className="mobile-grid-1 mobile-tight-spacing" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
-                            <input id="fullName" className="mobile-tiny-input" name="fullName" style={styles.input} placeholder="Full Name" onChange={handleChange} required />
-                            <input id="email" className="mobile-tiny-input" name="email" type="email" style={styles.input} placeholder="Email" onChange={handleChange} required />
+                        <div className="mobile-grid-1 mobile-tight-spacing register-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                            <input id="fullName" className="mobile-tiny-input" name="fullName" style={styles.input} placeholder="Full Name" onChange={handleChange} required autoComplete="name" />
+                            <input id="email" className="mobile-tiny-input" name="email" type="email" style={styles.input} placeholder="Email" onChange={handleChange} required autoComplete="email" />
                             <input id={activeTab === 'student' ? 'studentId' : 'staffId'} className="mobile-tiny-input" name={activeTab === 'student' ? 'studentId' : 'staffId'} style={styles.input} placeholder={activeTab === 'student' ? 'Student ID' : 'Staff ID'} onChange={handleChange} required />
                             <select id="department" className="mobile-tiny-input" name="department" style={styles.input} onChange={handleChange} required>
                                 <option value="">Department</option>
@@ -269,9 +297,9 @@ function Register() {
                             </select>
                             {activeTab === 'student' && (
                                 <>
-                                    <input id="phone" className="mobile-tiny-input" name="phone" style={styles.input} placeholder="Phone Number" onChange={handleChange} />
-                                    <input id="address" className="mobile-tiny-input" name="address" style={styles.input} placeholder="Address" onChange={handleChange} />
-                                    <input id="dateOfBirth" className="mobile-tiny-input" name="dateOfBirth" type="date" style={styles.input} onChange={handleChange} />
+                                    <input id="phone" className="mobile-tiny-input" name="phone" style={styles.input} placeholder="Phone Number" onChange={handleChange} autoComplete="tel" />
+                                    <input id="address" className="mobile-tiny-input" name="address" style={styles.input} placeholder="Address" onChange={handleChange} autoComplete="street-address" />
+                                    <input id="dateOfBirth" className="mobile-tiny-input" name="dateOfBirth" type="date" style={styles.input} onChange={handleChange} autoComplete="bday" />
                                     <select id="gender" className="mobile-tiny-input" name="gender" style={styles.input} onChange={handleChange}>
                                         <option value="">Gender</option>
                                         <option value="Male">Male</option>
@@ -289,8 +317,8 @@ function Register() {
                                     <input id="specialization" className="mobile-tiny-input" name="specialization" style={styles.input} placeholder="Specialization" onChange={handleChange} />
                                 </>
                             )}
-                            <input id="password" data-lpignore="true" className="mobile-tiny-input" name="password" type="password" style={styles.input} placeholder="Password" onChange={handleChange} required />
-                            <input id="confirmPassword" data-lpignore="true" className="mobile-tiny-input" name="confirmPassword" type="password" style={styles.input} placeholder="Confirm Password" onChange={handleChange} required />
+                            <input id="password" data-lpignore="true" className="mobile-tiny-input" name="password" type="password" style={styles.input} placeholder="Password" onChange={handleChange} required autoComplete="new-password" />
+                            <input id="confirmPassword" data-lpignore="true" className="mobile-tiny-input" name="confirmPassword" type="password" style={styles.input} placeholder="Confirm Password" onChange={handleChange} required autoComplete="new-password" />
                         </div>
                         <button
                             type="submit"

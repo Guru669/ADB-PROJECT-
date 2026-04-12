@@ -140,29 +140,58 @@ function UnifiedLogin() {
         },
         homeBtn: {
             position: 'absolute',
-            left: '16px',
-            top: '16px',
-            padding: '10px 16px',
-            background: 'linear-gradient(90deg, #18442f 0%, #14532d 100%)',
-            color: '#fff',
-            border: 'none',
+            right: '24px',
+            top: '24px',
+            padding: '10px 22px',
+            background: 'rgba(24, 68, 47, 0.95)',
+            color: '#ffe600',
+            border: '1px solid rgba(255, 230, 0, 0.3)',
             borderRadius: '999px',
             fontWeight: '700',
             cursor: 'pointer',
-            zIndex: 20
+            zIndex: 100,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontSize: '14px',
+            backdropFilter: 'blur(8px)',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.15)',
+            transition: 'all 0.3s ease'
         }
     };
 
     const responsiveStyles = `
       @media (max-width: 850px) {
+        body { background: #fff !important; }
         .login-wrapper {
           grid-template-columns: 1fr !important;
+          width: 100% !important;
+          border-radius: 0 !important;
+          box-shadow: none !important;
+          border: none !important;
+          min-height: 100vh;
         }
         .login-side-panel {
-          padding: 24px !important;
+          padding: 60px 24px 40px !important;
+          text-align: center;
+          align-items: center;
         }
         .login-form-panel {
-          padding: 36px 24px !important;
+          padding: 40px 24px !important;
+          background: #fff;
+        }
+        .login-title {
+          font-size: 28px !important;
+        }
+        .mobile-home-btn {
+          top: auto !important;
+          bottom: 20px !important;
+          left: 20px !important;
+          right: auto !important;
+          padding: 12px 24px !important;
+          font-size: 15px !important;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.2) !important;
+          border: 1px solid rgba(255, 230, 0, 0.4) !important;
         }
       }
     `;
@@ -170,8 +199,8 @@ function UnifiedLogin() {
     return (
         <div style={styles.page}>
             <style>{responsiveStyles}</style>
-            <button type="button" style={styles.homeBtn} onClick={() => navigate('/')}>
-                Home
+            <button type="button" style={styles.homeBtn} className="mobile-home-btn" onClick={() => navigate('/')}>
+                ← Back
             </button>
             <div style={styles.wrapper} className="login-wrapper">
                 <div style={styles.sidePanel} className="login-side-panel">
@@ -192,12 +221,12 @@ function UnifiedLogin() {
                 </div>
 
                 <div style={styles.formPanel} className="login-form-panel">
-                    <h1 style={styles.title}>Login</h1>
+                    <h1 style={styles.title} className="login-title">Login</h1>
                     <p style={{ color: '#64748b', marginBottom: '34px' }}>Sign in to your professional portal.</p>
                     {error && <div style={{ color: '#dc3545', marginBottom: '20px' }}>{error}</div>}
                     <form onSubmit={handleSubmit}>
-                        <input id="identifier" name="identifier" value={formData.identifier} style={styles.input} placeholder="Email or Student ID" onChange={handleChange} />
-                        <input id="password" name="password" value={formData.password} type="password" style={styles.input} placeholder="Password" onChange={handleChange} />
+                        <input id="identifier" name="identifier" value={formData.identifier} style={styles.input} placeholder="Email or Student ID" onChange={handleChange} autoComplete="username" />
+                        <input id="password" name="password" value={formData.password} type="password" style={styles.input} placeholder="Password" onChange={handleChange} autoComplete="current-password" />
                         <button type="submit" style={styles.button} disabled={isLoading}>
                             {isLoading ? 'Loading...' : 'Sign In'}
                         </button>

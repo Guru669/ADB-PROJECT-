@@ -307,20 +307,6 @@ function FacultySettings() {
           </div>
           <div style={{ display: 'flex', gap: 15 }} className="settings-header-right">
             <button
-               className="mobile-logout-only" 
-               style={{...styles.topActionPrimaryBtn, background: '#64748b'}} 
-               onClick={() => navigate('/faculty-settings')}
-             >
-               Settings
-             </button>
-            <button
-               className="mobile-logout-only" 
-               style={{...styles.topActionPrimaryBtn, background: '#dc2626'}} 
-               onClick={handleLogout}
-             >
-               Logout
-             </button>
-            <button
               style={styles.topActionPrimaryBtn}
               onClick={toggleDarkMode}
             >
@@ -328,21 +314,9 @@ function FacultySettings() {
             </button>
             <button
               style={styles.topActionBtn}
-              onClick={() => navigate('/faculty-analytics')}
-            >
-              Analytics
-            </button>
-            <button
-              style={styles.topActionBtn}
-              onClick={() => navigate('/faculty-reports')}
-            >
-              Reports
-            </button>
-            <button
-              style={styles.topActionBtn}
               onClick={() => navigate('/staff-dashboard')}
             >
-              Students
+              Academic Overview
             </button>
           </div>
         </div>
