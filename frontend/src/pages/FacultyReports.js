@@ -228,6 +228,15 @@ function FacultyReports() {
     statVal: { fontWeight: '800', color: '#16a34a' }
   };
 
+  const responsiveStyles = `
+    @media (max-width: 850px) {
+      .reports-container { margin-left: 0 !important; padding: 15px !important; padding-bottom: 90px !important; }
+      .faculty-header { flex-direction: column; gap: 20px; text-align: center; }
+      .reports-grid { grid-template-columns: 1fr !important; }
+      .mobile-logout-only { display: block !important; }
+    }
+    .mobile-logout-only { display: none !important; }
+  `;
   if (loading) return (
     <div style={{...styles.container, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
       <div style={{textAlign: 'center'}}>
@@ -240,6 +249,7 @@ function FacultyReports() {
 
   return (
     <>
+      <style>{responsiveStyles}</style>
       <FacultySidebar darkMode={darkMode} onLogout={handleLogout} />
       <div style={styles.container} className="reports-container">
         
@@ -249,7 +259,21 @@ function FacultyReports() {
             <h1 style={styles.headerTitle}>Intelligence Reports</h1>
             <p style={{color: darkMode ? '#94a3b8' : '#64748b', marginTop: '4px'}}>Executive documents and auditing tools</p>
           </div>
-          <div className="mobile-nav-buttons" style={{display: 'flex', gap: '12px'}}>
+          <div className="mobile-nav-buttons" style={{display: 'flex', gap: '12px', alignItems: 'center'}}>
+            <button 
+              className="mobile-logout-only" 
+              style={{...styles.btnPrimary, background: '#64748b', color: '#fff', width: 'auto'}} 
+              onClick={() => navigate('/faculty-settings')}
+            >
+              Settings
+            </button>
+            <button 
+              className="mobile-logout-only" 
+              style={{...styles.btnPrimary, background: '#dc2626', color: '#fff', width: 'auto'}} 
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
             <button style={{...styles.btnPrimary, background: '#ffffff', color: '#1e293b', border: '1px solid #e2e8f0'}} onClick={() => navigate('/faculty-analytics')}>Analyze Trends</button>
             <button style={styles.btnPrimary} onClick={generateReports}>Re-Generate</button>
           </div>

@@ -99,11 +99,39 @@ function FacultySidebar({ darkMode, onLogout }) {
   const responsiveStyles = `
     @media (max-width: 850px) {
       .faculty-sidebar {
-        transform: translateX(${isOpen ? '0' : '-100%'});
-        width: 240px !important;
+        width: 100% !important;
+        height: 70px !important;
+        flex-direction: row !important;
+        bottom: 0 !important;
+        top: auto !important;
+        left: 0 !important;
+        padding: 0 10px !important;
+        justify-content: space-around !important;
+        align-items: center !important;
+        border-right: none !important;
+        border-top: 1px solid rgba(255,230,0,0.1) !important;
+        background: #0b4f00 !important;
+        box-shadow: 0 -4px 15px rgba(0,0,0,0.2) !important;
+      }
+      .sidebar-footer {
+        display: none !important;
+      }
+      .sidebar-logo {
+        display: none !important;
+      }
+      .sidebar-menu {
+        display: flex !important;
+        flex-direction: row !important;
+        width: 100% !important;
+        justify-content: space-around !important;
+        margin: 0 !important;
+      }
+      .menu-item-text {
+        font-size: 10px !important;
+        margin-top: 4px !important;
       }
       .mobile-toggle {
-        display: flex !important;
+        display: none !important;
       }
     }
   `;
@@ -111,89 +139,57 @@ function FacultySidebar({ darkMode, onLogout }) {
   return (
     <>
       <style>{responsiveStyles}</style>
-      <button 
-        className="mobile-toggle"
-        style={{
-          display: 'none',
-          position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          zIndex: 2000,
-          width: '50px',
-          height: '50px',
-          borderRadius: '25px',
-          backgroundColor: '#0b4f00',
-          color: '#ffe600',
-          border: 'none',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '24px',
-          cursor: 'pointer'
-        }}
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        {isOpen ? '✕' : '☰'}
-      </button>
-
-      {isOpen && (
-        <div 
-          style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            zIndex: 999,
-            backdropFilter: 'blur(2px)'
-          }}
-          onClick={() => setIsOpen(false)}
-        />
-      )}
-
       <div className="faculty-sidebar" style={styles.sidebar}>
-      <div style={styles.header}>
-        <div style={styles.logo}>Faculty Portal</div>
-        <div style={styles.subtitle}>Student Portfolio Management</div>
+        <div style={styles.header} className="sidebar-logo">
+          <div style={styles.logo}>Faculty Portal</div>
+          <div style={styles.subtitle}>Student Portfolio Management</div>
+        </div>
+        
+        <nav style={styles.nav} className="sidebar-menu">
+          {menuItems.map(item => {
+            const isActive = location.pathname === item.path;
+            return (
+              <a
+                key={item.id}
+                href={item.path}
+                className={`faculty-sidebar-link ${isActive ? 'active' : ''}`}
+                style={{
+                  ...styles.menuItem,
+                  ...(isActive ? styles.menuItemActive : {})
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate(item.path);
+                }}
+              >
+                <span style={styles.icon}>{item.icon}</span>
+                <span style={styles.label} className="menu-item-text">{item.label}</span>
+              </a>
+            );
+          })}
+        </nav>
+        <style>{`
+          .faculty-sidebar-link:hover {
+            background: ${styles.menuItemHover.background} !important;
+          }
+          .faculty-sidebar-link.active {
+            background: ${styles.menuItemActive.background} !important;
+            border-left-color: ${styles.menuItemActive.borderLeftColor} !important;
+          }
+        `}</style>
+        
+        <div style={styles.footer} className="sidebar-footer">
+          <button 
+            style={{...styles.logoutBtn, background: 'rgba(255,255,255,0.1)', marginBottom: '8px', border: '1px solid rgba(255,255,255,0.2)'}} 
+            onClick={() => navigate('/faculty-settings')}
+          >
+            Settings
+          </button>
+          <button style={styles.logoutBtn} onClick={onLogout}>
+            Logout
+          </button>
+        </div>
       </div>
-      
-      <nav style={styles.nav}>
-        {menuItems.map(item => {
-          const isActive = location.pathname === item.path;
-          return (
-            <a
-              key={item.id}
-              href={item.path}
-              className={`faculty-sidebar-link ${isActive ? 'active' : ''}`}
-              style={{
-                ...styles.menuItem,
-                ...(isActive ? styles.menuItemActive : {})
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                navigate(item.path);
-              }}
-            >
-              <span style={styles.icon}>{item.icon}</span>
-              <span style={styles.label}>{item.label}</span>
-            </a>
-          );
-        })}
-      </nav>
-      <style>{`
-        .faculty-sidebar-link:hover {
-          background: ${styles.menuItemHover.background} !important;
-        }
-        .faculty-sidebar-link.active {
-          background: ${styles.menuItemActive.background} !important;
-          border-left-color: ${styles.menuItemActive.borderLeftColor} !important;
-        }
-      `}</style>
-      
-      <div style={styles.footer}>
-        <button style={styles.logoutBtn} onClick={onLogout}>
-          Logout
-        </button>
-      </div>
-    </div>
     </>
   );
 }

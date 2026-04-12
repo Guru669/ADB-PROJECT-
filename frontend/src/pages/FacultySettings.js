@@ -262,6 +262,7 @@ function FacultySettings() {
       .settings-container {
         margin-left: 0 !important;
         padding: 20px !important;
+        padding-bottom: 90px !important;
       }
       .settings-header {
         flex-direction: column !important;
@@ -282,7 +283,9 @@ function FacultySettings() {
       .settings-main {
         padding: 15px !important;
       }
+      .mobile-logout-only { display: block !important; }
     }
+    .mobile-logout-only { display: none !important; }
   `;
 
   return (
@@ -303,6 +306,20 @@ function FacultySettings() {
             </div>
           </div>
           <div style={{ display: 'flex', gap: 15 }} className="settings-header-right">
+            <button
+               className="mobile-logout-only" 
+               style={{...styles.topActionPrimaryBtn, background: '#64748b'}} 
+               onClick={() => navigate('/faculty-settings')}
+             >
+               Settings
+             </button>
+            <button
+               className="mobile-logout-only" 
+               style={{...styles.topActionPrimaryBtn, background: '#dc2626'}} 
+               onClick={handleLogout}
+             >
+               Logout
+             </button>
             <button
               style={styles.topActionPrimaryBtn}
               onClick={toggleDarkMode}

@@ -150,6 +150,7 @@ function FacultyAnalytics() {
     URL.revokeObjectURL(url);
   };
 
+
   const styles = {
     container: {
       minHeight: '100vh',
@@ -370,6 +371,7 @@ function FacultyAnalytics() {
       .analytics-container {
         margin-left: 0 !important;
         padding: 20px !important;
+        padding-bottom: 90px !important;
       }
       .analytics-header {
         flex-direction: column !important;
@@ -387,6 +389,7 @@ function FacultyAnalytics() {
         width: 100% !important;
         padding: 10px !important;
       }
+      .mobile-logout-only { display: block !important; }
       .stats-container {
         grid-template-columns: 1fr !important;
       }
@@ -419,6 +422,20 @@ function FacultyAnalytics() {
             </div>
           </div>
           <div style={{ display: 'flex', gap: 15 }} className="analytics-header-right">
+            <button
+               className="mobile-logout-only" 
+               style={{...styles.topActionPrimaryBtn, background: '#64748b'}} 
+               onClick={() => navigate('/faculty-settings')}
+             >
+               Settings
+             </button>
+            <button
+               className="mobile-logout-only" 
+               style={{...styles.topActionPrimaryBtn, background: '#dc2626'}} 
+               onClick={handleLogout}
+             >
+               Logout
+             </button>
             <button
               style={styles.topActionPrimaryBtn}
               onClick={toggleDarkMode}

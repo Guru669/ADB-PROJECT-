@@ -150,8 +150,21 @@ function FacultyDashboard() {
 
   const uniqueDepts = Array.from(new Set(students.map(s => s.department).filter(Boolean))).sort();
 
+  const responsiveStyles = `
+    @media (max-width: 850px) {
+      .faculty-page-container { margin-left: 0 !important; padding: 15px !important; padding-bottom: 90px !important; }
+      .faculty-header { flex-direction: column; gap: 20px; text-align: center; }
+      .mobile-center { flex-direction: column !important; text-align: center; }
+      .control-bar { flex-direction: column; }
+      .student-grid { grid-template-columns: 1fr !important; }
+      .mobile-logout-only { display: block !important; }
+    }
+    .mobile-logout-only { display: none !important; }
+  `;
+
   return (
     <div style={styles.page} className="faculty-page-container">
+      <style>{responsiveStyles}</style>
       <FacultySidebar darkMode={darkMode} onLogout={handleLogout} />
       
       <header style={styles.header} className="faculty-header">
@@ -163,6 +176,20 @@ function FacultyDashboard() {
           </div>
         </div>
         <div className="mobile-nav-buttons" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+           <button 
+             className="mobile-logout-only" 
+             style={{...styles.btnPrimary, background: '#64748b', color: '#fff', marginTop: 0, width: 'auto'}} 
+             onClick={() => navigate('/faculty-settings')}
+           >
+             Settings
+           </button>
+           <button 
+             className="mobile-logout-only" 
+             style={{...styles.btnPrimary, background: '#dc2626', color: '#fff', marginTop: 0, width: 'auto'}} 
+             onClick={handleLogout}
+           >
+             Logout
+           </button>
            <button style={{...styles.btnPrimary, background: '#fff', color: '#1e293b', marginTop: 0, width: 'auto', border: '1px solid #e2e8f0'}} onClick={toggleDarkMode}>{darkMode ? 'Light' : 'Dark'}</button>
            <button style={{...styles.btnPrimary, marginTop: 0, width: 'auto'}} onClick={() => navigate('/faculty-analytics')}>Analytics Hub</button>
         </div>
