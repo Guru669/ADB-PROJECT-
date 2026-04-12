@@ -41,6 +41,7 @@ function FacultyDashboard() {
         const response = await fetch(`${API_URL}/api/auth/students`);
         if (!response.ok) throw new Error('Fetch failed');
         const liveStudents = await response.json();
+        
         // Ultra-slim sync for localStorage (avoid QuotaExceededError)
         try {
           const ultraSlimStudents = liveStudents.map(s => ({
@@ -75,7 +76,11 @@ function FacultyDashboard() {
     if (filterSection) list = list.filter(s => s.section === filterSection);
     if (searchTerm) {
       const q = searchTerm.toLowerCase();
-      list = list.filter(s => (s.fullName || '').toLowerCase().includes(q) || (s.studentId || '').toLowerCase().includes(q));
+      list = list.filter(s => 
+        (s.fullName || '').toLowerCase().includes(q) || 
+        (s.studentId || '').toLowerCase().includes(q) ||
+        (s.email || '').toLowerCase().includes(q)
+      );
     }
     
     list.sort((a, b) => (String(a.studentId) || '').localeCompare(String(b.studentId), undefined, { numeric: true }));
@@ -114,66 +119,148 @@ function FacultyDashboard() {
   const styles = {
     page: { 
       minHeight: '100vh', 
-      background: darkMode ? '#0f172a' : '#f8fafc', 
+      background: darkMode ? '#0f172a' : '#f1f5f9', 
       marginLeft: '260px', 
-      padding: '30px', 
-      fontFamily: "'Inter', sans-serif" 
+      padding: '40px', 
+      fontFamily: "'Inter', sans-serif",
+      transition: 'all 0.3s ease'
     },
-    header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' },
+    header: { 
+      display: 'flex', 
+      justifyContent: 'space-between', 
+      alignItems: 'center', 
+      marginBottom: '40px',
+      padding: '24px',
+      background: darkMode ? 'rgba(30, 41, 59, 0.8)' : '#ffffff',
+      borderRadius: '24px',
+      backdropFilter: 'blur(10px)',
+      boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)',
+      border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'transparent'}`
+    },
     title: { fontSize: '28px', fontWeight: '800', color: darkMode ? '#ffe600' : '#14532d', margin: 0 },
     
     summaryGrid: {
-      display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '32px'
+      display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', marginBottom: '32px'
     },
     summaryCard: {
-      background: darkMode ? 'rgba(30, 41, 59, 0.7)' : '#ffffff',
-      padding: '20px', borderRadius: '16px', border: `1px solid ${darkMode ? 'rgba(255,230,0,0.1)' : 'rgba(20,83,45,0.05)'}`,
-      textAlign: 'center', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)'
+      background: darkMode ? '#1e293b' : '#ffffff',
+      padding: '28px', 
+      borderRadius: '24px', 
+      border: `1px solid ${darkMode ? 'rgba(255,230,0,0.1)' : 'rgba(0,0,0,0.02)'}`,
+      textAlign: 'left', 
+      boxShadow: '0 10px 15px -3px rgba(0,0,0,0.05)',
+      position: 'relative',
+      overflow: 'hidden'
     },
-    summaryLabel: { fontSize: '11px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', marginBottom: '4px' },
-    summaryValue: { fontSize: '24px', fontWeight: '800', color: '#16a34a' },
+    cardAccent: {
+      position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: '#14532d'
+    },
+    summaryLabel: { fontSize: '13px', fontWeight: '600', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' },
+    summaryValue: { fontSize: '32px', fontWeight: '900', color: darkMode ? '#fff' : '#1e293b', marginTop: '8px' },
 
     controlBar: {
-       background: darkMode ? '#1e293b' : '#ffffff', padding: '16px', borderRadius: '16px', marginBottom: '32px',
-       display: 'flex', gap: '16px', flexWrap: 'wrap', boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+       background: darkMode ? '#1e293b' : '#ffffff', 
+       padding: '24px', 
+       borderRadius: '20px', 
+       marginBottom: '40px',
+       display: 'flex', 
+       gap: '20px', 
+       flexWrap: 'wrap', 
+       boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)',
+       alignItems: 'center'
     },
-    input: { flex: 2, padding: '12px 18px', borderRadius: '12px', border: `1px solid ${darkMode ? '#334155' : '#e2e8f0'}`, background: darkMode ? '#0f172a' : '#f8fafc', color: darkMode ? '#fff' : '#1e293b' },
-    select: { flex: 1, padding: '12px', borderRadius: '12px', border: `1px solid ${darkMode ? '#334155' : '#e2e8f0'}`, background: darkMode ? '#0f172a' : '#f8fafc', color: darkMode ? '#fff' : '#1e293b' },
+    input: { 
+      flex: 3, padding: '14px 20px', borderRadius: '12px', 
+      border: `1px solid ${darkMode ? '#334155' : '#e2e8f0'}`, 
+      background: darkMode ? '#0f172a' : '#f8fafc', 
+      color: darkMode ? '#fff' : '#1e293b',
+      fontSize: '15px'
+    },
+    select: { 
+      flex: 1, padding: '14px', borderRadius: '12px', 
+      border: `1px solid ${darkMode ? '#334155' : '#e2e8f0'}`, 
+      background: darkMode ? '#0f172a' : '#f8fafc', 
+      color: darkMode ? '#fff' : '#1e293b',
+      cursor: 'pointer'
+    },
 
-    studentGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' },
+    studentGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '24px' },
     studentCard: {
-      background: darkMode ? '#1e293b' : '#ffffff', padding: '24px', borderRadius: '20px', 
-      border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`,
-      boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', transition: 'transform 0.2s', position: 'relative'
+      background: darkMode ? '#1e293b' : '#ffffff', 
+      padding: '30px', 
+      borderRadius: '28px', 
+      border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)'}`,
+      boxShadow: '0 20px 25px -5px rgba(0,0,0,0.05)', 
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', 
+      position: 'relative',
+      cursor: 'default'
     },
-    badge: { position: 'absolute', top: '24px', right: '24px', padding: '4px 10px', background: '#ecfdf5', color: '#059669', borderRadius: '8px', fontSize: '11px', fontWeight: '800' },
-    avatar: { width: '64px', height: '64px', borderRadius: '16px', background: 'linear-gradient(135deg, #14532d, #16a34a)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', color: '#fff', marginBottom: '16px' },
-    cardName: { fontSize: '18px', fontWeight: '700', marginBottom: '4px' },
-    cardId: { fontSize: '13px', opacity: 0.6, marginBottom: '16px', display: 'block' },
-    metaGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '13px' },
-    metaItem: { color: '#64748b', fontWeight: '600' },
-    metaVal: { color: '#1e293b', fontWeight: '700', marginLeft: '4px' },
+    badge: { 
+      position: 'absolute', top: '30px', right: '30px', 
+      padding: '6px 14px', background: darkMode ? 'rgba(255,230,0,0.1)' : '#f0fdf4', 
+      color: darkMode ? '#ffe600' : '#15803d', 
+      borderRadius: '10px', fontSize: '12px', fontWeight: '800' 
+    },
+    avatar: { 
+      width: '80px', height: '80px', borderRadius: '24px', 
+      background: 'linear-gradient(135deg, #14532d, #16a34a)', 
+      display: 'flex', alignItems: 'center', justifyContent: 'center', 
+      fontSize: '32px', color: '#fff', marginBottom: '20px',
+      boxShadow: '0 4px 12px rgba(20, 83, 45, 0.2)',
+      overflow: 'hidden'
+    },
+    cardName: { fontSize: '22px', fontWeight: '800', color: darkMode ? '#fff' : '#0f172a', marginBottom: '6px' },
+    cardId: { fontSize: '14px', color: '#64748b', fontWeight: '500', marginBottom: '24px', display: 'block' },
+    metaGrid: { 
+      display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', 
+      background: darkMode ? 'rgba(15,23,42,0.4)' : '#f8fafc',
+      padding: '20px', borderRadius: '20px'
+    },
+    metaLabel: { fontSize: '11px', color: '#64748b', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.4px', marginBottom: '4px' },
+    metaVal: { fontSize: '15px', color: darkMode ? '#fff' : '#1e293b', fontWeight: '700' },
     
-    btnPrimary: {
-       marginTop: '20px', width: '100%', padding: '12px', background: '#14532d', color: '#fff', border: 'none', borderRadius: '12px', fontWeight: '700', cursor: 'pointer', transition: 'filter 0.2s'
+    actionRow: {
+      marginTop: '24px', display: 'flex', gap: '12px'
     },
-    logoWrap: { display: 'flex', alignItems: 'center', gap: '16px' },
-    logo: { width: '80px', height: '80px', objectFit: 'contain' },
-    statusText: { fontSize: '14px', color: '#64748b', marginTop: '4px' }
+    btnView: {
+       flex: 2, padding: '14px', background: '#14532d', color: '#fff', border: 'none', borderRadius: '14px', fontWeight: '700', cursor: 'pointer', transition: 'all 0.2s'
+    },
+    btnSecondary: {
+       flex: 1, padding: '14px', background: darkMode ? '#334155' : '#e2e8f0', color: darkMode ? '#fff' : '#1e293b', border: 'none', borderRadius: '14px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
+    },
+
+    logoWrap: { display: 'flex', alignItems: 'center', gap: '20px' },
+    logo: { width: '60px', height: '60px', objectFit: 'contain' }
   };
 
   const uniqueDepts = Array.from(new Set(students.map(s => s.department).filter(Boolean))).sort();
 
   const responsiveStyles = `
-    @media (max-width: 850px) {
-      .faculty-page-container { margin-left: 0 !important; padding: 15px !important; padding-bottom: 90px !important; }
-      .faculty-header { flex-direction: column; gap: 20px; text-align: center; }
-      .mobile-center { flex-direction: column !important; text-align: center; }
-      .control-bar { flex-direction: column; }
-      .student-grid { grid-template-columns: 1fr !important; }
-      .mobile-logout-only { display: block !important; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    
+    .student-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+      border-color: #14532d !important;
     }
-    .mobile-logout-only { display: none !important; }
+
+    .btn-view:hover {
+      filter: brightness(1.2);
+      transform: scale(1.02);
+    }
+
+    button, input, select {
+      transition: all 0.2s ease;
+    }
+
+    @media (max-width: 850px) {
+      .faculty-page-container { margin-left: 0 !important; padding: 20px !important; padding-bottom: 100px !important; }
+      .control-bar { flex-direction: column !important; }
+      .control-bar > * { width: 100% !important; flex: none !important; }
+      .student-grid { grid-template-columns: 1fr !important; }
+      .faculty-header { flex-direction: column; text-align: center; gap: 24px; }
+      .mobile-hide { display: none !important; }
+    }
   `;
 
   return (
@@ -182,77 +269,82 @@ function FacultyDashboard() {
       <FacultySidebar darkMode={darkMode} onLogout={handleLogout} />
       
       <header style={styles.header} className="faculty-header">
-        <div style={styles.logoWrap} className="mobile-center">
-          <img src="/siet.png" alt="SIET Logo" style={styles.logo} />
+        <div style={styles.logoWrap}>
+          <img src="/siet.png" alt="Logo" style={styles.logo} />
           <div>
-            <h1 style={styles.title} className="dashboard-title">Academic Oversight</h1>
-            <div style={styles.statusText}>Welcome back, {staff?.fullName || 'Faculty'}</div>
+            <h1 style={styles.title}>Academic Oversight</h1>
+            <div style={{color: '#64748b', fontSize: '14px', marginTop: '4px'}}>Registry Hub • {staff?.fullName}</div>
           </div>
         </div>
-        <div className="mobile-nav-buttons" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-           <button 
-             className="mobile-logout-only" 
-             style={{...styles.btnPrimary, background: '#64748b', color: '#fff', marginTop: 0, width: 'auto'}} 
-             onClick={() => navigate('/faculty-settings')}
-           >
-             Settings
+        <div style={{ display: 'flex', gap: '12px' }}>
+           <button style={{...styles.btnSecondary, flex: 'none', padding: '10px 18px'}} onClick={toggleDarkMode}>
+             {darkMode ? '☀️ Light' : '🌙 Dark'}
            </button>
            <button 
-             className="mobile-logout-only" 
-             style={{...styles.btnPrimary, background: '#dc2626', color: '#fff', marginTop: 0, width: 'auto'}} 
+             style={{...styles.btnView, flex: 'none', padding: '10px 24px', background: '#dc2626'}} 
+             className="mobile-hide"
              onClick={handleLogout}
            >
-             Logout
+             Sign Out
            </button>
-           <button style={{...styles.btnPrimary, background: '#fff', color: '#1e293b', marginTop: 0, width: 'auto', border: '1px solid #e2e8f0'}} onClick={toggleDarkMode}>{darkMode ? 'Light' : 'Dark'}</button>
-           <button style={{...styles.btnPrimary, marginTop: 0, width: 'auto'}} onClick={() => navigate('/faculty-analytics')}>Analytics Hub</button>
         </div>
       </header>
 
-      {/* Summary KPI Widgets */}
-      <section style={styles.summaryGrid} className="summary-grid">
+      {/* Analytics Summary */}
+      <section style={styles.summaryGrid}>
         <div style={styles.summaryCard}>
-          <div style={styles.summaryLabel}>Cohort Size</div>
+          <div style={styles.cardAccent} />
+          <div style={styles.summaryLabel}>Total Students</div>
           <div style={styles.summaryValue}>{students.length}</div>
         </div>
         <div style={styles.summaryCard}>
-          <div style={styles.summaryLabel}>Avg Institutional CGPA</div>
+          <div style={{...styles.cardAccent, background: '#16a34a'}} />
+          <div style={styles.summaryLabel}>Institutional CGPA</div>
           <div style={styles.summaryValue}>{stats.avgCgpa}</div>
         </div>
         <div style={styles.summaryCard}>
-          <div style={styles.summaryLabel}>Dominant Skill</div>
-          <div style={{...styles.summaryValue, fontSize: '18px', marginTop: '6px'}}>{stats.topSkill}</div>
+          <div style={{...styles.cardAccent, background: '#ffe600'}} />
+          <div style={styles.summaryLabel}>Innovation Lead</div>
+          <div style={styles.summaryValue}>{stats.topSkill}</div>
         </div>
         <div style={styles.summaryCard}>
-          <div style={styles.summaryLabel}>Innovation Output</div>
-          <div style={styles.summaryValue}>{stats.totalProjects} <span style={{fontSize: '11px', opacity: 0.5}}>PRJ</span></div>
+          <div style={{...styles.cardAccent, background: '#0b4f00'}} />
+          <div style={styles.summaryLabel}>Project Output</div>
+          <div style={styles.summaryValue}>{stats.totalProjects}</div>
         </div>
       </section>
 
-      {/* Control Bar */}
-      <div style={styles.controlBar} className="control-bar">
-        <input id="student-search" name="student-search" style={styles.input} placeholder="Search by name or identifier..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
-        <select id="dept-filter" name="dept-filter" style={styles.select} value={filterDept} onChange={e => setFilterDept(e.target.value)}>
-          <option value="">Global Departments</option>
+      {/* Search & Filtering */}
+      <div style={styles.controlBar}>
+        <input 
+          style={styles.input} 
+          placeholder="Filter by name, ID or email address..." 
+          value={searchTerm} 
+          onChange={e => setSearchTerm(e.target.value)} 
+        />
+        <select style={styles.select} value={filterDept} onChange={e => setFilterDept(e.target.value)}>
+          <option value="">All Departments</option>
           {uniqueDepts.map(d => <option key={d} value={d}>{d}</option>)}
         </select>
-        <select id="section-filter" name="section-filter" style={styles.select} value={filterSection} onChange={e => setFilterSection(e.target.value)}>
+        <select style={styles.select} value={filterSection} onChange={e => setFilterSection(e.target.value)}>
            <option value="">All Sections</option>
-           {['A','B','C','D'].map(s => <option key={s} value={s}>Section {s}</option>)}
+           {['A','B','C','D','E'].map(s => <option key={s} value={s}>Section {s}</option>)}
         </select>
       </div>
 
-      {/* Student Catalog */}
+      {/* Student Registry Grid */}
       {isLoadingStudents ? (
-         <div style={{textAlign: 'center', padding: '100px'}}>⏳ Loading Student Registry...</div>
+         <div style={{textAlign: 'center', padding: '100px', fontSize: '18px', color: '#64748b'}}>
+           <div className="spinner">⌛</div> Synchronizing Registry...
+         </div>
       ) : (
-        <div style={styles.studentGrid} className="student-grid">
+        <div style={styles.studentGrid}>
           {filteredStudents.map(s => (
-            <div key={s._id} style={styles.studentCard} onMouseEnter={e => e.currentTarget.style.transform='translateY(-4px)'} onMouseLeave={e => e.currentTarget.style.transform='none'}>
-              <div style={styles.badge}>{s.section}</div>
+            <div key={s._id} style={styles.studentCard} className="student-card">
+              <div style={styles.badge}>Section {s.section}</div>
               <div style={styles.avatar}>
                 {s.portfolio?.profilePhoto ? (
-                  <img src={s.portfolio.profilePhoto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '16px' }} />
+                  <img src={s.portfolio.profilePhoto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
                   s.fullName?.[0] || 'S'
                 )}
@@ -261,33 +353,57 @@ function FacultyDashboard() {
               <span style={styles.cardId}>{s.studentId} • {s.department}</span>
               
               <div style={styles.metaGrid}>
-                <div><span style={styles.metaItem}>CGPA:</span><span style={{...styles.metaVal, color: '#16a34a'}}>{s.cgpa || 'N/A'}</span></div>
-                <div><span style={styles.metaItem}>Year:</span><span style={styles.metaVal}>{s.currentYear}</span></div>
-                <div><span style={styles.metaItem}>Projects:</span><span style={styles.metaVal}>{s.portfolio?.projects?.length || 0}</span></div>
-                <div><span style={styles.metaItem}>Status:</span><span style={styles.metaVal}>{s.portfolio?.isPublic ? 'Public' : 'Private'}</span></div>
+                <div>
+                  <div style={styles.metaLabel}>Academic CGPA</div>
+                  <div style={{...styles.metaVal, color: parseFloat(s.cgpa) >= 8.5 ? '#16a34a' : (darkMode ? '#fff' : '#1e293b')}}>
+                    {s.cgpa || '0.00'}
+                  </div>
+                </div>
+                <div>
+                  <div style={styles.metaLabel}>Current Year</div>
+                  <div style={styles.metaVal}>{s.currentYear || '1st'} Year</div>
+                </div>
+                <div>
+                  <div style={styles.metaLabel}>Projects</div>
+                  <div style={styles.metaVal}>{s.portfolio?.projects?.length || 0} Built</div>
+                </div>
+                <div>
+                  <div style={styles.metaLabel}>Profile Status</div>
+                  <div style={{...styles.metaVal, color: s.portfolio?.isPublic ? '#16a34a' : '#64748b'}}>
+                    {s.portfolio?.isPublic ? '• Public' : '• Private'}
+                  </div>
+                </div>
               </div>
 
-              <button style={styles.btnPrimary} onClick={() => navigate(`/student-details/${s.studentId || s._id}`)}>
-                View Professional Profile
-              </button>
+              <div style={styles.actionRow}>
+                <button 
+                  style={styles.btnView} 
+                  className="btn-view"
+                  onClick={() => navigate(`/student-details/${s.studentId || s._id}`)}
+                >
+                  View Full Portfolio
+                </button>
+                <button 
+                  style={styles.btnSecondary}
+                  onClick={() => window.location.href = `mailto:${s.email}`}
+                  title="Contact Student"
+                >
+                  ✉️
+                </button>
+              </div>
             </div>
           ))}
-          {filteredStudents.length === 0 && <div style={{gridColumn: 'span 3', textAlign: 'center', opacity: 0.5, padding: '60px'}}>No records found matching your query.</div>}
+          {filteredStudents.length === 0 && (
+            <div style={{gridColumn: 'span 3', textAlign: 'center', padding: '80px', background: 'rgba(0,0,0,0.02)', borderRadius: '24px'}}>
+              <div style={{fontSize: '40px', marginBottom: '16px'}}>🔍</div>
+              <h3 style={{margin: 0, color: '#1e293b'}}>No records found</h3>
+              <p style={{color: '#64748b'}}>Try adjusting your filters or search query</p>
+            </div>
+          )}
         </div>
       )}
-
-      <style>{`
-        @media (max-width: 850px) {
-          .faculty-page-container { margin-left: 0 !important; padding: 20px !important; }
-          .faculty-header { flex-direction: column; align-items: flex-start !important; gap: 15px; }
-          .summary-grid { grid-template-columns: 1fr !important; }
-          .control-bar { flex-direction: column; gap: 10px; }
-          .student-grid { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </div>
   );
 }
 
 export default FacultyDashboard;
-

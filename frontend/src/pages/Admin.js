@@ -19,6 +19,16 @@ function Admin() {
         sections: {}
     });
 
+    useEffect(() => {
+        const adminData = localStorage.getItem('admin');
+        if (!adminData) {
+            navigate('/');
+            return;
+        }
+        setAdmin(JSON.parse(adminData));
+        fetchAllData();
+    }, [navigate]);
+
     const fetchAllData = async () => {
         try {
             // Fetch students from backend
@@ -63,7 +73,7 @@ function Admin() {
                     avgSkillsPerStudent: fetchedStudents.length > 0 ? parseFloat((totalSkills / fetchedStudents.length).toFixed(1)) : 0,
                     totalAchievements: totalAchievements,
                     sections: fetchedStudents.reduce((acc, s) => {
-                        const sec = s.section || 'N/A';
+                        const sec = s.section || 'A';
                         acc[sec] = (acc[sec] || 0) + 1;
                         return acc;
                     }, {})
@@ -74,51 +84,38 @@ function Admin() {
         }
     };
 
-    useEffect(() => {
-        const adminUser = localStorage.getItem('admin');
-        if (!adminUser) {
-            navigate('/login');
-            return;
-        }
-        setAdmin(JSON.parse(adminUser));
-
-
-        fetchAllData();
-    }, [navigate]);
-
     const deleteStudent = async (email) => {
-        if (window.confirm(`Are you sure you want to delete the student with email ${email}? This action cannot be undone.`)) {
-            try {
-                const response = await fetch(`${API_URL}/api/auth/students/${email}`, {
-                    method: 'DELETE'
-                });
-                if (response.ok) {
-                    await fetchAllData();
-                    alert('Student deleted successfully');
-                } else {
-                    alert('Failed to delete student');
-                }
-            } catch (error) {
-                console.error('Delete error:', error);
-                alert('Error deleting student');
+        if (!window.confirm("Are you sure you want to delete this student permanently from the database?")) return;
+        try {
+            const response = await fetch(`${API_URL}/api/auth/students/${email}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                alert("Student deleted successfully");
+                fetchAllData();
+            } else {
+                throw new Error("Deletion failed");
             }
+        } catch (err) {
+            alert("Error: " + err.message);
         }
     };
 
     const deleteAllStudents = async () => {
-        if (!window.confirm('Are you sure you want to delete all students? This action cannot be undone.')) return;
+        if (!window.confirm("CRITICAL ACTION: Are you absolutely sure you want to delete ALL student records from the database? This cannot be undone.")) return;
+        const confirmCode = window.prompt("Type 'DELETE ALL' to confirm:");
+        if (confirmCode !== "DELETE ALL") return;
+
         try {
             const response = await fetch(`${API_URL}/api/auth/students`, {
                 method: 'DELETE'
             });
             if (response.ok) {
-                alert("All students have been deleted from the database.");
+                alert("Database purged successfully");
                 fetchAllData();
-            } else {
-                alert("Failed to delete all students.");
             }
         } catch (err) {
-            console.error("Delete all error:", err);
+            alert("Error: " + err.message);
         }
     };
 
@@ -128,17 +125,13 @@ function Admin() {
     };
 
     const handleBackup = () => {
-        const data = {
-            allStudents: students,
-            loginLogs: JSON.parse(localStorage.getItem('loginLogs') || '[]')
-        };
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `SIET_Database_Backup_${new Date().toISOString().split('T')[0]}.json`;
-        link.click();
-        URL.revokeObjectURL(url);
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(students));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", `student_backup_${new Date().toISOString().split('T')[0]}.json`);
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
     };
 
     const handleRestore = (e) => {
@@ -146,46 +139,46 @@ function Admin() {
         if (file) {
             const reader = new FileReader();
             reader.onload = (event) => {
-                alert("Restore from file currently only updates legacy localStorage. Please use registration for database updates.");
-                // Note: Restoring to database would require a bulk-insert API
+                const restoredData = JSON.parse(event.target.result);
+                console.log("Restored data length:", restoredData.length);
+                alert(`Backup containing ${restoredData.length} students loaded. (Simulated)`);
             };
             reader.readAsText(file);
         }
     };
 
     const styles = {
-        container: { minHeight: '100vh', backgroundColor: '#f1f2f6', fontFamily: "'Inter', sans-serif" },
-        header: { backgroundColor: '#1e5631', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'all 0.3s ease' },
-        logoutBtn: { padding: '10px 25px', backgroundColor: '#ffc107', color: '#1e5631', border: 'none', borderRadius: '25px', cursor: 'pointer', fontWeight: 'bold' },
-        main: { padding: 'min(40px, 4vw)', maxWidth: '1200px', margin: '0 auto' },
-        statsRow: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '40px' },
-        statCard: { backgroundColor: 'white', padding: '30px', borderRadius: '10px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', textAlign: 'center' },
-        statValue: { fontSize: 'clamp(28px, 6vw, 42px)', fontWeight: 'bold', color: '#1e5631', display: 'block' },
-        statLabel: { color: '#666', fontSize: '13px', fontWeight: '600', textTransform: 'uppercase' },
-        tableContainer: { backgroundColor: 'white', padding: '30px', borderRadius: '10px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)' },
+        container: { minHeight: '100vh', backgroundColor: '#f8fafc', fontFamily: "'Outfit', sans-serif" },
+        header: { 
+            backgroundColor: '#0b4f00', 
+            color: 'white', 
+            padding: '24px 5%', 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center', 
+            boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' 
+        },
+        btn: { padding: '12px 24px', borderRadius: '12px', border: 'none', cursor: 'pointer', fontWeight: '700', fontSize: '14px', transition: 'all 0.2s' },
+        main: { padding: '40px 5%', maxWidth: '1400px', margin: '0 auto' },
+        tableCard: { backgroundColor: 'white', border: '1px solid #e2e8f0', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.05)' },
         table: { width: '100%', borderCollapse: 'collapse' },
-        th: { textAlign: 'left', padding: '12px', borderBottom: '2px solid #f1f2f6', color: '#747d8c' },
-        td: { padding: '12px', borderBottom: '1px solid #f1f2f6' }
+        th: { textAlign: 'left', padding: '18px', backgroundColor: '#f8fafc', color: '#64748b', fontSize: '12px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid #e2e8f0' },
+        td: { padding: '18px', borderBottom: '1px solid #f1f5f9', color: '#1e293b', fontSize: '15px' },
+        tag: { padding: '4px 10px', borderRadius: '8px', fontSize: '12px', fontWeight: '700' }
     };
 
     const responsiveStyles = `
-        @media (max-width: 768px) {
-            .admin-header {
-                flex-direction: column !important;
-                text-align: center !important;
-                gap: 20px !important;
-            }
-            .admin-header-right {
-                flex-direction: column !important;
-                width: 100% !important;
-            }
-            .admin-header-right button, .admin-header-right label {
-                width: 100% !important;
-                text-align: center !important;
-            }
-            .admin-table-container {
-                overflow-x: auto !important;
-            }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+        
+        .admin-row:hover {
+            background-color: #f8fafc;
+        }
+
+        @media (max-width: 850px) {
+            .admin-header { flex-direction: column; gap: 20px; text-align: center; }
+            .admin-actions { flex-direction: column; width: 100%; }
+            .admin-actions > * { width: 100% !important; text-align: center; }
+            .admin-table-container { overflow-x: auto; }
         }
     `;
 
@@ -195,157 +188,121 @@ function Admin() {
         <div style={styles.container}>
             <style>{responsiveStyles}</style>
             <div style={styles.header} className="admin-header">
-                <h1 style={{ fontSize: 'clamp(20px, 5vw, 32px)', margin: 0, display: 'flex', alignItems: 'center', gap: '15px' }}>
-                    <img src="/siet.png" alt="SIET" style={{ height: '50px', backgroundColor: '#fff', borderRadius: '8px', padding: '4px' }} />
-                    Admin Control Panel
-                </h1>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }} className="admin-header-right">
-                    <button style={{ ...styles.logoutBtn, backgroundColor: '#2ed573', color: 'white' }} onClick={handleBackup}>📥 Backup Data</button>
-                    <label style={{ ...styles.logoutBtn, backgroundColor: '#747d8c', color: 'white', cursor: 'pointer' }}>
-                        📤 Restore
-                        <input type="file" style={{ display: 'none' }} onChange={handleRestore} accept=".json" />
-                    </label>
-                    <button style={styles.logoutBtn} onClick={handleLogout}>Logout</button>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                    <img src="/siet.png" alt="SIET" style={{ height: '50px', backgroundColor: '#fff', borderRadius: '12px', padding: '6px' }} />
+                    <div>
+                        <h1 style={{ fontSize: '24px', margin: 0 }}>System Administration</h1>
+                        <span style={{ opacity: 0.7, fontSize: '14px' }}>Global Portfolio Oversight</span>
+                    </div>
+                </div>
+                <div style={{ display: 'flex', gap: '12px' }} className="admin-actions">
+                    <button style={{ ...styles.btn, backgroundColor: '#16a34a', color: 'white' }} onClick={handleBackup}>Backup Database</button>
+                    <button style={{ ...styles.btn, backgroundColor: '#dc2626', color: 'white' }} onClick={handleLogout}>Logout</button>
                 </div>
             </div>
 
             <div style={styles.main}>
                 <AnalyticsDashboard />
                 
-                <div className="mobile-grid-2" style={styles.statsRow}>
-                    <div className="mobile-card" style={styles.statCard}>
-                        <span style={styles.statValue}>{stats.totalStudents}</span>
-                        <span style={styles.statLabel}>Total Students</span>
-                    </div>
-                    <div className="mobile-card" style={styles.statCard}>
-                        <span style={styles.statValue}>{stats.totalStaff}</span>
-                        <span style={styles.statLabel}>Total Staff</span>
-                    </div>
-                    <div className="mobile-card" style={styles.statCard}>
-                        <span style={styles.statValue}>{stats.totalPortfolios}</span>
-                        <span style={styles.statLabel}>Active Portfolios</span>
-                    </div>
-                    <div className="mobile-card mobile-grid-1" style={styles.statCard}>
-                        <div className="mobile-stack" style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', height: '100%', gap: '10px', minHeight: '50px' }}>
-                            {Object.entries(stats.sections).sort().map(([sec, count]) => (
-                                <div key={sec}>
-                                    <span style={{ ...styles.statValue, fontSize: '24px' }}>{count}</span>
-                                    <span style={styles.statLabel}>Sec {sec}</span>
-                                </div>
-                            ))}
-                        </div>
-                        <span style={{ ...styles.statLabel, display: 'block', marginTop: '10px', color: '#1e5631' }}>Section-wise Distribution</span>
-                    </div>
-                </div>
+                <h2 style={{ fontSize: '22px', fontWeight: '800', marginBottom: '24px', marginTop: '40px' }}>Database Maintenance</h2>
 
-                <div className="mobile-super-card admin-table-container" style={styles.tableContainer}>
-                    <div className="mobile-stack mobile-tight-spacing" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                        <h2 className="mobile-tiny-header">Student Management (Database)</h2>
-                        <button className="mobile-tiny-btn"
-                            style={{ ...styles.logoutBtn, backgroundColor: '#ff4757', color: 'white' }}
-                            onClick={deleteAllStudents}
-                        >
-                            ?? Delete All from DB
-                        </button>
-                    </div>
-                    {['A', 'B', 'C', 'D'].map(sectionKey => {
-                        const sectionStudents = students.filter(s => (s.section || 'A') === sectionKey);
-                        const isExpanded = expandedSection === sectionKey;
+                {['A', 'B', 'C', 'D'].map(sectionKey => {
+                    const sectionStudents = students.filter(s => (s.section || 'A') === sectionKey);
+                    const isExpanded = expandedSection === sectionKey;
 
-                        return (
-                            <div 
-                                key={sectionKey} 
-                                style={{ 
-                                    marginBottom: '20px', 
-                                    border: '1px solid #ddd', 
-                                    borderRadius: '12px', 
-                                    backgroundColor: '#fff',
-                                    boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-                                    overflow: 'hidden'
+                    return (
+                        <div key={sectionKey} style={{ marginBottom: '16px' }}>
+                            <div
+                                onClick={() => setExpandedSection(isExpanded ? null : sectionKey)}
+                                style={{
+                                    padding: '20px 24px',
+                                    background: isExpanded ? '#0b4f00' : 'white',
+                                    color: isExpanded ? 'white' : '#0b4f00',
+                                    borderRadius: isExpanded ? '20px 20px 0 0' : '20px',
+                                    boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    transition: 'all 0.3s ease',
+                                    border: `1px solid ${isExpanded ? '#0b4f00' : '#e2e8f0'}`,
+                                    fontWeight: '800'
                                 }}
                             >
-                                <div
-                                    onClick={() => setExpandedSection(isExpanded ? null : sectionKey)}
-                                    className="mobile-compact-card"
-                                    style={{
-                                        padding: '20px',
-                                        backgroundColor: isExpanded ? '#1e5631' : '#fff',
-                                        color: isExpanded ? '#fff' : '#1e5631',
-                                        cursor: 'pointer',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        transition: 'all 0.3s ease',
-                                        fontWeight: 'bold',
-                                        fontSize: '18px'
-                                    }}
-                                >
-                                    <div className="mobile-stack" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                                        <span style={{
-                                            backgroundColor: isExpanded ? '#ffc107' : '#1e5631',
-                                            color: isExpanded ? '#1e5631' : '#fff',
-                                            width: '35px',
-                                            height: '35px',
-                                            borderRadius: '50%',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center'
-                                        }}>
-                                            {sectionKey}
-                                        </span>
-                                        <span className="mobile-compact-text">Section {sectionKey} Management</span>
-                                    </div>
-                                    <div className="mobile-stack" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                                        <span className="mobile-compact-text" style={{ fontSize: '14px', opacity: 0.8 }}>{sectionStudents.length} Students</span>
-                                        <span>{isExpanded ? '▲' : '▼'}</span>
-                                    </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                    <span style={{ 
+                                        width: '32px', height: '32px', borderRadius: '10px', 
+                                        background: isExpanded ? '#ffe600' : '#0b4f00',
+                                        color: isExpanded ? '#0b4f00' : '#fff',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                    }}>
+                                        {sectionKey}
+                                    </span>
+                                    Section {sectionKey} Registry
                                 </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                                    <span style={{ fontSize: '14px', opacity: 0.8 }}>{sectionStudents.length} Students</span>
+                                    <span>{isExpanded ? '▼' : '▶'}</span>
+                                </div>
+                            </div>
 
-                                {isExpanded && (
-                                    <div className="mobile-card" style={{ padding: '20px', borderTop: '1px solid #eee', backgroundColor: '#fcfcfc' }}>
-                                        <table className="mobile-table" style={styles.table}>
+                            {isExpanded && (
+                                <div style={{ ...styles.tableCard, borderRadius: '0 0 24px 24px', borderTop: 'none' }}>
+                                    <div className="admin-table-container">
+                                        <table style={styles.table}>
                                             <thead>
                                                 <tr>
-                                                    <th className="mobile-compact-text" style={styles.th}>Full Name</th>
-                                                    <th className="mobile-compact-text" style={styles.th}>Email</th>
-                                                    <th className="mobile-compact-text" style={styles.th}>Department</th>
-                                                    <th className="mobile-compact-text" style={styles.th}>Actions</th>
+                                                    <th style={styles.th}>Full Name</th>
+                                                    <th style={styles.th}>Identification</th>
+                                                    <th style={styles.th}>Department</th>
+                                                    <th style={styles.th}>Portfolio Access</th>
+                                                    <th style={styles.th}>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {sectionStudents.length > 0 ? (
-                                                    sectionStudents.map((s, idx) => (
-                                                        <tr key={idx}>
-                                                            <td className="mobile-compact-text mobile-name-wrap" style={styles.td}>{s.fullName}</td>
-                                                            <td className="mobile-compact-text" style={styles.td}>{s.email}</td>
-                                                            <td className="mobile-compact-text" style={styles.td}>{s.department}</td>
-                                                            <td style={styles.td}>
-                                                                <button
-                                                                    className="mobile-tiny-btn"
-                                                                    style={{ ...styles.logoutBtn, backgroundColor: '#ff4757', color: 'white', padding: '5px 12px' }}
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        deleteStudent(s.email);
-                                                                    }}
+                                                {sectionStudents.map((s, idx) => (
+                                                    <tr key={idx} className="admin-row">
+                                                        <td style={styles.td}>
+                                                            <div style={{ fontWeight: '700' }}>{s.fullName}</div>
+                                                            <div style={{ fontSize: '12px', color: '#64748b' }}>{s.email}</div>
+                                                        </td>
+                                                        <td style={styles.td}>{s.studentId}</td>
+                                                        <td style={styles.td}>{s.department}</td>
+                                                        <td style={styles.td}>
+                                                            <span style={{ 
+                                                                ...styles.tag, 
+                                                                backgroundColor: s.portfolio?.isPublic ? '#f0fdf4' : '#f1f5f9',
+                                                                color: s.portfolio?.isPublic ? '#16a34a' : '#64748b'
+                                                            }}>
+                                                                {s.portfolio?.isPublic ? 'Public' : 'Protected'}
+                                                            </span>
+                                                        </td>
+                                                        <td style={styles.td}>
+                                                            <div style={{ display: 'flex', gap: '8px' }}>
+                                                                <button 
+                                                                    style={{ ...styles.btn, padding: '6px 14px', fontSize: '12px', backgroundColor: '#f1f5f9', color: '#1e293b' }}
+                                                                    onClick={() => navigate(`/student-details/${s.studentId}`)}
                                                                 >
-                                                                    Delete
+                                                                    Modify
                                                                 </button>
-                                                            </td>
-                                                        </tr>
-                                                    ))
-                                                ) : (
-                                                    <tr>
-                                                        <td colSpan="4" style={{ textAlign: 'center', padding: '20px', color: '#666' }}>No students found in Section {sectionKey}</td>
+                                                                <button 
+                                                                    style={{ ...styles.btn, padding: '6px 14px', fontSize: '12px', backgroundColor: '#fee2e2', color: '#dc2626' }}
+                                                                    onClick={(e) => { e.stopPropagation(); deleteStudent(s.email); }}
+                                                                >
+                                                                    Purge
+                                                                </button>
+                                                            </div>
+                                                        </td>
                                                     </tr>
-                                                )}
+                                                ))}
                                             </tbody>
                                         </table>
                                     </div>
-                                )}
-                            </div>
-                        );
-                    })}
-                </div>
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );

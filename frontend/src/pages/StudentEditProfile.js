@@ -139,14 +139,20 @@ function StudentEditProfile() {
         return;
       }
 
-      // Update localStorage so UI reflects changes immediately
-      const updatedUser = { 
+      // Update localStorage so UI reflects changes immediately (Ultra-slimming to avoid QuotaExceededError)
+      const slimUser = { 
         ...user, 
         ...data.user, 
-        portfolio: portData.user.portfolio 
+        portfolio: {
+            ...portData.user.portfolio,
+            profilePhoto: '',
+            certificates: (portData.user.portfolio.certificates || []).map(c => ({ ...c, file: '' })),
+            projects: (portData.user.portfolio.projects || []).map(p => ({ ...p, file: '', presentationPhoto: '', journalFile: '', certificateFile: '' })),
+            achievements: (portData.user.portfolio.achievements || []).map(a => ({ ...a, file: '' }))
+        }
       };
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-      localStorage.setItem('portfolio', JSON.stringify(portData.user.portfolio));
+      localStorage.setItem('user', JSON.stringify(slimUser));
+      localStorage.setItem('portfolio', JSON.stringify(slimUser.portfolio));
 
       setMessage('Profile and Photo updated successfully!');
       setTimeout(() => {

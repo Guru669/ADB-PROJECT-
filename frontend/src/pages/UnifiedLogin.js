@@ -31,11 +31,25 @@ function UnifiedLogin() {
             const data = await response.json();
             if (!response.ok) throw new Error(data || 'Login failed');
             localStorage.setItem('token', data.token);
-            if (data.user.role === 'student') {
-                localStorage.setItem('user', JSON.stringify(data.user));
+            const slimUser = { ...data.user };
+            if (slimUser.portfolio) {
+                slimUser.portfolio = { 
+                    ...slimUser.portfolio, 
+                    profilePhoto: '', 
+                    certificates: (slimUser.portfolio.certificates || []).map(c => ({ ...c, file: '' })),
+                    projects: (slimUser.portfolio.projects || []).map(p => ({ ...p, file: '', presentationPhoto: '', journalFile: '', certificateFile: '' })),
+                    achievements: (slimUser.portfolio.achievements || []).map(a => ({ ...a, file: '' }))
+                };
+            }
+
+            if (data.user.role === 'student' || data.user.role === 'user') {
+                localStorage.setItem('user', JSON.stringify(slimUser));
+                if (data.user.portfolio) {
+                    localStorage.setItem('portfolio', JSON.stringify(slimUser.portfolio));
+                }
                 navigate('/dashboard');
-            } else if (data.user.role === 'staff') {
-                localStorage.setItem('staff', JSON.stringify(data.user));
+            } else if (data.user.role === 'staff' || data.user.role === 'admin') {
+                localStorage.setItem('staff', JSON.stringify(slimUser));
                 navigate('/staff-dashboard');
             }
         } catch (err) { setError(err.message); }

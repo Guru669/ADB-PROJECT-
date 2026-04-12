@@ -63,6 +63,26 @@ function Home() {
   const sections = ['A', 'B', 'C', 'D', 'E'];
   useEffect(() => {
     setIsLoaded(true);
+
+    // NUCLEAR RESET: One-time purge of legacy Base64 bloat to fix QuotaExceededError
+    if (!localStorage.getItem('storage_integrity_v1')) {
+      console.log("Cleaning legacy storage bloat...");
+      const savedUser = localStorage.getItem('user');
+      const savedStaff = localStorage.getItem('staff');
+      const savedAdmin = localStorage.getItem('admin');
+      const savedToken = localStorage.getItem('token');
+      
+      localStorage.clear(); // Wipe everything
+      
+      // Restore essential session keys ONLY
+      if (savedUser) localStorage.setItem('user', savedUser);
+      if (savedStaff) localStorage.setItem('staff', savedStaff);
+      if (savedAdmin) localStorage.setItem('admin', savedAdmin);
+      if (savedToken) localStorage.setItem('token', savedToken);
+      
+      localStorage.setItem('storage_integrity_v1', 'true'); // Mark as cleaned
+    }
+
     // Add keyboard shortcut for admin access
     const handleKeyPress = (e) => {
       // Ctrl + Shift + A to open admin login
@@ -155,23 +175,28 @@ function Home() {
       existingLogs.push(loginDataLog);
       localStorage.setItem('loginLogs', JSON.stringify(existingLogs));
 
-      if (user.role === 'student') {
-        localStorage.setItem('user', JSON.stringify(user));
-        if (user.portfolio) {
-          localStorage.setItem('portfolio', JSON.stringify(user.portfolio));
-        }
-        setShowLoginPanel(false);
-        navigate('/dashboard');
-      } else if (user.role === 'staff' || user.role === 'admin') {
-        if (user.role === 'staff') {
-          localStorage.setItem('staff', JSON.stringify(user));
+      localStorage.setItem('token', data.token);
+      const slimUser = { ...data.user };
+      if (slimUser.portfolio) {
+        slimUser.portfolio = { 
+          ...slimUser.portfolio, 
+          profilePhoto: '', 
+          certificates: (slimUser.portfolio.certificates || []).map(c => ({ ...c, file: '' })),
+          projects: (slimUser.portfolio.projects || []).map(p => ({ ...p, file: '', presentationPhoto: '', journalFile: '', certificateFile: '' })),
+          achievements: (slimUser.portfolio.achievements || []).map(a => ({ ...a, file: '' }))
+        };
+      }
+      if (data.user.role === 'student' || data.user.role === 'user') {
+          localStorage.setItem('user', JSON.stringify(slimUser));
+          if (data.user.portfolio) {
+              localStorage.setItem('portfolio', JSON.stringify(slimUser.portfolio));
+          }
+          setShowLoginPanel(false);
+          navigate('/dashboard');
+      } else if (data.user.role === 'staff' || data.user.role === 'admin') {
+          localStorage.setItem('staff', JSON.stringify(slimUser));
           setShowLoginPanel(false);
           navigate('/staff-dashboard');
-        } else {
-          localStorage.setItem('admin', JSON.stringify(user));
-          setShowLoginPanel(false);
-          navigate('/admin');
-        }
       } else {
         setLoginError('Unknown user role');
       }

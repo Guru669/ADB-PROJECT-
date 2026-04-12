@@ -179,8 +179,20 @@ function Dashboard() {
 
       setUser(updatedUser);
       setPortfolio(portData.user?.portfolio || {});
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-      localStorage.setItem('portfolio', JSON.stringify(portData.user?.portfolio || {}));
+      
+      // Slim sync for localStorage (avoid QuotaExceededError)
+      const slimUser = { ...updatedUser };
+      if (slimUser.portfolio) {
+          slimUser.portfolio = { 
+            ...slimUser.portfolio, 
+            profilePhoto: '', 
+            certificates: (slimUser.portfolio.certificates || []).map(c => ({ ...c, file: '' })),
+            projects: (slimUser.portfolio.projects || []).map(p => ({ ...p, file: '', presentationPhoto: '', journalFile: '', certificateFile: '' })),
+            achievements: (slimUser.portfolio.achievements || []).map(a => ({ ...a, file: '' }))
+          };
+      }
+      localStorage.setItem('user', JSON.stringify(slimUser));
+      localStorage.setItem('portfolio', JSON.stringify(slimUser.portfolio || {}));
       setProfileMessage('Profile updated successfully.');
       setIsProfileEditing(false);
     } catch (error) {
