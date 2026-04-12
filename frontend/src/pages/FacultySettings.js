@@ -258,22 +258,26 @@ function FacultySettings() {
   };
 
   const responsiveStyles = `
-    @media (max-width: 768px) {
+    @media (max-width: 850px) {
       .settings-container {
         margin-left: 0 !important;
+        padding: 20px !important;
       }
       .settings-header {
         flex-direction: column !important;
-        text-align: center !important;
+        align-items: flex-start !important;
         gap: 20px !important;
-        padding: 20px !important;
+        padding: 15px !important;
       }
       .settings-header-right {
-        flex-direction: column !important;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
         width: 100% !important;
+        gap: 10px !important;
       }
       .settings-header-right button {
         width: 100% !important;
+        padding: 10px !important;
       }
       .settings-main {
         padding: 15px !important;
@@ -342,8 +346,11 @@ function FacultySettings() {
             <div style={styles.settingItem}>
               <span style={styles.settingLabel}>Email Alerts</span>
               <div
+                role="button"
+                tabIndex={0}
                 style={{ ...styles.toggleSwitch, ...(settings.notifications.emailNotifications ? styles.toggleSwitchActive : {}) }}
                 onClick={() => handleSettingChange('notifications', 'emailNotifications', !settings.notifications.emailNotifications)}
+                onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleSettingChange('notifications', 'emailNotifications', !settings.notifications.emailNotifications)}
               >
                 <div style={{ ...styles.toggleSlider, ...(settings.notifications.emailNotifications ? styles.toggleSliderActive : {}) }}></div>
               </div>
@@ -351,8 +358,11 @@ function FacultySettings() {
             <div style={styles.settingItem}>
               <span style={styles.settingLabel}>New Student Alerts</span>
               <div
+                role="button"
+                tabIndex={0}
                 style={{ ...styles.toggleSwitch, ...(settings.notifications.newStudentAlerts ? styles.toggleSwitchActive : {}) }}
                 onClick={() => handleSettingChange('notifications', 'newStudentAlerts', !settings.notifications.newStudentAlerts)}
+                onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleSettingChange('notifications', 'newStudentAlerts', !settings.notifications.newStudentAlerts)}
               >
                 <div style={{ ...styles.toggleSlider, ...(settings.notifications.newStudentAlerts ? styles.toggleSliderActive : {}) }}></div>
               </div>

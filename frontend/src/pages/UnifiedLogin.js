@@ -196,8 +196,8 @@ function UnifiedLogin() {
                     <p style={{ color: '#64748b', marginBottom: '34px' }}>Sign in to your professional portal.</p>
                     {error && <div style={{ color: '#dc3545', marginBottom: '20px' }}>{error}</div>}
                     <form onSubmit={handleSubmit}>
-                        <input name="identifier" value={formData.identifier} style={styles.input} placeholder="Email or Student ID" onChange={handleChange} />
-                        <input name="password" value={formData.password} type="password" style={styles.input} placeholder="Password" onChange={handleChange} />
+                        <input id="identifier" name="identifier" value={formData.identifier} style={styles.input} placeholder="Email or Student ID" onChange={handleChange} />
+                        <input id="password" name="password" value={formData.password} type="password" style={styles.input} placeholder="Password" onChange={handleChange} />
                         <button type="submit" style={styles.button} disabled={isLoading}>
                             {isLoading ? 'Loading...' : 'Sign In'}
                         </button>

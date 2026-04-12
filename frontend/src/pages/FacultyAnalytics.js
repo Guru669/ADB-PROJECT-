@@ -31,7 +31,7 @@ function FacultyAnalytics() {
           const students = await response.json();
           // Sync with localStorage
           localStorage.setItem('allStudents', JSON.stringify(students));
-          
+
           const departments = {};
           const sections = {};
           const skillsList = {};
@@ -67,7 +67,7 @@ function FacultyAnalytics() {
             skillsDistribution: Object.entries(skillsList).sort((a, b) => b[1] - a[1]).slice(0, 10),
             projectStats: {
               totalProjects: students.reduce((acc, s) => acc + (s.portfolio?.projects?.length || 0), 0),
-              avgProjectsPerStudent: students.length > 0 ? 
+              avgProjectsPerStudent: students.length > 0 ?
                 (students.reduce((acc, s) => acc + (s.portfolio?.projects?.length || 0), 0) / students.length).toFixed(1) : 0,
               totalCertificates: students.reduce((acc, s) => acc + (s.portfolio?.certificates?.length || 0), 0),
               totalAchievements: students.reduce((acc, s) => acc + (s.portfolio?.achievements?.length || 0), 0)
@@ -151,8 +151,8 @@ function FacultyAnalytics() {
   };
 
   const styles = {
-    container: { 
-      minHeight: '100vh', 
+    container: {
+      minHeight: '100vh',
       background: darkMode ? '#121212' : '#ffffff',
       fontFamily: "'Inter', Arial, sans-serif",
       marginLeft: '260px',
@@ -165,8 +165,8 @@ function FacultyAnalytics() {
       width: '400px',
       height: '400px',
       borderRadius: '50%',
-      background: darkMode 
-        ? 'linear-gradient(135deg, rgba(255, 230, 0, 0.05) 0%, rgba(255, 230, 0, 0.02) 100%)' 
+      background: darkMode
+        ? 'linear-gradient(135deg, rgba(255, 230, 0, 0.05) 0%, rgba(255, 230, 0, 0.02) 100%)'
         : 'linear-gradient(135deg, rgba(11, 79, 0, 0.08) 0%, rgba(11, 79, 0, 0.03) 100%)',
       top: '-100px',
       right: '-100px',
@@ -366,22 +366,29 @@ function FacultyAnalytics() {
   };
 
   const responsiveStyles = `
-    @media (max-width: 768px) {
+    @media (max-width: 850px) {
       .analytics-container {
         margin-left: 0 !important;
+        padding: 20px !important;
       }
       .analytics-header {
         flex-direction: column !important;
-        text-align: center !important;
+        align-items: flex-start !important;
         gap: 20px !important;
-        padding: 20px !important;
+        padding: 15px !important;
       }
       .analytics-header-right {
-        flex-direction: column !important;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
         width: 100% !important;
+        gap: 10px !important;
       }
       .analytics-header-right button {
         width: 100% !important;
+        padding: 10px !important;
+      }
+      .stats-container {
+        grid-template-columns: 1fr !important;
       }
       .bar-item {
         flex-direction: column !important;
@@ -413,18 +420,18 @@ function FacultyAnalytics() {
           </div>
           <div style={{ display: 'flex', gap: 15 }} className="analytics-header-right">
             <button
-             style={styles.topActionPrimaryBtn}
-             onClick={toggleDarkMode}
+              style={styles.topActionPrimaryBtn}
+              onClick={toggleDarkMode}
             >
-             {darkMode ? 'Light' : 'Dark'}
+              {darkMode ? 'Light' : 'Dark'}
             </button>
             <button
-             style={styles.topActionBtn}
-             onClick={() => navigate('/staff-dashboard')}
+              style={styles.topActionBtn}
+              onClick={() => navigate('/staff-dashboard')}
             >
-             Students
+              Students
             </button>
-            <button 
+            <button
               style={styles.topActionBtn}
               onClick={() => navigate('/faculty-settings')}
             >
@@ -454,7 +461,7 @@ function FacultyAnalytics() {
               💾 Save Analytics CSV
             </button>
           </div>
-          <div style={styles.statsContainer}>
+          <div style={styles.statsContainer} className="stats-container">
             <div style={styles.statCard}>
               <div style={styles.statNumber}>{analyticsData.totalStudents}</div>
               <div style={styles.statLabel}>Total Students</div>
@@ -482,7 +489,7 @@ function FacultyAnalytics() {
                   <div key={dept} style={styles.barItem} className="bar-item">
                     <div style={styles.barLabel} className="bar-label">{dept}</div>
                     <div style={styles.barContainer}>
-                      <div style={{...styles.barFill, width: `${percentage}%`}}>
+                      <div style={{ ...styles.barFill, width: `${percentage}%` }}>
                         {count}
                       </div>
                     </div>
@@ -502,7 +509,7 @@ function FacultyAnalytics() {
                   <div key={dept} style={styles.barItem} className="bar-item">
                     <div style={styles.barLabel} className="bar-label">{dept}</div>
                     <div style={styles.barContainer}>
-                      <div style={{...styles.barFill, width: `${Math.max(percentage, 5)}%`, backgroundColor: '#ffc107', color: '#1e5631'}}>
+                      <div style={{ ...styles.barFill, width: `${Math.max(percentage, 5)}%`, backgroundColor: '#ffc107', color: '#1e5631' }}>
                         {count}
                       </div>
                     </div>
@@ -533,7 +540,7 @@ function FacultyAnalytics() {
                   <div key={section} style={styles.barItem} className="bar-item">
                     <div style={styles.barLabel} className="bar-label">Section {section}</div>
                     <div style={styles.barContainer}>
-                      <div style={{...styles.barFill, width: `${percentage}%`}}>
+                      <div style={{ ...styles.barFill, width: `${percentage}%` }}>
                         {count}
                       </div>
                     </div>

@@ -260,37 +260,37 @@ function Register() {
 
                     <form onSubmit={handleSubmit}>
                         <div className="mobile-grid-1 mobile-tight-spacing" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
-                            <input className="mobile-tiny-input" name="fullName" style={styles.input} placeholder="Full Name" onChange={handleChange} required />
-                            <input className="mobile-tiny-input" name="email" type="email" style={styles.input} placeholder="Email" onChange={handleChange} required />
-                            <input className="mobile-tiny-input" name={activeTab === 'student' ? 'studentId' : 'staffId'} style={styles.input} placeholder={activeTab === 'student' ? 'Student ID' : 'Staff ID'} onChange={handleChange} required />
-                            <select className="mobile-tiny-input" name="department" style={styles.input} onChange={handleChange} required>
+                            <input id="fullName" className="mobile-tiny-input" name="fullName" style={styles.input} placeholder="Full Name" onChange={handleChange} required />
+                            <input id="email" className="mobile-tiny-input" name="email" type="email" style={styles.input} placeholder="Email" onChange={handleChange} required />
+                            <input id={activeTab === 'student' ? 'studentId' : 'staffId'} className="mobile-tiny-input" name={activeTab === 'student' ? 'studentId' : 'staffId'} style={styles.input} placeholder={activeTab === 'student' ? 'Student ID' : 'Staff ID'} onChange={handleChange} required />
+                            <select id="department" className="mobile-tiny-input" name="department" style={styles.input} onChange={handleChange} required>
                                 <option value="">Department</option>
                                 {departments.map(d => <option key={d} value={d}>{d}</option>)}
                             </select>
                             {activeTab === 'student' && (
                                 <>
-                                    <input className="mobile-tiny-input" name="phone" style={styles.input} placeholder="Phone Number" onChange={handleChange} />
-                                    <input className="mobile-tiny-input" name="address" style={styles.input} placeholder="Address" onChange={handleChange} />
-                                    <input className="mobile-tiny-input" name="dateOfBirth" type="date" style={styles.input} onChange={handleChange} />
-                                    <select className="mobile-tiny-input" name="gender" style={styles.input} onChange={handleChange}>
+                                    <input id="phone" className="mobile-tiny-input" name="phone" style={styles.input} placeholder="Phone Number" onChange={handleChange} />
+                                    <input id="address" className="mobile-tiny-input" name="address" style={styles.input} placeholder="Address" onChange={handleChange} />
+                                    <input id="dateOfBirth" className="mobile-tiny-input" name="dateOfBirth" type="date" style={styles.input} onChange={handleChange} />
+                                    <select id="gender" className="mobile-tiny-input" name="gender" style={styles.input} onChange={handleChange}>
                                         <option value="">Gender</option>
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
                                         <option value="Other">Other</option>
                                     </select>
-                                    <input className="mobile-tiny-input" name="umisNumber" style={styles.input} placeholder="UMIS Number" onChange={handleChange} />
-                                    <select className="mobile-tiny-input" name="section" style={styles.input} onChange={handleChange}>
+                                    <input id="umisNumber" className="mobile-tiny-input" name="umisNumber" style={styles.input} placeholder="UMIS Number" onChange={handleChange} />
+                                    <select id="section" className="mobile-tiny-input" name="section" style={styles.input} onChange={handleChange}>
                                         <option value="">Section</option>
                                         {['A', 'B', 'C', 'D', 'E'].map(s => <option key={s} value={s}>{s}</option>)}
                                     </select>
-                                    <input className="mobile-tiny-input" name="currentYear" style={styles.input} placeholder="Current Year" onChange={handleChange} />
-                                    <input className="mobile-tiny-input" name="currentSemester" style={styles.input} placeholder="Current Semester" onChange={handleChange} />
-                                    <input className="mobile-tiny-input" name="cgpa" type="number" step="0.01" style={styles.input} placeholder="Cumulative GPA" onChange={handleChange} />
-                                    <input className="mobile-tiny-input" name="specialization" style={styles.input} placeholder="Specialization" onChange={handleChange} />
+                                    <input id="currentYear" className="mobile-tiny-input" name="currentYear" style={styles.input} placeholder="Current Year" onChange={handleChange} />
+                                    <input id="currentSemester" className="mobile-tiny-input" name="currentSemester" style={styles.input} placeholder="Current Semester" onChange={handleChange} />
+                                    <input id="cgpa" className="mobile-tiny-input" name="cgpa" type="number" step="0.01" style={styles.input} placeholder="Cumulative GPA" onChange={handleChange} />
+                                    <input id="specialization" className="mobile-tiny-input" name="specialization" style={styles.input} placeholder="Specialization" onChange={handleChange} />
                                 </>
                             )}
-                            <input className="mobile-tiny-input" name="password" type="password" style={styles.input} placeholder="Password" onChange={handleChange} required />
-                            <input className="mobile-tiny-input" name="confirmPassword" type="password" style={styles.input} placeholder="Confirm Password" onChange={handleChange} required />
+                            <input id="password" data-lpignore="true" className="mobile-tiny-input" name="password" type="password" style={styles.input} placeholder="Password" onChange={handleChange} required />
+                            <input id="confirmPassword" data-lpignore="true" className="mobile-tiny-input" name="confirmPassword" type="password" style={styles.input} placeholder="Confirm Password" onChange={handleChange} required />
                         </div>
                         <button
                             type="submit"

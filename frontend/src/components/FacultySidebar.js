@@ -97,7 +97,7 @@ function FacultySidebar({ darkMode, onLogout }) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const responsiveStyles = `
-    @media (max-width: 768px) {
+    @media (max-width: 850px) {
       .faculty-sidebar {
         transform: translateX(${isOpen ? '0' : '-100%'});
         width: 240px !important;
@@ -156,34 +156,37 @@ function FacultySidebar({ darkMode, onLogout }) {
       </div>
       
       <nav style={styles.nav}>
-        {menuItems.map(item => (
-          <a
-            key={item.id}
-            href={item.path}
-            style={{
-              ...styles.menuItem,
-              ...(location.pathname === item.path ? styles.menuItemActive : {})
-            }}
-            onClick={(e) => {
-              e.preventDefault();
-              navigate(item.path);
-            }}
-            onMouseEnter={(e) => {
-              if (location.pathname !== item.path) {
-                e.target.style.background = styles.menuItemHover.background;
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (location.pathname !== item.path) {
-                e.target.style.background = 'transparent';
-              }
-            }}
-          >
-            <span style={styles.icon}>{item.icon}</span>
-            <span style={styles.label}>{item.label}</span>
-          </a>
-        ))}
+        {menuItems.map(item => {
+          const isActive = location.pathname === item.path;
+          return (
+            <a
+              key={item.id}
+              href={item.path}
+              className={`faculty-sidebar-link ${isActive ? 'active' : ''}`}
+              style={{
+                ...styles.menuItem,
+                ...(isActive ? styles.menuItemActive : {})
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                navigate(item.path);
+              }}
+            >
+              <span style={styles.icon}>{item.icon}</span>
+              <span style={styles.label}>{item.label}</span>
+            </a>
+          );
+        })}
       </nav>
+      <style>{`
+        .faculty-sidebar-link:hover {
+          background: ${styles.menuItemHover.background} !important;
+        }
+        .faculty-sidebar-link.active {
+          background: ${styles.menuItemActive.background} !important;
+          border-left-color: ${styles.menuItemActive.borderLeftColor} !important;
+        }
+      `}</style>
       
       <div style={styles.footer}>
         <button style={styles.logoutBtn} onClick={onLogout}>

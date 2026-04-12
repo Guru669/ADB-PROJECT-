@@ -435,15 +435,46 @@ function Dashboard() {
 
   const logout = () => { localStorage.clear(); navigate('/'); };
 
+  const responsiveStyles = `
+    @media (max-width: 1024px) {
+      .dashboard-main { padding: 20px !important; }
+    }
+    @media (max-width: 768px) {
+      .dashboard-header { flex-direction: column; gap: 15px; text-align: center; padding: 20px !important; height: auto !important; }
+      .dashboard-nav { flex-direction: column !important; padding: 10px !important; height: auto !important; }
+      .dashboard-nav-tabs { width: 100%; display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+      .dashboard-nav-tabs button { width: 100% !important; padding: 10px !important; font-size: 11px !important; }
+      .dashboard-nav-actions { width: 100%; justify-content: space-between; padding: 10px 0 !important; }
+      .dashboard-nav-actions button { flex: 1; }
+      
+      .profile-info-grid { grid-template-columns: 1fr !important; }
+      .profile-header { flex-direction: column !important; text-align: center !important; gap: 20px !important; }
+      .profile-photo-wrap { margin: 0 auto !important; }
+      
+      .edit-profile-grid { grid-template-columns: 1fr !important; }
+      .edit-profile-left { display: flex; flex-direction: column; align-items: center; }
+      
+      .stats-summary-grid { grid-template-columns: 1fr !important; }
+    }
+    @media (max-width: 480px) {
+      .dashboard-nav-tabs { grid-template-columns: 1fr !important; }
+      .dashboard-title { font-size: 24px !important; }
+      .profile-name { font-size: 28px !important; }
+      .form-grid-3 { grid-template-columns: 1fr !important; }
+      .form-grid-4 { grid-template-columns: 1fr !important; }
+    }
+  `;
+
   return (
     <div style={styles.page}>
+      <style>{responsiveStyles}</style>
       <div style={styles.decorCircle1}></div>
       <div style={styles.decorCircle2}></div>
-      <header className="mobile-nav" style={styles.header}>
+      <header className="mobile-nav dashboard-header" style={styles.header}>
         <div className="mobile-stack" style={styles.logoWrap}>
           <img src="/siet.png" alt="SIET Logo" style={styles.logo} />
           <div className="mobile-center">
-            <h1 style={styles.title}>Student Dashboard</h1>
+            <h1 style={styles.title} className="dashboard-title">Student Dashboard</h1>
             <div style={styles.statusText}>Welcome back, {user?.fullName || 'Student'}</div>
           </div>
         </div>
@@ -452,21 +483,21 @@ function Dashboard() {
         </div>
       </header>
 
-      <nav className="mobile-stack" style={styles.nav}>
-        <div className="mobile-grid-2" style={styles.navTabs}>
+      <nav className="mobile-stack dashboard-nav" style={styles.nav}>
+        <div className="mobile-grid-2 dashboard-nav-tabs" style={styles.navTabs}>
           {['profile', 'skills', 'certificates', 'projects', 'journal', 'analytics', 'settings'].map(tab => (
             <button key={tab} className="mobile-full-width" style={styles.navItem(activeTab === tab)} onClick={() => setActiveTab(tab)}>
               {tab}
             </button>
           ))}
         </div>
-        <div className="mobile-stack mobile-nav-buttons" style={styles.navActions}>
+        <div className="mobile-stack mobile-nav-buttons dashboard-nav-actions" style={styles.navActions}>
           <button className="mobile-full-width" style={styles.btn} onClick={() => setShowQR(true)}>Show QR</button>
           <button className="mobile-full-width" style={{ ...styles.btn, backgroundColor: 'transparent', border: '1px solid #0b4f00', color: '#0b4f00' }}>Export Data</button>
         </div>
       </nav>
 
-      <main style={styles.main}>
+      <main style={styles.main} className="dashboard-main">
         {activeTab === 'profile' && (
           isProfileEditing ? (
             <div className="mobile-super-card" style={{ ...styles.card, padding: '16px' }}>
@@ -494,8 +525,8 @@ function Dashboard() {
                 </p>
               )}
 
-              <div className="mobile-stack mobile-grid-1" style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '18px', marginBottom: '18px' }}>
-                <div className="mobile-center">
+              <div className="mobile-stack mobile-grid-1 edit-profile-grid" style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '18px', marginBottom: '18px' }}>
+                <div className="mobile-center edit-profile-left">
                   <div style={{ width: '200px', height: '200px', backgroundColor: '#f8fafc', border: '2px solid #0b4f00', borderRadius: '50%', overflow: 'hidden', marginBottom: '10px' }}>
                     {profileForm.profilePhoto ? <img src={profileForm.profilePhoto} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ fontSize: '100px', textAlign: 'center', lineHeight: '200px' }}>???</div>}
                   </div>
@@ -532,7 +563,7 @@ function Dashboard() {
                   </div>
                 </div>
 
-                <div className="mobile-grid-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '12px' }}>
+                <div className="mobile-grid-1 form-grid-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '12px' }}>
                   {[
                     { key: 'fullName', label: 'Full Name' },
                     { key: 'email', label: 'Email', readOnly: true },
@@ -552,6 +583,7 @@ function Dashboard() {
                     <div key={field.key}>
                       <div className="mobile-compact-text" style={{ fontSize: '12px', color: '#64748b', marginBottom: '6px', fontWeight: '700' }}>{field.label}</div>
                       <input
+                        id={field.key}
                         name={field.key}
                         value={profileForm[field.key] || ''}
                         readOnly={field.readOnly}
@@ -567,6 +599,7 @@ function Dashboard() {
               <div className="mobile-full-width">
                 <div className="mobile-compact-text" style={{ fontSize: '12px', color: '#64748b', marginBottom: '6px', fontWeight: '700' }}>Bio</div>
                 <textarea
+                  id="bio"
                   name="bio"
                   value={profileForm.bio || ''}
                   onChange={handleProfileInputChange}
@@ -577,12 +610,12 @@ function Dashboard() {
             </div>
           ) : (
             <div style={styles.card}>
-              <div style={{ display: 'flex', gap: '30px', flexWrap: 'wrap', alignItems: 'center' }}>
-                <div style={{ width: '180px', height: '180px', backgroundColor: '#f8fafc', border: '2px solid #0b4f00', borderRadius: '50%', overflow: 'hidden' }}>
-                  {profileForm.profilePhoto ? <img src={profileForm.profilePhoto} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ fontSize: '100px', textAlign: 'center', lineHeight: '200px' }}>👤</div>}
+              <div style={{ display: 'flex', gap: '30px', flexWrap: 'wrap', alignItems: 'center' }} className="profile-header">
+                <div style={{ width: '180px', height: '180px', backgroundColor: '#f8fafc', border: '2px solid #0b4f00', borderRadius: '50%', overflow: 'hidden' }} className="profile-photo-wrap">
+                  {profileForm.profilePhoto ? <img src={profileForm.profilePhoto} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ fontSize: '100px', textAlign: 'center', lineHeight: '180px' }}>👤</div>}
                 </div>
                 <div style={{ flex: 1 }}>
-                  <h2 style={{ fontSize: '38px', fontWeight: '800', letterSpacing: '-1px', marginBottom: '10px', color: '#173828' }}>{profileForm.fullName || 'Student'}</h2>
+                  <h2 style={{ fontSize: '38px', fontWeight: '800', letterSpacing: '-1px', marginBottom: '10px', color: '#173828' }} className="profile-name">{profileForm.fullName || 'Student'}</h2>
                   <div style={{ color: '#0b4f00', fontWeight: '800', marginBottom: '16px' }}>Student ID: {profileForm.studentId || '-'}</div>
                   <p style={{ fontSize: '16px', color: '#64748b', lineHeight: '1.6', maxWidth: '700px' }}>{profileForm.bio || "No bio added yet. Update profile to add your introduction."}</p>
                   {profileMessage && (
@@ -590,14 +623,14 @@ function Dashboard() {
                       {profileMessage}
                     </p>
                   )}
-                  <div style={{ marginTop: '24px', display: 'flex', gap: '12px' }}>
+                  <div style={{ marginTop: '24px', display: 'flex', gap: '12px' }} className="dashboard-nav-actions">
                     <button style={styles.btn} onClick={() => setIsProfileEditing(true)}>Edit Profile</button>
                   </div>
                 </div>
               </div>
 
               <div style={{ marginTop: '26px', borderTop: '1px solid #e2e8f0', paddingTop: '20px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '12px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '12px' }} className="profile-info-grid form-grid-4">
                   {[
                     { key: 'fullName', label: 'Full Name' },
                     { key: 'email', label: 'Email' },
@@ -622,7 +655,7 @@ function Dashboard() {
                 </div>
               </div>
 
-              <div style={{ marginTop: '18px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px' }}>
+              <div style={{ marginTop: '18px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px' }} className="stats-summary-grid form-grid-3">
                 <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '12px' }}>
                   <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '6px', fontWeight: '700' }}>PROJECTS</div>
                   <div style={{ color: '#173828', fontWeight: '700', marginBottom: '8px' }}>
@@ -638,7 +671,7 @@ function Dashboard() {
                       <div style={{ fontSize: '13px', color: '#64748b' }}>No projects added yet.</div>
                     )}
                   </div>
-                  <button style={{ ...styles.btn, marginTop: '10px' }} onClick={() => setActiveTab('projects')}>
+                  <button style={{ ...styles.btn, marginTop: '10px' }} className="mobile-full-width" onClick={() => setActiveTab('projects')}>
                     Add Project
                   </button>
                 </div>
@@ -658,7 +691,7 @@ function Dashboard() {
                       <div style={{ fontSize: '13px', color: '#64748b' }}>No certificates added yet.</div>
                     )}
                   </div>
-                  <button style={{ ...styles.btn, marginTop: '10px' }} onClick={() => setActiveTab('certificates')}>
+                  <button style={{ ...styles.btn, marginTop: '10px' }} className="mobile-full-width" onClick={() => setActiveTab('certificates')}>
                     Add Certificate
                   </button>
                 </div>
@@ -678,7 +711,7 @@ function Dashboard() {
                       <div style={{ fontSize: '13px', color: '#64748b' }}>No journal papers added yet.</div>
                     )}
                   </div>
-                  <button style={{ ...styles.btn, marginTop: '10px' }} onClick={() => setActiveTab('journal')}>
+                  <button style={{ ...styles.btn, marginTop: '10px' }} className="mobile-full-width" onClick={() => setActiveTab('journal')}>
                     Add Journal Paper
                   </button>
                 </div>
@@ -691,7 +724,7 @@ function Dashboard() {
           <div style={{ ...styles.card, padding: '28px' }}>
             <h2 style={{ fontSize: '28px', fontWeight: '800', marginBottom: '12px', color: '#173828' }}>Skills</h2>
             <p style={{ color: '#64748b', marginBottom: '16px' }}>Add and update your technical skills here.</p>
-            <div style={{ display: 'flex', gap: '10px', marginBottom: '14px' }}>
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '14px' }} className="mobile-stack">
               <input
                 value={skillInput}
                 onChange={(e) => setSkillInput(e.target.value)}
@@ -700,7 +733,7 @@ function Dashboard() {
               />
               <button style={styles.btn} onClick={handleAddSkill}>Add Skill</button>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' }} className="mobile-grid-2">
               {(portfolio.skills || []).map((skill, idx) => (
                 <div key={`${skill}-${idx}`} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '10px 12px', borderRadius: '10px', fontWeight: '600' }}>
                   {typeof skill === 'string' ? skill : (skill?.name || 'Skill')}
@@ -714,7 +747,7 @@ function Dashboard() {
           <div style={{ ...styles.card, padding: '28px' }}>
             <h2 style={{ fontSize: '28px', fontWeight: '800', marginBottom: '12px', color: '#173828' }}>Certificates</h2>
             <p style={{ color: '#64748b', marginBottom: '16px' }}>Add your certifications and proof documents here.</p>
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 2fr 1fr auto', gap: '10px', marginBottom: '14px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '2fr 2fr 1fr auto', gap: '10px', marginBottom: '14px' }} className="mobile-grid-1">
               <input
                 value={certificateForm.title}
                 onChange={(e) => setCertificateForm(prev => ({ ...prev, title: e.target.value }))}
@@ -929,17 +962,11 @@ function Dashboard() {
         )}
 
         {activeTab === 'analytics' && (
-          <div style={styles.card}>
-            <h2 style={{ fontSize: '28px', fontWeight: '800', marginBottom: '18px', color: '#173828' }}>My Records Analytics</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '14px', marginBottom: '24px' }}>
-              <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '18px' }}>
-                <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '8px', fontWeight: '700' }}>TOTAL SKILLS</div>
-                <div style={{ fontSize: '30px', fontWeight: '800', color: '#0b4f00' }}>{portfolio.skills?.length || 0}</div>
-              </div>
-              <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '18px' }}>
-                <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '8px', fontWeight: '700' }}>TOTAL CERTIFICATES</div>
-                <div style={{ fontSize: '30px', fontWeight: '800', color: '#0b4f00' }}>{portfolio.certificates?.length || 0}</div>
-              </div>
+          <div style={{ ...styles.card, padding: '28px' }}>
+            <h2 style={{ fontSize: '28px', fontWeight: '800', marginBottom: '12px', color: '#173828' }}>Portfolio Analytics</h2>
+            <p style={{ color: '#64748b', marginBottom: '24px' }}>Overview of your technical growth and contributions.</p>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '28px' }}>
               <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '18px' }}>
                 <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '8px', fontWeight: '700' }}>TOTAL PROJECTS</div>
                 <div style={{ fontSize: '30px', fontWeight: '800', color: '#0b4f00' }}>{portfolio.projects?.length || 0}</div>
@@ -1047,8 +1074,19 @@ function Dashboard() {
       </main>
 
       {showQR && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.72)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowQR(false)}>
-          <div style={{ backgroundColor: '#fff', padding: '36px', border: '1px solid #0b4f00', borderRadius: '14px', textAlign: 'center' }} onClick={e => e.stopPropagation()}>
+        <div 
+          role="button" 
+          tabIndex={0}
+          style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.72)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} 
+          onClick={() => setShowQR(false)}
+          onKeyDown={(e) => e.key === 'Escape' && setShowQR(false)}
+        >
+          <div 
+            role="dialog"
+            aria-modal="true"
+            style={{ backgroundColor: '#fff', padding: '36px', border: '1px solid #0b4f00', borderRadius: '14px', textAlign: 'center' }} 
+            onClick={e => e.stopPropagation()}
+          >
             <h3 style={{ marginBottom: '20px', fontWeight: '800', color: '#173828' }}>Portfolio QR</h3>
             <img
               src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(window.location.origin + '/portfolio/' + user?.studentId)}`}

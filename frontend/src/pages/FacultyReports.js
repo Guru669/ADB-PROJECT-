@@ -6,12 +6,14 @@ import { API_URL } from '../config/api';
 function FacultyReports() {
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState(false);
-  const staffName = (JSON.parse(localStorage.getItem('staff') || '{}').fullName || 'staff').split(' ')[0].toLowerCase();
+  const staff = JSON.parse(localStorage.getItem('staff') || '{}');
+  const staffName = (staff.fullName || 'staff').split(' ')[0].toLowerCase();
+  
   const [reports, setReports] = useState([]);
   const [reportType, setReportType] = useState('all');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Load theme
     const storedTheme = localStorage.getItem('facultyTheme');
     if (storedTheme) setDarkMode(storedTheme === 'dark');
 
@@ -25,284 +27,310 @@ function FacultyReports() {
   };
 
   const generateReports = async () => {
+    setLoading(true);
     try {
       const response = await fetch(`${API_URL}/api/auth/students`);
-      if (!response.ok) return;
+      if (!response.ok) throw new Error('Failed to fetch data');
       const students = await response.json();
-      localStorage.setItem('allStudents', JSON.stringify(students));
       
       const loginLogs = JSON.parse(localStorage.getItem('loginLogs') || '[]');
       
-      const generatedReports = [
-        {
-          id: 1,
-          name: 'Student Enrollment Report',
-          type: 'students',
-          generatedDate: new Date().toLocaleDateString(),
-          data: {
-            totalStudents: students.length,
-            departments: {},
-            sections: {},
-            publicPortfolios: students.filter(s => s.portfolio?.isPublic).length,
-            privatePortfolios: students.filter(s => !s.portfolio?.isPublic).length
-          }
-        },
-        {
-          id: 2,
-          name: 'Portfolio Status Report',
-          type: 'portfolios',
-          generatedDate: new Date().toLocaleDateString(),
-          data: {
-            totalPortfolios: students.length,
-            publicPortfolios: students.filter(s => s.portfolio?.isPublic).length,
-            privatePortfolios: students.filter(s => !s.portfolio?.isPublic).length,
-            portfoliosWithProjects: students.filter(s => s.portfolio?.projects?.length > 0).length,
-            portfoliosWithSkills: students.filter(s => s.portfolio?.skills?.length > 0).length
-          }
-        },
-        {
-          id: 3,
-          name: 'Activity Report',
-          type: 'activity',
-          generatedDate: new Date().toLocaleDateString(),
-          data: {
-            totalLogins: loginLogs.length,
-            uniqueUsers: [...new Set(loginLogs.map(log => log.email))].length,
-            averageLoginsPerDay: loginLogs.length > 0 ? (loginLogs.length / 30).toFixed(1) : 0
-          }
+      // 1. Comprehensive Student Ledger
+      const enrollmentReport = {
+        id: 'enrollment',
+        name: 'Student Enrollment Ledger',
+        type: 'students',
+        description: 'Global overview of student distribution and profile visibility.',
+        data: {
+          'Total Enrolled': students.length,
+          'Public Profiles': students.filter(s => s.portfolio?.isPublic).length,
+          'Verified Portfolios': students.filter(s => s.portfolio?.bio || s.portfolio?.skills?.length > 0).length,
+          'Departments': students.reduce((acc, s) => { if(s.department) acc[s.department] = (acc[s.department] || 0) + 1; return acc; }, {}),
+          'Sections': students.reduce((acc, s) => { if(s.section) acc[s.section] = (acc[s.section] || 0) + 1; return acc; }, {})
         }
-      ];
+      };
 
-      const departments = {};
-      const sections = {};
-      students.forEach(student => {
-        if (student.department) {
-          departments[student.department] = (departments[student.department] || 0) + 1;
+      // 2. Innovation & Project Audit
+      const projectReport = {
+        id: 'projects',
+        name: 'Innovation & Research Audit',
+        type: 'portfolios',
+        description: 'Tracking student technical output and project milestones.',
+        data: {
+          'Total Projects Published': students.reduce((acc, s) => acc + (s.portfolio?.projects?.length || 0), 0),
+          'Students with Projects': students.filter(s => s.portfolio?.projects?.length > 0).length,
+          'Active Research Journals': students.reduce((acc, s) => acc + (s.portfolio?.journals?.length || 0), 0),
+          'Avg projects/Student': (students.reduce((acc, s) => acc + (s.portfolio?.projects?.length || 0), 0) / (students.length || 1)).toFixed(2)
         }
-        if (student.section) {
-          sections[student.section] = (sections[student.section] || 0) + 1;
-        }
-      });
+      };
 
-      generatedReports[0].data.departments = departments;
-      generatedReports[0].data.sections = sections;
-      setReports(generatedReports);
+      // 3. High Performers Directory
+      const highPerformers = students.filter(s => parseFloat(s.cgpa) >= 8.5)
+        .sort((a, b) => b.cgpa - a.cgpa)
+        .slice(0, 10)
+        .map(s => `${s.fullName} (${s.cgpa}) - ${s.department}`);
+
+      const performanceReport = {
+        id: 'merit',
+        name: 'Academic Merit Directory',
+        type: 'merit',
+        description: 'Top 10 High-Ranking students based on cumulative performance.',
+        data: {
+          'Total High Achievers (>=8.5)': students.filter(s => parseFloat(s.cgpa) >= 8.5).length,
+          'Elite Class (>=9.0)': students.filter(s => parseFloat(s.cgpa) >= 9.0).length,
+          'Top Graduates': highPerformers
+        }
+      };
+
+      // 4. Skills Mastery Index
+      const skillsCount = {};
+      students.forEach(s => s.portfolio?.skills?.forEach(sk => {
+        const name = typeof sk === 'string' ? sk : sk.name;
+        if(name) skillsCount[name] = (skillsCount[name] || 0) + 1;
+      }));
+      
+      const skillsReport = {
+        id: 'skills',
+        name: 'Technical Mastery Index',
+        type: 'skills',
+        description: 'Heatmap of skills across the institution.',
+        data: Object.fromEntries(Object.entries(skillsCount).sort((a,b) => b[1]-a[1]).slice(0, 15))
+      };
+
+      setReports([enrollmentReport, projectReport, performanceReport, skillsReport]);
     } catch (err) {
       console.error("Error generating reports:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('staff');
-    localStorage.removeItem('staffProfile');
-    localStorage.removeItem('facultyTheme');
-    window.location.href = '/';
-  };
-
-  const downloadReport = (report) => {
-    const reportData = JSON.stringify(report.data, null, 2);
-    const blob = new Blob([reportData], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${report.name.replace(/\s+/g, '_')}_${report.generatedDate}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
-  const exportAllReports = () => {
-    const visible = reports.filter(r => reportType === 'all' || r.type === reportType);
-    if (visible.length === 0) return;
-
-    let csvLines = [`All Reports Export - ${new Date().toLocaleDateString()}`, ''];
-    visible.forEach(report => {
-      csvLines.push(`=== ${report.name} (${report.generatedDate}) ===`);
-      Object.entries(report.data).forEach(([key, val]) => {
-        if (typeof val !== 'object') {
-          csvLines.push(`${key.replace(/([A-Z])/g, ' $1')},${val}`);
-        } else {
-          Object.entries(val).forEach(([k, v]) => csvLines.push(`  ${k},${v}`));
-        }
-      });
-      csvLines.push('');
+  const downloadCSV = (report) => {
+    let csvRows = [`${report.name} Report`, `Description: ${report.description}`, `Generated: ${new Date().toLocaleString()}`, ''];
+    
+    Object.entries(report.data).forEach(([key, val]) => {
+      if (Array.isArray(val)) {
+        csvRows.push(`${key}:`);
+        val.forEach(item => csvRows.push(`,${item}`));
+      } else if (typeof val === 'object') {
+        csvRows.push(`${key}:`);
+        Object.entries(val).forEach(([k, v]) => csvRows.push(`,${k},${v}`));
+      } else {
+        csvRows.push(`${key},${val}`);
+      }
     });
 
-    const blob = new Blob([csvLines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `all_reports_${new Date().toISOString().slice(0, 10)}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `siet_report_${report.id}_${new Date().toISOString().slice(0,10)}.csv`;
+    link.click();
     URL.revokeObjectURL(url);
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = '/';
   };
 
   const styles = {
     container: { 
       minHeight: '100vh', 
-      background: darkMode ? '#121212' : '#ffffff', 
+      background: darkMode ? '#0f172a' : '#f8fafc', 
       fontFamily: "'Inter', sans-serif", 
       marginLeft: '260px', 
-      position: 'relative', 
-      overflow: 'hidden', 
-      transition: 'background-color 0.3s ease',
-      boxSizing: 'border-box'
+      padding: '34px',
+      transition: 'all 0.3s ease',
+      color: darkMode ? '#f1f5f9' : '#1e293b'
     },
     header: {
-      padding: '0 0 18px 0',
-      background: 'transparent',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      borderBottom: '1px solid #e5e7eb',
-      marginBottom: '20px'
+      marginBottom: '32px'
     },
-    headerBrand: { display: 'flex', alignItems: 'center', gap: '14px' },
-    headerLogoWrap: {
-      width: '56px',
-      height: '56px',
-      borderRadius: '12px',
-      background: '#ffffff',
-      border: '1px solid #e5e7eb',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
-    },
-    headerLogo: { width: '44px', height: '44px', objectFit: 'contain' },
-    headerTitle: { margin: 0, fontSize: '32px', fontWeight: '800', color: '#1a3625' },
-    headerSubtitle: { color: '#64748b', fontSize: '16px', margin: '4px 0 0 0' },
-    topActionBtn: {
-      background: '#ffffff',
-      color: '#1a3625',
-      border: '1px solid #cbd5e1',
-      borderRadius: '999px',
-      padding: '8px 16px',
-      fontWeight: '700',
-      cursor: 'pointer',
-      fontSize: '12px'
-    },
-    topActionPrimaryBtn: {
-      background: 'linear-gradient(90deg, #18442f 0%, #14532d 100%)',
-      color: '#fff',
-      border: 'none',
-      borderRadius: '999px',
-      padding: '8px 16px',
-      fontWeight: '700',
-      cursor: 'pointer',
-      fontSize: '12px'
-    },
-    main: { maxWidth: 1200, margin: '0 auto', padding: '25px' },
+    headerTitle: { fontSize: '28px', fontWeight: '800', color: darkMode ? '#ffe600' : '#14532d', margin: 0 },
+    
     controls: {
-      background: darkMode ? 'rgba(255, 255, 255, 0.05)' : '#ffffff', padding: '20px', borderRadius: '15px', boxShadow: darkMode ? '0 10px 30px rgba(0,0,0,0.5)' : '0 4px 15px rgba(0,0,0,0.1)', border: darkMode ? '1px solid rgba(255, 230, 0, 0.2)' : '2px solid #0b4f00', marginBottom: '30px', display: 'flex', gap: '20px', alignItems: 'center', flexWrap: 'wrap'
+      background: darkMode ? 'rgba(30, 41, 59, 0.7)' : '#ffffff', 
+      padding: '24px', 
+      borderRadius: '20px', 
+      boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)',
+      border: `1px solid ${darkMode ? 'rgba(255, 230, 0, 0.1)' : 'rgba(20, 83, 45, 0.05)'}`, 
+      marginBottom: '32px', 
+      display: 'flex', 
+      gap: '16px', 
+      alignItems: 'center',
+      justifyContent: 'space-between'
     },
     select: {
-      padding: '10px 15px', borderRadius: '8px', border: darkMode ? '1px solid rgba(255, 230, 0, 0.4)' : '2px solid #0b4f00', background: darkMode ? '#2d2d2d' : '#fff', color: darkMode ? '#ffe600' : '#0b4f00', fontSize: '14px', minWidth: '150px'
+      padding: '12px 20px', 
+      borderRadius: '12px', 
+      border: `1px solid ${darkMode ? '#334155' : '#e2e8f0'}`, 
+      background: darkMode ? '#1e293b' : '#fff', 
+      color: darkMode ? '#f1f5f9' : '#1e293b', 
+      fontSize: '14px', 
+      minWidth: '200px'
     },
-    btn: {
-      padding: '10px 25px', backgroundColor: '#0b4f00', color: '#ffe600', border: 'none', borderRadius: '25px', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold'
+    btnPrimary: {
+       padding: '12px 24px',
+       background: 'linear-gradient(135deg, #14532d 0%, #166534 100%)',
+       color: '#fff',
+       border: 'none',
+       borderRadius: '12px',
+       fontWeight: '700',
+       cursor: 'pointer',
+       boxShadow: '0 4px 12px rgba(20, 83, 45, 0.25)',
+       fontSize: '14px'
+    },
+
+    reportGrid: {
+      display: 'grid', 
+      gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', 
+      gap: '24px'
     },
     reportCard: {
-      background: darkMode ? 'rgba(255, 255, 255, 0.05)' : '#ffffff', padding: '25px', borderRadius: '15px', border: darkMode ? '1px solid rgba(255, 230, 0, 0.2)' : '2px solid #0b4f00', transition: 'all 0.3s ease'
+      background: darkMode ? 'rgba(30, 41, 59, 0.7)' : '#ffffff', 
+      padding: '30px', 
+      borderRadius: '24px', 
+      border: `1px solid ${darkMode ? 'rgba(255, 230, 0, 0.1)' : 'rgba(20, 83, 45, 0.05)'}`, 
+      boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)',
+      display: 'flex',
+      flexDirection: 'column',
+      transition: 'transform 0.2s'
     },
-    statItem: {
-      display: 'flex', justifyContent: 'space-between', padding: '10px', background: darkMode ? 'rgba(255, 255, 255, 0.05)' : '#f8f9fa', borderRadius: '8px'
-    }
+    reportBadge: {
+       display: 'inline-block',
+       padding: '4px 10px',
+       background: 'rgba(22, 163, 74, 0.1)',
+       color: '#16a34a',
+       borderRadius: '8px',
+       fontSize: '11px',
+       fontWeight: '800',
+       textTransform: 'uppercase',
+       marginBottom: '12px'
+    },
+    reportTitle: { fontSize: '20px', fontWeight: '800', color: darkMode ? '#f1f5f9' : '#1e293b', margin: '0 0 8px 0' },
+    reportDesc: { fontSize: '13px', color: darkMode ? '#94a3b8' : '#64748b', marginBottom: '24px', lineHeight: '1.5' },
+    
+    statRow: {
+      display: 'flex', 
+      justifyContent: 'space-between', 
+      alignItems: 'center',
+      padding: '12px 16px', 
+      background: darkMode ? '#1e293b' : '#f8fafc', 
+      borderRadius: '12px',
+      marginBottom: '8px',
+      fontSize: '14px'
+    },
+    statKey: { fontWeight: '600', color: darkMode ? '#cbd5e1' : '#475569' },
+    statVal: { fontWeight: '800', color: '#16a34a' }
   };
 
-  const responsiveStyles = `
-    @media (max-width: 768px) {
-      .reports-container {
-        margin-left: 0 !important;
-      }
-      .reports-header {
-        flex-direction: column !important;
-        text-align: center !important;
-        gap: 20px !important;
-        padding: 20px !important;
-      }
-      .reports-header-right {
-        flex-direction: column !important;
-        width: 100% !important;
-      }
-      .reports-header-right button {
-        width: 100% !important;
-      }
-      .reports-main {
-        padding: 15px !important;
-      }
-      .reports-controls {
-        flex-direction: column !important;
-        align-items: stretch !important;
-      }
-      .reports-controls button, .reports-controls select {
-        width: 100% !important;
-      }
-    }
-  `;
+  if (loading) return (
+    <div style={{...styles.container, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      <div style={{textAlign: 'center'}}>
+        <div style={{width: '60px', height: '60px', border: '6px solid #f3f4f6', borderTopColor: '#14532d', borderRadius: '50%', animation: 'spin 1s infinite linear', margin: '0 auto 20px'}}></div>
+        <p style={{fontWeight: '700', color: '#14532d'}}>Assembling Analytical Data...</p>
+      </div>
+      <style>{`@keyframes spin { from {transform:rotate(0deg);} to {transform:rotate(360deg);} }`}</style>
+    </div>
+  );
 
   return (
     <>
-      <style>{responsiveStyles}</style>
       <FacultySidebar darkMode={darkMode} onLogout={handleLogout} />
       <div style={styles.container} className="reports-container">
-        <div style={styles.header} className="reports-header">
-          <div style={styles.headerBrand}>
-            <div style={styles.headerLogoWrap}>
-              <img src="/siet.png" alt="SIET Logo" style={styles.headerLogo} />
-            </div>
-            <div>
-              <h2 style={styles.headerTitle}>Reports</h2>
-              <p style={styles.headerSubtitle}>Welcome back, {staffName}</p>
-            </div>
+        
+        {/* Header */}
+        <header style={styles.header} className="faculty-header">
+          <div>
+            <h1 style={styles.headerTitle}>Intelligence Reports</h1>
+            <p style={{color: darkMode ? '#94a3b8' : '#64748b', marginTop: '4px'}}>Executive documents and auditing tools</p>
           </div>
-          <div style={{ display: 'flex', gap: 15 }} className="reports-header-right">
-            <button style={styles.topActionPrimaryBtn} onClick={toggleDarkMode}>{darkMode ? 'Light' : 'Dark'}</button>
-            <button style={styles.topActionBtn} onClick={() => navigate('/faculty-analytics')}>Analytics</button>
-            <button style={styles.topActionBtn} onClick={() => navigate('/faculty-settings')}>Settings</button>
-            <button style={styles.topActionBtn} onClick={() => navigate('/staff-dashboard')}>Students</button>
+          <div className="mobile-nav-buttons" style={{display: 'flex', gap: '12px'}}>
+            <button style={{...styles.btnPrimary, background: '#ffffff', color: '#1e293b', border: '1px solid #e2e8f0'}} onClick={() => navigate('/faculty-analytics')}>Analyze Trends</button>
+            <button style={styles.btnPrimary} onClick={generateReports}>🔄 Re-Generate</button>
           </div>
-        </div>
+        </header>
 
-        <div style={styles.main} className="reports-main">
-          <div style={styles.controls} className="reports-controls">
-            <select value={reportType} onChange={(e) => setReportType(e.target.value)} style={styles.select}>
-              <option value="all">All Reports</option>
-              <option value="students">Student Reports</option>
-              <option value="portfolios">Portfolio Reports</option>
-              <option value="activity">Activity Reports</option>
+        {/* Global Controls */}
+        <section style={styles.controls} className="report-controls">
+          <div style={{display: 'flex', gap: '12px', alignItems: 'center'}}>
+            <span style={{fontSize: '14px', fontWeight: '700', opacity: 0.7}}>Filter Category:</span>
+            <select id="report-category-filter" value={reportType} onChange={(e) => setReportType(e.target.value)} style={styles.select}>
+              <option value="all">Full Spectrum</option>
+              <option value="students">Enrollment & Growth</option>
+              <option value="portfolios">Portfolios & Projects</option>
+              <option value="merit">Academic Excellence</option>
+              <option value="skills">Marketable Skills</option>
             </select>
-            <button style={{ ...styles.btn, background: '#28a745', color: '#fff', boxShadow: '0 4px 15px rgba(40,167,69,0.3)' }} onClick={exportAllReports}>💾 Save All Reports CSV</button>
-            <button style={styles.btn} onClick={generateReports}>🔄 Refresh Reports</button>
           </div>
+          <p style={{fontSize: '12px', opacity: 0.6, margin: 0}}>Total Data Points: {reports.length}</p>
+        </section>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(350px, 100%), 1fr))', gap: '25px' }}>
-            {reports.filter(r => reportType === 'all' || r.type === reportType).map(report => (
-              <div key={report.id} style={styles.reportCard}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
-                  <h3 style={{ color: darkMode ? '#ffe600' : '#0b4f00', margin: 0 }}>{report.name}</h3>
-                  <button style={{ background: '#28a745', color: '#fff', border: 'none', borderRadius: '20px', padding: '7px 15px', cursor: 'pointer' }} onClick={() => downloadReport(report)}>📥 Download</button>
-                </div>
-                <div style={{ display: 'grid', gap: '10px' }}>
-                   {Object.entries(report.data).map(([key, val]) => (
-                     typeof val !== 'object' && (
-                       <div key={key} style={styles.statItem}>
-                         <span style={{ color: darkMode ? '#ccc' : '#666', fontSize: '12px' }}>{key.replace(/([A-Z])/g, ' $1').toUpperCase()}</span>
-                         <span style={{ color: '#ffe600', fontWeight: 'bold' }}>{val}</span>
+        {/* Reports Display */}
+        <div style={styles.reportGrid} className="report-grid">
+          {reports.filter(r => reportType === 'all' || r.type === reportType).map(report => (
+            <div key={report.id} style={styles.reportCard}>
+              <div style={styles.reportBadge}>{report.type} Audit</div>
+              <h3 style={styles.reportTitle}>{report.name}</h3>
+              <p style={styles.reportDesc}>{report.description}</p>
+              
+              <div style={{flex: 1, marginBottom: '24px'}}>
+                 {Object.entries(report.data).map(([key, val]) => (
+                   <div key={key}>
+                     {typeof val !== 'object' ? (
+                        <div style={styles.statRow}>
+                          <span style={styles.statKey}>{key}</span>
+                          <span style={styles.statVal}>{val}</span>
+                        </div>
+                     ) : (
+                       <div style={{...styles.statRow, flexDirection: 'column', alignItems: 'flex-start', gap: '12px', background: 'transparent', padding: '16px 0'}}>
+                          <span style={{...styles.statKey, fontSize: '13px', borderBottom: '2px solid #16a34a', paddingBottom: '4px', marginBottom: '8px'}}>{key} Breakdown</span>
+                          <div style={{width: '100%', display: 'flex', flexWrap: 'wrap', gap: '8px'}}>
+                             {Array.isArray(val) ? (
+                               val.map((item, idx) => <div key={idx} style={{padding: '8px 12px', background: darkMode ? '#1e293b' : '#f1f5f9', borderRadius: '8px', fontSize: '12px', fontWeight: '600', width: '100%'}}>{item}</div>)
+                             ) : (
+                               Object.entries(val).map(([k, v]) => (
+                                 <div key={k} style={{padding: '8px 12px', background: darkMode ? '#1e293b' : '#f1f5f9', borderRadius: '8px', fontSize: '12px', display: 'flex', justifyContent: 'space-between', width: '100%'}}>
+                                   <strong>{k}</strong>
+                                   <span style={{color: '#16a34a', fontWeight: '800'}}>{v}</span>
+                                 </div>
+                               ))
+                             )}
+                          </div>
                        </div>
-                     )
-                   ))}
-                </div>
+                     )}
+                   </div>
+                 ))}
               </div>
-            ))}
-          </div>
+
+              <button 
+                style={{...styles.btnPrimary, width: '100%', display: 'flex', justifyContent: 'center', gap: '10px'}}
+                onClick={() => downloadCSV(report)}
+              >
+                💾 Export Spreadsheet (.csv)
+              </button>
+            </div>
+          ))}
         </div>
       </div>
+      
+      <style>{`
+        @media (max-width: 850px) {
+          .reports-container { margin-left: 0 !important; padding: 20px !important; }
+          .faculty-header { flex-direction: column; align-items: flex-start !important; gap: 15px; }
+          .report-grid { grid-template-columns: 1fr !important; }
+          .report-controls { flex-direction: column; align-items: stretch; gap: 15px; }
+          .mobile-nav-buttons { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+          .mobile-nav-buttons button { width: 100%; padding: 10px; font-size: 12px; }
+        }
+      `}</style>
     </>
   );
 }
 
 export default FacultyReports;
+
