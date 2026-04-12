@@ -41,7 +41,20 @@ function FacultyDashboard() {
         const response = await fetch(`${API_URL}/api/auth/students`);
         if (!response.ok) throw new Error('Fetch failed');
         const liveStudents = await response.json();
-        localStorage.setItem('allStudents', JSON.stringify(liveStudents));
+        // Slim sync for localStorage (avoid QuotaExceededError from Base64 data)
+        try {
+          const slimStudents = liveStudents.map(s => ({
+            fullName: s.fullName,
+            studentId: s.studentId,
+            department: s.department,
+            section: s.section,
+            email: s.email,
+            portfolio: { isPublic: s.portfolio?.isPublic, profilePhoto: s.portfolio?.profilePhoto }
+          }));
+          localStorage.setItem('allStudents', JSON.stringify(slimStudents));
+        } catch (e) {
+          console.warn("localStorage quota exceeded. Student cache may be incomplete.");
+        }
         setStudents(liveStudents);
       } catch (error) {
         setStudents(JSON.parse(localStorage.getItem('allStudents') || '[]'));

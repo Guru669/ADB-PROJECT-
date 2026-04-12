@@ -297,7 +297,7 @@ function Register() {
                             </select>
                             {activeTab === 'student' && (
                                 <>
-                                    <input id="phone" className="mobile-tiny-input" name="phone" style={styles.input} placeholder="Phone Number" onChange={handleChange} autoComplete="tel" />
+                                    <input id="phone" className="mobile-tiny-input" name="phone" type="tel" style={styles.input} placeholder="Phone Number" onChange={handleChange} autoComplete="tel" />
                                     <input id="address" className="mobile-tiny-input" name="address" style={styles.input} placeholder="Address" onChange={handleChange} autoComplete="street-address" />
                                     <input id="dateOfBirth" className="mobile-tiny-input" name="dateOfBirth" type="date" style={styles.input} onChange={handleChange} autoComplete="bday" />
                                     <select id="gender" className="mobile-tiny-input" name="gender" style={styles.input} onChange={handleChange}>
@@ -318,7 +318,7 @@ function Register() {
                                 </>
                             )}
                             <input id="password" data-lpignore="true" className="mobile-tiny-input" name="password" type="password" style={styles.input} placeholder="Password" onChange={handleChange} required autoComplete="new-password" />
-                            <input id="confirmPassword" data-lpignore="true" className="mobile-tiny-input" name="confirmPassword" type="password" style={styles.input} placeholder="Confirm Password" onChange={handleChange} required autoComplete="new-password" />
+                            <input id="confirmPassword" data-lpignore="true" className="mobile-tiny-input" name="confirmPassword" type="password" style={styles.input} placeholder="Confirm Password" onChange={handleChange} required />
                         </div>
                         <button
                             type="submit"

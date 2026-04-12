@@ -29,8 +29,16 @@ function FacultyAnalytics() {
         const response = await fetch(`${API_URL}/api/auth/students`);
         if (response.ok) {
           const students = await response.json();
-          // Sync with localStorage
-          localStorage.setItem('allStudents', JSON.stringify(students));
+          // Sync with localStorage - Slim version only to avoid QuotaExceededError
+          try {
+            const slimStudents = students.map(({ fullName, studentId, department, section, email, portfolio }) => ({
+              fullName, studentId, department, section, email,
+              portfolio: { isPublic: portfolio?.isPublic, profilePhoto: portfolio?.profilePhoto }
+            }));
+            localStorage.setItem('allStudents', JSON.stringify(slimStudents));
+          } catch (e) {
+            console.warn("Storage quota exceeded. Caching failed.");
+          }
 
           const departments = {};
           const sections = {};
@@ -97,7 +105,11 @@ function FacultyAnalytics() {
       }
     `;
     document.head.appendChild(style);
-    return () => document.head.removeChild(style);
+    return () => {
+      if (document.head.contains(style)) {
+        document.head.removeChild(style);
+      }
+    };
   }, []);
 
   const toggleDarkMode = () => {
