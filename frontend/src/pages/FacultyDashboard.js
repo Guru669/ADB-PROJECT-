@@ -41,7 +41,7 @@ function FacultyDashboard() {
         const response = await fetch(`${API_URL}/api/auth/students`);
         if (!response.ok) throw new Error('Fetch failed');
         const liveStudents = await response.json();
-        
+
         // Ultra-slim sync for localStorage (avoid QuotaExceededError)
         try {
           const ultraSlimStudents = liveStudents.map(s => ({
@@ -76,13 +76,13 @@ function FacultyDashboard() {
     if (filterSection) list = list.filter(s => s.section === filterSection);
     if (searchTerm) {
       const q = searchTerm.toLowerCase();
-      list = list.filter(s => 
-        (s.fullName || '').toLowerCase().includes(q) || 
+      list = list.filter(s =>
+        (s.fullName || '').toLowerCase().includes(q) ||
         (s.studentId || '').toLowerCase().includes(q) ||
         (s.email || '').toLowerCase().includes(q)
       );
     }
-    
+
     list.sort((a, b) => (String(a.studentId) || '').localeCompare(String(b.studentId), undefined, { numeric: true }));
     setFilteredStudents(list);
 
@@ -90,14 +90,14 @@ function FacultyDashboard() {
     if (students.length > 0) {
       const validCgpas = students.map(s => parseFloat(s.cgpa)).filter(n => !isNaN(n));
       const avg = validCgpas.length > 0 ? (validCgpas.reduce((a, b) => a + b, 0) / validCgpas.length).toFixed(2) : '0.00';
-      
+
       const skillsMap = {};
       students.forEach(s => s.portfolio?.skills?.forEach(sk => {
         const name = typeof sk === 'string' ? sk : sk.name;
-        if(name) skillsMap[name] = (skillsMap[name] || 0) + 1;
+        if (name) skillsMap[name] = (skillsMap[name] || 0) + 1;
       }));
-      const top = Object.entries(skillsMap).sort((a,b) => b[1]-a[1])[0]?.[0] || 'None';
-      
+      const top = Object.entries(skillsMap).sort((a, b) => b[1] - a[1])[0]?.[0] || 'None';
+
       const proj = students.reduce((sum, s) => sum + (s.portfolio?.projects?.length || 0), 0);
       const cert = students.reduce((sum, s) => sum + (s.portfolio?.certificates?.length || 0), 0);
 
@@ -117,18 +117,18 @@ function FacultyDashboard() {
   };
 
   const styles = {
-    page: { 
-      minHeight: '100vh', 
-      background: darkMode ? '#0f172a' : '#f1f5f9', 
-      marginLeft: '260px', 
-      padding: '40px', 
+    page: {
+      minHeight: '100vh',
+      background: darkMode ? '#0f172a' : '#f1f5f9',
+      marginLeft: '260px',
+      padding: '40px',
       fontFamily: "'Inter', sans-serif",
       transition: 'all 0.3s ease'
     },
-    header: { 
-      display: 'flex', 
-      justifyContent: 'space-between', 
-      alignItems: 'center', 
+    header: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
       marginBottom: '40px',
       padding: '24px',
       background: darkMode ? 'rgba(30, 41, 59, 0.8)' : '#ffffff',
@@ -138,16 +138,16 @@ function FacultyDashboard() {
       border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'transparent'}`
     },
     title: { fontSize: '28px', fontWeight: '800', color: darkMode ? '#ffe600' : '#14532d', margin: 0 },
-    
+
     summaryGrid: {
       display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', marginBottom: '32px'
     },
     summaryCard: {
       background: darkMode ? '#1e293b' : '#ffffff',
-      padding: '28px', 
-      borderRadius: '24px', 
+      padding: '28px',
+      borderRadius: '24px',
       border: `1px solid ${darkMode ? 'rgba(255,230,0,0.1)' : 'rgba(0,0,0,0.02)'}`,
-      textAlign: 'left', 
+      textAlign: 'left',
       boxShadow: '0 10px 15px -3px rgba(0,0,0,0.05)',
       position: 'relative',
       overflow: 'hidden'
@@ -159,74 +159,74 @@ function FacultyDashboard() {
     summaryValue: { fontSize: '32px', fontWeight: '900', color: darkMode ? '#fff' : '#1e293b', marginTop: '8px' },
 
     controlBar: {
-       background: darkMode ? '#1e293b' : '#ffffff', 
-       padding: '24px', 
-       borderRadius: '20px', 
-       marginBottom: '40px',
-       display: 'flex', 
-       gap: '20px', 
-       flexWrap: 'wrap', 
-       boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)',
-       alignItems: 'center'
+      background: darkMode ? '#1e293b' : '#ffffff',
+      padding: '24px',
+      borderRadius: '20px',
+      marginBottom: '40px',
+      display: 'flex',
+      gap: '20px',
+      flexWrap: 'wrap',
+      boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)',
+      alignItems: 'center'
     },
-    input: { 
-      flex: 3, padding: '14px 20px', borderRadius: '12px', 
-      border: `1px solid ${darkMode ? '#334155' : '#e2e8f0'}`, 
-      background: darkMode ? '#0f172a' : '#f8fafc', 
+    input: {
+      flex: 3, padding: '14px 20px', borderRadius: '12px',
+      border: `1px solid ${darkMode ? '#334155' : '#e2e8f0'}`,
+      background: darkMode ? '#0f172a' : '#f8fafc',
       color: darkMode ? '#fff' : '#1e293b',
       fontSize: '15px'
     },
-    select: { 
-      flex: 1, padding: '14px', borderRadius: '12px', 
-      border: `1px solid ${darkMode ? '#334155' : '#e2e8f0'}`, 
-      background: darkMode ? '#0f172a' : '#f8fafc', 
+    select: {
+      flex: 1, padding: '14px', borderRadius: '12px',
+      border: `1px solid ${darkMode ? '#334155' : '#e2e8f0'}`,
+      background: darkMode ? '#0f172a' : '#f8fafc',
       color: darkMode ? '#fff' : '#1e293b',
       cursor: 'pointer'
     },
 
     studentGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '24px' },
     studentCard: {
-      background: darkMode ? '#1e293b' : '#ffffff', 
-      padding: '30px', 
-      borderRadius: '28px', 
+      background: darkMode ? '#1e293b' : '#ffffff',
+      padding: '30px',
+      borderRadius: '28px',
       border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)'}`,
-      boxShadow: '0 20px 25px -5px rgba(0,0,0,0.05)', 
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', 
+      boxShadow: '0 20px 25px -5px rgba(0,0,0,0.05)',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       position: 'relative',
       cursor: 'default'
     },
-    badge: { 
-      position: 'absolute', top: '30px', right: '30px', 
-      padding: '6px 14px', background: darkMode ? 'rgba(255,230,0,0.1)' : '#f0fdf4', 
-      color: darkMode ? '#ffe600' : '#15803d', 
-      borderRadius: '10px', fontSize: '12px', fontWeight: '800' 
+    badge: {
+      position: 'absolute', top: '30px', right: '30px',
+      padding: '6px 14px', background: darkMode ? 'rgba(255,230,0,0.1)' : '#f0fdf4',
+      color: darkMode ? '#ffe600' : '#15803d',
+      borderRadius: '10px', fontSize: '12px', fontWeight: '800'
     },
-    avatar: { 
-      width: '80px', height: '80px', borderRadius: '24px', 
-      background: 'linear-gradient(135deg, #14532d, #16a34a)', 
-      display: 'flex', alignItems: 'center', justifyContent: 'center', 
+    avatar: {
+      width: '80px', height: '80px', borderRadius: '24px',
+      background: 'linear-gradient(135deg, #14532d, #16a34a)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
       fontSize: '32px', color: '#fff', marginBottom: '20px',
       boxShadow: '0 4px 12px rgba(20, 83, 45, 0.2)',
       overflow: 'hidden'
     },
     cardName: { fontSize: '22px', fontWeight: '800', color: darkMode ? '#fff' : '#0f172a', marginBottom: '6px' },
     cardId: { fontSize: '14px', color: '#64748b', fontWeight: '500', marginBottom: '24px', display: 'block' },
-    metaGrid: { 
-      display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', 
+    metaGrid: {
+      display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px',
       background: darkMode ? 'rgba(15,23,42,0.4)' : '#f8fafc',
       padding: '20px', borderRadius: '20px'
     },
     metaLabel: { fontSize: '11px', color: '#64748b', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.4px', marginBottom: '4px' },
     metaVal: { fontSize: '15px', color: darkMode ? '#fff' : '#1e293b', fontWeight: '700' },
-    
+
     actionRow: {
       marginTop: '24px', display: 'flex', gap: '12px'
     },
     btnView: {
-       flex: 2, padding: '14px', background: '#14532d', color: '#fff', border: 'none', borderRadius: '14px', fontWeight: '700', cursor: 'pointer', transition: 'all 0.2s'
+      flex: 2, padding: '14px', background: '#14532d', color: '#fff', border: 'none', borderRadius: '14px', fontWeight: '700', cursor: 'pointer', transition: 'all 0.2s'
     },
     btnSecondary: {
-       flex: 1, padding: '14px', background: darkMode ? '#334155' : '#e2e8f0', color: darkMode ? '#fff' : '#1e293b', border: 'none', borderRadius: '14px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
+      flex: 1, padding: '14px', background: darkMode ? '#334155' : '#e2e8f0', color: darkMode ? '#fff' : '#1e293b', border: 'none', borderRadius: '14px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
     },
 
     logoWrap: { display: 'flex', alignItems: 'center', gap: '20px' },
@@ -267,26 +267,26 @@ function FacultyDashboard() {
     <div style={styles.page} className="faculty-page-container">
       <style>{responsiveStyles}</style>
       <FacultySidebar darkMode={darkMode} onLogout={handleLogout} />
-      
+
       <header style={styles.header} className="faculty-header">
         <div style={styles.logoWrap}>
           <img src="/siet.png" alt="Logo" style={styles.logo} />
           <div>
             <h1 style={styles.title}>Academic Oversight</h1>
-            <div style={{color: '#64748b', fontSize: '14px', marginTop: '4px'}}>Registry Hub • {staff?.fullName}</div>
+            <div style={{ color: '#64748b', fontSize: '14px', marginTop: '4px' }}>Registry Hub • {staff?.fullName}</div>
           </div>
         </div>
         <div style={{ display: 'flex', gap: '12px' }}>
-           <button style={{...styles.btnSecondary, flex: 'none', padding: '10px 18px'}} onClick={toggleDarkMode}>
-             {darkMode ? '☀️ Light' : '🌙 Dark'}
-           </button>
-           <button 
-             style={{...styles.btnView, flex: 'none', padding: '10px 24px', background: '#dc2626'}} 
-             className="mobile-hide"
-             onClick={handleLogout}
-           >
-             Sign Out
-           </button>
+          <button style={{ ...styles.btnSecondary, flex: 'none', padding: '10px 18px' }} onClick={toggleDarkMode}>
+            {darkMode ? '☀️ Light' : '🌙 Dark'}
+          </button>
+          <button
+            style={{ ...styles.btnView, flex: 'none', padding: '10px 24px', background: '#dc2626' }}
+            className="mobile-hide"
+            onClick={handleLogout}
+          >
+            Sign Out
+          </button>
         </div>
       </header>
 
@@ -298,45 +298,47 @@ function FacultyDashboard() {
           <div style={styles.summaryValue}>{students.length}</div>
         </div>
         <div style={styles.summaryCard}>
-          <div style={{...styles.cardAccent, background: '#16a34a'}} />
+          <div style={{ ...styles.cardAccent, background: '#16a34a' }} />
           <div style={styles.summaryLabel}>Institutional CGPA</div>
           <div style={styles.summaryValue}>{stats.avgCgpa}</div>
         </div>
         <div style={styles.summaryCard}>
-          <div style={{...styles.cardAccent, background: '#ffe600'}} />
+          <div style={{ ...styles.cardAccent, background: '#ffe600' }} />
           <div style={styles.summaryLabel}>Innovation Lead</div>
           <div style={styles.summaryValue}>{stats.topSkill}</div>
         </div>
         <div style={styles.summaryCard}>
-          <div style={{...styles.cardAccent, background: '#0b4f00'}} />
+          <div style={{ ...styles.cardAccent, background: '#0b4f00' }} />
           <div style={styles.summaryLabel}>Project Output</div>
           <div style={styles.summaryValue}>{stats.totalProjects}</div>
         </div>
       </section>
 
       {/* Search & Filtering */}
-      <div style={styles.controlBar}>
-        <input 
-          style={styles.input} 
-          placeholder="Filter by name, ID or email address..." 
-          value={searchTerm} 
-          onChange={e => setSearchTerm(e.target.value)} 
+      <div style={styles.filterBar} className="filter-bar">
+        <input
+          id="registry-search"
+          name="searchQuery"
+          style={styles.input}
+          placeholder="Search by name or student ID..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <select style={styles.select} value={filterDept} onChange={e => setFilterDept(e.target.value)}>
+        <select id="registry-dept-filter" name="filterDept" style={styles.select} value={filterDept} onChange={(e) => setFilterDept(e.target.value)}>
           <option value="">All Departments</option>
           {uniqueDepts.map(d => <option key={d} value={d}>{d}</option>)}
         </select>
-        <select style={styles.select} value={filterSection} onChange={e => setFilterSection(e.target.value)}>
-           <option value="">All Sections</option>
-           {['A','B','C','D','E'].map(s => <option key={s} value={s}>Section {s}</option>)}
+        <select id="registry-section-filter" name="filterSection" style={styles.select} value={filterSection} onChange={(e) => setFilterSection(e.target.value)}>
+          <option value="">All Sections</option>
+          {['A', 'B', 'C', 'D', 'E'].map(s => <option key={s} value={s}>Section {s}</option>)}
         </select>
       </div>
 
       {/* Student Registry Grid */}
       {isLoadingStudents ? (
-         <div style={{textAlign: 'center', padding: '100px', fontSize: '18px', color: '#64748b'}}>
-           <div className="spinner">⌛</div> Synchronizing Registry...
-         </div>
+        <div style={{ textAlign: 'center', padding: '100px', fontSize: '18px', color: '#64748b' }}>
+          <div className="spinner">⌛</div> Synchronizing Registry...
+        </div>
       ) : (
         <div style={styles.studentGrid}>
           {filteredStudents.map(s => (
@@ -351,11 +353,11 @@ function FacultyDashboard() {
               </div>
               <div style={styles.cardName}>{s.fullName}</div>
               <span style={styles.cardId}>{s.studentId} • {s.department}</span>
-              
+
               <div style={styles.metaGrid}>
                 <div>
                   <div style={styles.metaLabel}>Academic CGPA</div>
-                  <div style={{...styles.metaVal, color: parseFloat(s.cgpa) >= 8.5 ? '#16a34a' : (darkMode ? '#fff' : '#1e293b')}}>
+                  <div style={{ ...styles.metaVal, color: parseFloat(s.cgpa) >= 8.5 ? '#16a34a' : (darkMode ? '#fff' : '#1e293b') }}>
                     {s.cgpa || '0.00'}
                   </div>
                 </div>
@@ -369,35 +371,29 @@ function FacultyDashboard() {
                 </div>
                 <div>
                   <div style={styles.metaLabel}>Profile Status</div>
-                  <div style={{...styles.metaVal, color: s.portfolio?.isPublic ? '#16a34a' : '#64748b'}}>
+                  <div style={{ ...styles.metaVal, color: s.portfolio?.isPublic ? '#16a34a' : '#64748b' }}>
                     {s.portfolio?.isPublic ? '• Public' : '• Private'}
                   </div>
                 </div>
               </div>
 
               <div style={styles.actionRow}>
-                <button 
-                  style={styles.btnView} 
+                <button
+                  style={styles.btnView}
                   className="btn-view"
                   onClick={() => navigate(`/student-details/${s.studentId || s._id}`)}
                 >
                   View Full Portfolio
                 </button>
-                <button 
-                  style={styles.btnSecondary}
-                  onClick={() => window.location.href = `mailto:${s.email}`}
-                  title="Contact Student"
-                >
-                  ✉️
-                </button>
+
               </div>
             </div>
           ))}
           {filteredStudents.length === 0 && (
-            <div style={{gridColumn: 'span 3', textAlign: 'center', padding: '80px', background: 'rgba(0,0,0,0.02)', borderRadius: '24px'}}>
-              <div style={{fontSize: '40px', marginBottom: '16px'}}>🔍</div>
-              <h3 style={{margin: 0, color: '#1e293b'}}>No records found</h3>
-              <p style={{color: '#64748b'}}>Try adjusting your filters or search query</p>
+            <div style={{ gridColumn: 'span 3', textAlign: 'center', padding: '80px', background: 'rgba(0,0,0,0.02)', borderRadius: '24px' }}>
+              <div style={{ fontSize: '40px', marginBottom: '16px' }}>🔍</div>
+              <h3 style={{ margin: 0, color: '#1e293b' }}>No records found</h3>
+              <p style={{ color: '#64748b' }}>Try adjusting your filters or search query</p>
             </div>
           )}
         </div>

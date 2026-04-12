@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 
-// --- Console Guard: Silencing environment-side noise (HDS/Extensions) ---
+// --- Console Guard & WebSocket Patch: Silencing environment-side noise ---
 const suppressList = ['WebSocket', 'hooks', 'content_script.js'];
 const originalWarn = console.warn;
 const originalError = console.error;
@@ -17,6 +17,22 @@ console.error = (...args) => {
   if (typeof args[0] === 'string' && suppressList.some(s => args[0].includes(s))) return;
   originalError.apply(console, args);
 };
+
+// Intercept WebSocket to prevent Render.com HMR reload loops
+const OriginalWebSocket = window.WebSocket;
+window.WebSocket = function(url, protocols) {
+  if (typeof url === 'string' && url.includes('onrender.com')) {
+    console.log("Blocking problematic WebSocket HMR connection to prevent reload loops...");
+    return {
+      close: () => {},
+      send: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {}
+    };
+  }
+  return new OriginalWebSocket(url, protocols);
+};
+window.WebSocket.prototype = OriginalWebSocket.prototype;
 // -----------------------------------------------------------------------
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

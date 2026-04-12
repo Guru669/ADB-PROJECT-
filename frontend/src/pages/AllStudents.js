@@ -175,20 +175,22 @@ function AllStudents() {
       <main style={styles.main}>
         <div style={styles.filterBar} className="filter-bar">
           <input 
+            id="registry-search"
+            name="searchQuery"
             style={styles.input} 
             placeholder="Search by name or student ID..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <select style={styles.select} value={filterDept} onChange={(e) => setFilterDept(e.target.value)}>
+          <select id="registry-dept-filter" name="filterDept" style={styles.select} value={filterDept} onChange={(e) => setFilterDept(e.target.value)}>
             <option value="">All Departments</option>
             {departments.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
-          <select style={styles.select} value={filterSection} onChange={(e) => setFilterSection(e.target.value)}>
+          <select id="registry-section-filter" name="filterSection" style={styles.select} value={filterSection} onChange={(e) => setFilterSection(e.target.value)}>
             <option value="">All Sections</option>
             {sections.map(s => <option key={s} value={s}>Section {s}</option>)}
           </select>
-          <select style={styles.select} value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <select id="registry-sort-filter" name="sortBy" style={styles.select} value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
             <option value="name-asc">A-Z Name</option>
             <option value="name-desc">Z-A Name</option>
             <option value="id-asc">ID (Low-High)</option>

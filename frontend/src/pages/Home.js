@@ -65,22 +65,30 @@ function Home() {
     setIsLoaded(true);
 
     // NUCLEAR RESET: One-time purge of legacy Base64 bloat to fix QuotaExceededError
-    if (!localStorage.getItem('storage_integrity_v1')) {
-      console.log("Cleaning legacy storage bloat...");
-      const savedUser = localStorage.getItem('user');
-      const savedStaff = localStorage.getItem('staff');
-      const savedAdmin = localStorage.getItem('admin');
-      const savedToken = localStorage.getItem('token');
-      
-      localStorage.clear(); // Wipe everything
-      
-      // Restore essential session keys ONLY
-      if (savedUser) localStorage.setItem('user', savedUser);
-      if (savedStaff) localStorage.setItem('staff', savedStaff);
-      if (savedAdmin) localStorage.setItem('admin', savedAdmin);
-      if (savedToken) localStorage.setItem('token', savedToken);
-      
-      localStorage.setItem('storage_integrity_v1', 'true'); // Mark as cleaned
+    try {
+      if (!localStorage.getItem('storage_integrity_v1')) {
+        console.log("Cleaning legacy storage bloat...");
+        // Set the flag FIRST so we don't loop if the siguientes steps fail
+        localStorage.setItem('storage_integrity_v1', 'true'); 
+        
+        // Targeted removal of known bloat keys
+        localStorage.removeItem('allStudents');
+        localStorage.removeItem('portfolio');
+        
+        // Also strip profilePhotos from existing session objects if they are too big
+        const user = localStorage.getItem('user');
+        if (user && user.length > 500000) { // If > 0.5MB, it's definitely bloated
+           localStorage.removeItem('user');
+        }
+        const staff = localStorage.getItem('staff');
+        if (staff && staff.length > 500000) {
+           localStorage.removeItem('staff');
+        }
+      }
+    } catch (e) {
+      console.warn("Storage reset encountered an issue, but flag is set to prevent loops.");
+      // Ensure flag is set even on error to prevent refresh loops
+      try { localStorage.setItem('storage_integrity_v1', 'true'); } catch(e2) {}
     }
 
     // Add keyboard shortcut for admin access
