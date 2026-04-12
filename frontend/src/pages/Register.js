@@ -215,20 +215,20 @@ function Register() {
             <button type="button" style={styles.homeBtn} onClick={() => navigate('/')}>
                 Home
             </button>
-            <div style={styles.wrapper} className="register-wrapper">
-                <div style={styles.sidePanel} className="register-side-panel">
-                    <div>
-                        <div style={styles.logoWrap}>
+            <div className="mobile-grid-1 register-wrapper" style={styles.wrapper}>
+                <div className="mobile-card register-side-panel" style={styles.sidePanel}>
+                    <div className="mobile-center">
+                        <div className="mobile-center" style={styles.logoWrap}>
                             <img src="/siet.png" alt="SIET Logo" style={styles.logo} />
                         </div>
-                        <h2 style={styles.panelTitle}>SIET Portal</h2>
-                        <p style={styles.panelText}>
+                        <h2 className="mobile-center" style={styles.panelTitle}>SIET Portal</h2>
+                        <p className="mobile-center" style={styles.panelText}>
                             Create your student or faculty account to access portfolios,
                             profile management, and institutional services.
                         </p>
-                        <div style={styles.sideTabRow}>
-                            <button style={styles.sideTab(activeTab === 'student')} onClick={() => setActiveTab('student')}>Student</button>
-                            <button style={styles.sideTab(activeTab === 'staff')} onClick={() => setActiveTab('staff')}>Faculty</button>
+                        <div className="mobile-nav-buttons" style={styles.sideTabRow}>
+                            <button className="mobile-full-width" style={styles.sideTab(activeTab === 'student')} onClick={() => setActiveTab('student')}>Student</button>
+                            <button className="mobile-full-width" style={styles.sideTab(activeTab === 'staff')} onClick={() => setActiveTab('staff')}>Faculty</button>
                         </div>
                         <p style={styles.lineTag}>Portfolio Based Student Project Platform</p>
                         <div style={styles.panelCard}>
@@ -251,48 +251,49 @@ function Register() {
                     </div>
                 </div>
 
-                <div style={styles.formPanel} className="register-form-panel">
-                    <h1 style={styles.title}>Register</h1>
-                    <p style={styles.subtitle}>Create your professional account.</p>
+                <div className="mobile-super-card register-form-panel" style={styles.formPanel}>
+                    <h1 className="mobile-tiny-header" style={styles.title}>Register</h1>
+                    <p className="mobile-compact-text" style={styles.subtitle}>Create your professional account.</p>
 
-                    {error && <div style={{ color: '#dc3545', textAlign: 'center', marginBottom: '20px' }}>{error}</div>}
+                    {error && <div className="mobile-compact-card" style={{ color: '#dc3545', textAlign: 'center', marginBottom: '12px', padding: '8px' }}>{error}</div>}
 
                     <form onSubmit={handleSubmit}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                            <input name="fullName" style={styles.input} placeholder="Full Name" onChange={handleChange} required />
-                            <input name="email" type="email" style={styles.input} placeholder="Email" onChange={handleChange} required />
-                            <input name={activeTab === 'student' ? 'studentId' : 'staffId'} style={styles.input} placeholder={activeTab === 'student' ? 'Student ID' : 'Staff ID'} onChange={handleChange} required />
-                            <select name="department" style={styles.input} onChange={handleChange} required>
+                        <div className="mobile-grid-1 mobile-tight-spacing" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
+                            <input className="mobile-tiny-input" name="fullName" style={styles.input} placeholder="Full Name" onChange={handleChange} required />
+                            <input className="mobile-tiny-input" name="email" type="email" style={styles.input} placeholder="Email" onChange={handleChange} required />
+                            <input className="mobile-tiny-input" name={activeTab === 'student' ? 'studentId' : 'staffId'} style={styles.input} placeholder={activeTab === 'student' ? 'Student ID' : 'Staff ID'} onChange={handleChange} required />
+                            <select className="mobile-tiny-input" name="department" style={styles.input} onChange={handleChange} required>
                                 <option value="">Department</option>
                                 {departments.map(d => <option key={d} value={d}>{d}</option>)}
                             </select>
                             {activeTab === 'student' && (
                                 <>
-                                    <input name="phone" style={styles.input} placeholder="Phone Number" onChange={handleChange} />
-                                    <input name="address" style={styles.input} placeholder="Address" onChange={handleChange} />
-                                    <input name="dateOfBirth" type="date" style={styles.input} onChange={handleChange} />
-                                    <select name="gender" style={styles.input} onChange={handleChange}>
+                                    <input className="mobile-tiny-input" name="phone" style={styles.input} placeholder="Phone Number" onChange={handleChange} />
+                                    <input className="mobile-tiny-input" name="address" style={styles.input} placeholder="Address" onChange={handleChange} />
+                                    <input className="mobile-tiny-input" name="dateOfBirth" type="date" style={styles.input} onChange={handleChange} />
+                                    <select className="mobile-tiny-input" name="gender" style={styles.input} onChange={handleChange}>
                                         <option value="">Gender</option>
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
                                         <option value="Other">Other</option>
                                     </select>
-                                    <input name="umisNumber" style={styles.input} placeholder="UMIS Number" onChange={handleChange} />
-                                    <select name="section" style={styles.input} onChange={handleChange}>
+                                    <input className="mobile-tiny-input" name="umisNumber" style={styles.input} placeholder="UMIS Number" onChange={handleChange} />
+                                    <select className="mobile-tiny-input" name="section" style={styles.input} onChange={handleChange}>
                                         <option value="">Section</option>
                                         {['A', 'B', 'C', 'D', 'E'].map(s => <option key={s} value={s}>{s}</option>)}
                                     </select>
-                                    <input name="currentYear" style={styles.input} placeholder="Current Year" onChange={handleChange} />
-                                    <input name="currentSemester" style={styles.input} placeholder="Current Semester" onChange={handleChange} />
-                                    <input name="cgpa" type="number" step="0.01" style={styles.input} placeholder="Cumulative GPA" onChange={handleChange} />
-                                    <input name="specialization" style={styles.input} placeholder="Specialization" onChange={handleChange} />
+                                    <input className="mobile-tiny-input" name="currentYear" style={styles.input} placeholder="Current Year" onChange={handleChange} />
+                                    <input className="mobile-tiny-input" name="currentSemester" style={styles.input} placeholder="Current Semester" onChange={handleChange} />
+                                    <input className="mobile-tiny-input" name="cgpa" type="number" step="0.01" style={styles.input} placeholder="Cumulative GPA" onChange={handleChange} />
+                                    <input className="mobile-tiny-input" name="specialization" style={styles.input} placeholder="Specialization" onChange={handleChange} />
                                 </>
                             )}
-                            <input name="password" type="password" style={styles.input} placeholder="Password" onChange={handleChange} required />
-                            <input name="confirmPassword" type="password" style={styles.input} placeholder="Confirm Password" onChange={handleChange} required />
+                            <input className="mobile-tiny-input" name="password" type="password" style={styles.input} placeholder="Password" onChange={handleChange} required />
+                            <input className="mobile-tiny-input" name="confirmPassword" type="password" style={styles.input} placeholder="Confirm Password" onChange={handleChange} required />
                         </div>
                         <button
                             type="submit"
+                            className="mobile-tiny-btn"
                             style={styles.btn}
                             disabled={isLoading}
                             onMouseEnter={(e) => {

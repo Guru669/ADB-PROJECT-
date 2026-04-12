@@ -207,7 +207,7 @@ function StudentDetails() {
             <style>{responsiveStyles}</style>
             <div style={styles.bgDecoration1}></div>
             <div style={styles.bgDecoration2}></div>
-            <button
+            <button className="mobile-full-width"
                 style={styles.backBtn}
                 onClick={() => navigate(-1)}
                 onMouseEnter={e => e.target.style.transform = 'translateY(-2px)'}
@@ -216,9 +216,9 @@ function StudentDetails() {
                 ← Back to Dashboard
             </button>
 
-            <div style={styles.card} className="student-details-card">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '30px' }} className="student-details-header">
-                    <div style={{
+            <div className="mobile-card student-details-card" style={styles.card}>
+                <div className="mobile-stack student-details-header" style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '30px' }}>
+                    <div className="mobile-tiny-avatar" style={{
                         width: '100px',
                         height: '100px',
                         borderRadius: '50%',
@@ -239,9 +239,9 @@ function StudentDetails() {
                             student.fullName.charAt(0)
                         )}
                     </div>
-                    <div>
-                        <h1 style={{ ...styles.title, margin: 0 }} className="student-details-title">{student.fullName}'s Details</h1>
-                        <span style={{
+                    <div className="mobile-stack">
+                        <h1 className="mobile-tiny-header student-details-title" style={{ ...styles.title, margin: 0 }}>{student.fullName}'s Details</h1>
+                        <span className="mobile-tiny-badge" style={{
                             ...styles.badge,
                             ...(isPublic ? styles.publicBadge : styles.privateBadge),
                             marginTop: '10px'
@@ -251,80 +251,80 @@ function StudentDetails() {
                     </div>
                 </div>
 
-                <div style={styles.section}>
-                    <h2 style={styles.sectionTitle}>Personal Information</h2>
-                    <div style={styles.grid} className="student-details-grid">
-                        <div style={styles.infoGroup}>
-                            <span style={styles.label}>Full Name</span>
-                            <span style={styles.value}>{student.fullName}</span>
+                <div className="mobile-card" style={styles.section}>
+                    <h2 className="mobile-tiny-header" style={styles.sectionTitle}>Personal Information</h2>
+                    <div className="mobile-grid-1 student-details-grid" style={styles.grid}>
+                        <div className="mobile-compact-card" style={styles.infoGroup}>
+                            <span className="mobile-compact-text" style={styles.label}>Full Name</span>
+                            <span className="mobile-compact-text mobile-name-wrap" style={styles.value}>{student.fullName}</span>
                         </div>
-                        <div style={styles.infoGroup}>
-                            <span style={styles.label}>Email Address</span>
-                            <span style={styles.value}>{student.email}</span>
+                        <div className="mobile-compact-card" style={styles.infoGroup}>
+                            <span className="mobile-compact-text" style={styles.label}>Email Address</span>
+                            <span className="mobile-compact-text mobile-name-wrap" style={styles.value}>{student.email}</span>
                         </div>
-                        <div style={styles.infoGroup}>
-                            <span style={styles.label}>Student ID</span>
-                            <span style={styles.value}>{student.studentId}</span>
+                        <div className="mobile-compact-card" style={styles.infoGroup}>
+                            <span className="mobile-compact-text" style={styles.label}>Student ID</span>
+                            <span className="mobile-compact-text" style={styles.value}>{student.studentId}</span>
                         </div>
-                        <div style={styles.infoGroup}>
-                            <span style={styles.label}>Phone Number</span>
-                            <span style={styles.value}>{student.phone || 'Not provided'}</span>
+                        <div className="mobile-compact-card" style={styles.infoGroup}>
+                            <span className="mobile-compact-text" style={styles.label}>Phone Number</span>
+                            <span className="mobile-compact-text" style={styles.value}>{student.phone || 'Not provided'}</span>
                         </div>
-                        <div style={styles.infoGroup}>
-                            <span style={styles.label}>Address</span>
-                            <span style={styles.value}>{student.address || 'Not provided'}</span>
+                        <div className="mobile-compact-card" style={styles.infoGroup}>
+                            <span className="mobile-compact-text" style={styles.label}>Address</span>
+                            <span className="mobile-compact-text mobile-name-wrap" style={styles.value}>{student.address || 'Not provided'}</span>
                         </div>
-                        <div style={styles.infoGroup}>
-                            <span style={styles.label}>Date of Birth</span>
-                            <span style={styles.value}>{student.dob || 'Not provided'}</span>
+                        <div className="mobile-compact-card" style={styles.infoGroup}>
+                            <span className="mobile-compact-text" style={styles.label}>Date of Birth</span>
+                            <span className="mobile-compact-text" style={styles.value}>{student.dob || 'Not provided'}</span>
                         </div>
-                        <div style={styles.infoGroup}>
-                            <span style={styles.label}>Gender</span>
-                            <span style={styles.value}>{student.gender || 'Not provided'}</span>
+                        <div className="mobile-compact-card" style={styles.infoGroup}>
+                            <span className="mobile-compact-text" style={styles.label}>Gender</span>
+                            <span className="mobile-compact-text" style={styles.value}>{student.gender || 'Not provided'}</span>
                         </div>
-                        <div style={styles.infoGroup}>
-                            <span style={styles.label}>UMIS Number</span>
-                            <span style={styles.value}>{student.umisNumber || 'Not provided'}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div style={styles.section}>
-                    <h2 style={styles.sectionTitle}>Academic Information</h2>
-                    <div style={styles.grid} className="student-details-grid">
-                        <div style={styles.infoGroup}>
-                            <span style={styles.label}>Department</span>
-                            <span style={styles.value}>{student.department}</span>
-                        </div>
-                        <div style={styles.infoGroup}>
-                            <span style={styles.label}>Section</span>
-                            <span style={styles.value}>{student.section}</span>
-                        </div>
-                        <div style={styles.infoGroup}>
-                            <span style={styles.label}>Current Year</span>
-                            <span style={styles.value}>{student.currentYear || 'Not provided'}</span>
-                        </div>
-                        <div style={styles.infoGroup}>
-                            <span style={styles.label}>Current Semester</span>
-                            <span style={styles.value}>{student.currentSemester || 'Not provided'}</span>
-                        </div>
-                        <div style={styles.infoGroup}>
-                            <span style={styles.label}>Cumulative GPA</span>
-                            <span style={styles.value}>{student.cgpa || 'Not provided'}</span>
-                        </div>
-                        <div style={styles.infoGroup}>
-                            <span style={styles.label}>Specialization</span>
-                            <span style={styles.value}>{student.specialization || 'Not provided'}</span>
+                        <div className="mobile-compact-card" style={styles.infoGroup}>
+                            <span className="mobile-compact-text" style={styles.label}>UMIS Number</span>
+                            <span className="mobile-compact-text" style={styles.value}>{student.umisNumber || 'Not provided'}</span>
                         </div>
                     </div>
                 </div>
 
-                <div style={styles.section}>
-                    <h2 style={styles.sectionTitle}>Portfolio Highlights</h2>
-                    <div style={{ ...styles.grid, gridTemplateColumns: '1fr' }} className="student-details-grid">
-                        <div style={styles.infoGroup}>
-                            <span style={styles.label}>Skills</span>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '10px' }}>
+                <div className="mobile-card" style={styles.section}>
+                    <h2 className="mobile-tiny-header" style={styles.sectionTitle}>Academic Information</h2>
+                    <div className="mobile-grid-1 student-details-grid" style={styles.grid}>
+                        <div className="mobile-compact-card" style={styles.infoGroup}>
+                            <span className="mobile-compact-text" style={styles.label}>Department</span>
+                            <span className="mobile-compact-text" style={styles.value}>{student.department}</span>
+                        </div>
+                        <div className="mobile-compact-card" style={styles.infoGroup}>
+                            <span className="mobile-compact-text" style={styles.label}>Section</span>
+                            <span className="mobile-compact-text" style={styles.value}>{student.section}</span>
+                        </div>
+                        <div className="mobile-compact-card" style={styles.infoGroup}>
+                            <span className="mobile-compact-text" style={styles.label}>Current Year</span>
+                            <span className="mobile-compact-text" style={styles.value}>{student.currentYear || 'Not provided'}</span>
+                        </div>
+                        <div className="mobile-compact-card" style={styles.infoGroup}>
+                            <span className="mobile-compact-text" style={styles.label}>Current Semester</span>
+                            <span className="mobile-compact-text" style={styles.value}>{student.currentSemester || 'Not provided'}</span>
+                        </div>
+                        <div className="mobile-compact-card" style={styles.infoGroup}>
+                            <span className="mobile-compact-text" style={styles.label}>Cumulative GPA</span>
+                            <span className="mobile-compact-text" style={styles.value}>{student.cgpa || 'Not provided'}</span>
+                        </div>
+                        <div className="mobile-compact-card" style={styles.infoGroup}>
+                            <span className="mobile-compact-text" style={styles.label}>Specialization</span>
+                            <span className="mobile-compact-text" style={styles.value}>{student.specialization || 'Not provided'}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mobile-card" style={styles.section}>
+                    <h2 className="mobile-tiny-header" style={styles.sectionTitle}>Portfolio Highlights</h2>
+                    <div className="mobile-grid-1 student-details-grid" style={{ ...styles.grid, gridTemplateColumns: '1fr' }}>
+                        <div className="mobile-compact-card" style={styles.infoGroup}>
+                            <span className="mobile-compact-text" style={styles.label}>Skills</span>
+                            <div className="mobile-stack" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '10px' }}>
                                 {student.portfolio?.skills?.length > 0
                                     ? student.portfolio.skills.map((s, i) => (
                                         <span key={i} style={{ backgroundColor: '#0b4f00', color: '#ffe600', padding: '5px 12px', borderRadius: '20px', fontSize: '13px', fontWeight: 'bold' }}>
@@ -336,24 +336,24 @@ function StudentDetails() {
                         </div>
 
                         {student.portfolio?.projects?.length > 0 && (
-                            <div style={styles.infoGroup}>
-                                <span style={styles.label}>Projects</span>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginTop: '10px' }}>
+                            <div className="mobile-compact-card" style={styles.infoGroup}>
+                                <span className="mobile-compact-text" style={styles.label}>Projects</span>
+                                <div className="mobile-grid-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginTop: '10px' }}>
                                     {student.portfolio.projects.map((p, i) => (
-                                        <div key={i} style={{ backgroundColor: '#fff', padding: '15px', borderRadius: '12px', border: '1px solid #eef0f2', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
-                                            <div style={{ fontWeight: 'bold', fontSize: '16px', color: '#0b4f00', marginBottom: '8px' }}>{p.title}</div>
-                                            <div style={{ color: '#1e5631', fontSize: '13px', fontWeight: '600', marginBottom: '8px' }}>🛠 {p.technologies}</div>
-                                            <p style={{ fontSize: '14px', color: '#666', lineHeight: '1.5' }}>{p.description}</p>
-                                            <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                                        <div key={i} className="mobile-card" style={{ backgroundColor: '#fff', padding: '15px', borderRadius: '12px', border: '1px solid #eef0f2', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
+                                            <div className="mobile-compact-text" style={{ fontWeight: 'bold', fontSize: '16px', color: '#0b4f00', marginBottom: '8px' }}>{p.title}</div>
+                                            <div className="mobile-compact-text" style={{ color: '#1e5631', fontSize: '13px', fontWeight: '600', marginBottom: '8px' }}>🛠 {p.technologies}</div>
+                                            <p className="mobile-compact-text" style={{ fontSize: '14px', color: '#666', lineHeight: '1.5' }}>{p.description}</p>
+                                            <div className="mobile-stack mobile-nav-buttons" style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
                                                 {p.journalFile && (
                                                     <div style={{ textAlign: 'center' }}>
-                                                        <div style={{ fontSize: '10px', fontWeight: 'bold', color: '#666' }}>JOURNAL</div>
+                                                        <div className="mobile-compact-text" style={{ fontSize: '10px', fontWeight: 'bold', color: '#666' }}>JOURNAL</div>
                                                         <img src={p.journalFile} alt="Journal" style={{ width: '80px', height: '60px', borderRadius: '4px', border: '1px solid #ddd', cursor: 'pointer' }} onClick={() => window.open(p.journalFile, '_blank')} />
                                                     </div>
                                                 )}
                                                 {p.certificateFile && (
                                                     <div style={{ textAlign: 'center' }}>
-                                                        <div style={{ fontSize: '10px', fontWeight: 'bold', color: '#666' }}>CERTIFICATE</div>
+                                                        <div className="mobile-compact-text" style={{ fontSize: '10px', fontWeight: 'bold', color: '#666' }}>CERTIFICATE</div>
                                                         <img src={p.certificateFile} alt="Cert" style={{ width: '80px', height: '60px', borderRadius: '4px', border: '1px solid #ddd', cursor: 'pointer' }} onClick={() => window.open(p.certificateFile, '_blank')} />
                                                     </div>
                                                 )}
@@ -365,13 +365,13 @@ function StudentDetails() {
                         )}
 
                         {student.portfolio?.achievements?.length > 0 && (
-                            <div style={styles.infoGroup}>
-                                <span style={styles.label}>Achievements & Awards</span>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginTop: '10px' }}>
+                            <div className="mobile-compact-card" style={styles.infoGroup}>
+                                <span className="mobile-compact-text" style={styles.label}>Achievements & Awards</span>
+                                <div className="mobile-grid-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginTop: '10px' }}>
                                     {student.portfolio.achievements.map((a, i) => (
-                                        <div key={i} style={{ backgroundColor: '#fff', padding: '15px', borderRadius: '12px', border: '1px solid #eef0f2', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
-                                            <div style={{ fontWeight: 'bold', color: '#0b4f00' }}>🏆 {a.title}</div>
-                                            <p style={{ fontSize: '14px', color: '#666', marginTop: '5px' }}>{a.description}</p>
+                                        <div key={i} className="mobile-card" style={{ backgroundColor: '#fff', padding: '15px', borderRadius: '12px', border: '1px solid #eef0f2', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
+                                            <div className="mobile-compact-text" style={{ fontWeight: 'bold', color: '#0b4f00' }}>🏆 {a.title}</div>
+                                            <p className="mobile-compact-text" style={{ fontSize: '14px', color: '#666', marginTop: '5px' }}>{a.description}</p>
                                         </div>
                                     ))}
                                 </div>

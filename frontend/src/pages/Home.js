@@ -642,12 +642,6 @@ function Home() {
     register: {},
     cta: {}
   });
-  const [cardStyles, setCardStyles] = useState({
-    card1: {},
-    card2: {},
-    card3: {},
-    card4: {}
-  });
   const handleButtonHover = (buttonKey, styleKey) => {
     setButtonStyles({
       ...buttonStyles,
@@ -660,18 +654,6 @@ function Home() {
       [buttonKey]: {}
     });
   };
-  const handleCardHover = (cardIndex) => {
-    setCardStyles({
-      ...cardStyles,
-      [`card${cardIndex}`]: styles.featureCardHover
-    });
-  };
-  const handleCardLeave = (cardIndex) => {
-    setCardStyles({
-      ...cardStyles,
-      [`card${cardIndex}`]: {}
-    });
-  };
   return (
     <>
       <div style={styles.container}>
@@ -679,13 +661,13 @@ function Home() {
         <div style={styles.decorCircle2}></div>
         <img src="/siet.png" alt="SIET" style={styles.watermark} />
         {/* Navigation */}
-        <nav style={{
+        <nav className="mobile-nav" style={{
           ...styles.nav,
           animation: isLoaded ? 'slideDown 0.6s ease-out forwards' : 'none',
           opacity: isLoaded ? 1 : 0
         }}>
-          <div style={styles.logo}>SIET Student Portfolio</div>
-          <div style={styles.navButtons}>
+          <div style={styles.logo} className="mobile-center">SIET Student Portfolio</div>
+          <div className="mobile-nav-buttons" style={styles.navButtons}>
             {dashboardPath ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                 {/* User Info Display */}
@@ -759,84 +741,28 @@ function Home() {
             )}
           </div>
         </nav>
-        {/* Hero Section */}
-        <div style={{
-          ...styles.hero,
-          animation: isLoaded ? 'slideUp 0.8s ease-out 0.2s forwards' : 'none',
-          opacity: isLoaded ? 1 : 0
-        }}>
-          <div style={{
-            backgroundColor: '#ffe600',
-            padding: '15px 30px',
-            borderRadius: '10px',
-            marginBottom: '30px',
-            boxShadow: '0 4px 20px rgba(255, 230, 0, 0.3)'
-          }}>
-            <h2 style={{ color: '#0b4f00', margin: 0, fontSize: '24px', fontWeight: 'bold' }}>SRI SHAKTHI INSTITUTE OF ENGINEERING AND TECHNOLOGY</h2>
-          </div>
-          <h1 style={styles.heroTitle}>Student Portfolio System</h1>
-          <p style={styles.heroSubtitle}>
-            Showcase your achievements, certificates, projects, and skills.
-            Create a professional portfolio to share with recruiters and faculty.
-          </p>
-          <button
-            style={{
-              ...styles.ctaButton,
-              ...buttonStyles.cta,
-              animation: isLoaded ? 'pulse 2s ease-in-out infinite 1.5s' : 'none'
-            }}
-            onClick={() => navigate('/register')}
-            onMouseEnter={() => handleButtonHover('cta', 'ctaButton')}
-            onMouseLeave={() => handleButtonLeave('cta')}
-            id="hero-cta-button"
-          >
-            Get Started Free
-          </button>
-        </div>
-        <div style={styles.features} id="features-section">
-          <div style={{ ...styles.featureCard, ...cardStyles.card1 }} onMouseEnter={() => handleCardHover(1)} onMouseLeave={() => handleCardLeave(1)}>
-            <div style={styles.featureIcon}>🎓</div>
-            <div style={styles.featureTitle}>Student Portfolio</div>
-            <p style={styles.featureDesc}>Build your professional digital identity with ease.</p>
-          </div>
-          <div style={{ ...styles.featureCard, ...cardStyles.card2 }} onMouseEnter={() => handleCardHover(2)} onMouseLeave={() => handleCardLeave(2)}>
-            <div style={styles.featureIcon}>💼</div>
-            <div style={styles.featureTitle}>Placement Portal</div>
-            <p style={styles.featureDesc}>Connect with top recruiters and land your dream job.</p>
-          </div>
-          <div style={{ ...styles.featureCard, ...cardStyles.card3 }} onMouseEnter={() => handleCardHover(3)} onMouseLeave={() => handleCardLeave(3)}>
-            <div style={styles.featureIcon}>🏢</div>
-            <div style={styles.featureTitle}>Corporate Access</div>
-            <p style={styles.featureDesc}>Verified student skills and achievements for employers.</p>
-          </div>
-          <div style={{ ...styles.featureCard, ...cardStyles.card4 }} onMouseEnter={() => handleCardHover(4)} onMouseLeave={() => handleCardLeave(4)}>
-            <div style={styles.featureIcon}>📜</div>
-            <div style={styles.featureTitle}>Digital Certificates</div>
-            <p style={styles.featureDesc}>Secure and shareable digital verification for all your skills.</p>
-          </div>
-        </div>
 
         {/* How It Works Section */}
-        <div style={styles.howToSection}>
-          <h2 style={styles.sectionTitle}>How It Works</h2>
-          <p style={{ ...styles.sectionText, maxWidth: '600px', margin: '0 auto' }}>
+        <div className="mobile-super-card" style={styles.howToSection}>
+          <h2 className="mobile-tiny-header" style={styles.sectionTitle}>How It Works</h2>
+          <p className="mobile-compact-text" style={{ ...styles.sectionText, maxWidth: '600px', margin: '0 auto' }}>
             Build your professional identity in three simple steps.
           </p>
-          <div style={styles.stepsContainer}>
-            <div style={styles.stepCard}>
-              <div style={styles.stepNumber}>1</div>
-              <h3 style={styles.featureTitle}>Create Account</h3>
-              <p style={styles.featureDesc}>Sign up with your college ID to access the exclusive student portal.</p>
+          <div className="mobile-grid-1 mobile-tight-spacing" style={styles.stepsContainer}>
+            <div className="mobile-compact-card" style={styles.stepCard}>
+              <div className="mobile-tiny-badge" style={styles.stepNumber}>1</div>
+              <h3 className="mobile-compact-text" style={styles.featureTitle}>Create Account</h3>
+              <p className="mobile-compact-text" style={styles.featureDesc}>Sign up with your college ID to access the exclusive student portal.</p>
             </div>
-            <div style={styles.stepCard}>
-              <div style={styles.stepNumber}>2</div>
-              <h3 style={styles.featureTitle}>Build Profile</h3>
-              <p style={styles.featureDesc}>Add your projects, skills, and certifications to showcase your talent.</p>
+            <div className="mobile-compact-card" style={styles.stepCard}>
+              <div className="mobile-tiny-badge" style={styles.stepNumber}>2</div>
+              <h3 className="mobile-compact-text" style={styles.featureTitle}>Build Profile</h3>
+              <p className="mobile-compact-text" style={styles.featureDesc}>Add your projects, skills, and certifications to showcase your talent.</p>
             </div>
-            <div style={styles.stepCard}>
-              <div style={styles.stepNumber}>3</div>
-              <h3 style={styles.featureTitle}>Get Hired</h3>
-              <p style={styles.featureDesc}>Connect with top recruiters and apply for exclusive campus placements.</p>
+            <div className="mobile-compact-card" style={styles.stepCard}>
+              <div className="mobile-tiny-badge" style={styles.stepNumber}>3</div>
+              <h3 className="mobile-compact-text" style={styles.featureTitle}>Get Hired</h3>
+              <p className="mobile-compact-text" style={styles.featureDesc}>Connect with top recruiters and apply for exclusive campus placements.</p>
             </div>
           </div>
         </div>
@@ -852,19 +778,19 @@ function Home() {
             transition: 'all 0.8s ease-out'
           }}
         >
-          <div style={styles.statItem}>
+          <div className="mobile-grid-2" style={styles.statItem}>
             <div style={styles.statNumber}>5000+</div>
             <div style={styles.statLabel}>Students</div>
           </div>
-          <div style={styles.statItem}>
+          <div className="mobile-grid-2" style={styles.statItem}>
             <div style={styles.statNumber}>150+</div>
             <div style={styles.statLabel}>Recruiters</div>
           </div>
-          <div style={styles.statItem}>
+          <div className="mobile-grid-2" style={styles.statItem}>
             <div style={styles.statNumber}>98%</div>
             <div style={styles.statLabel}>Placement Rate</div>
           </div>
-          <div style={styles.statItem}>
+          <div className="mobile-grid-2" style={styles.statItem}>
             <div style={styles.statNumber}>12k+</div>
             <div style={styles.statLabel}>Certifications</div>
           </div>
@@ -992,7 +918,6 @@ function Home() {
           </div>
         </footer>
       </div>
-      {/* Slide-in Login Panel */}
       {false && (
         <>
           {/* Backdrop */}
@@ -1016,7 +941,8 @@ function Home() {
               position: 'fixed',
               top: 0,
               right: 0,
-              width: '50vw',
+              width: '100vw',
+              maxWidth: '500px',
               height: '100vh',
               backgroundColor: '#fff',
               zIndex: 1000,
@@ -1124,12 +1050,13 @@ function Home() {
                     value={loginData.identifier}
                     onChange={(e) => setLoginData({ ...loginData, identifier: e.target.value })}
                     placeholder="Enter your ID or Email"
+                    className="mobile-input"
                     style={{
                       width: '100%',
                       padding: '14px 16px',
                       border: '2px solid #e9ecef',
                       borderRadius: '10px',
-                      fontSize: '15px',
+                      fontSize: '16px',
                       boxSizing: 'border-box',
                       transition: 'border-color 0.3s',
                       outline: 'none'
@@ -1147,12 +1074,13 @@ function Home() {
                     value={loginData.password}
                     onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                     placeholder="••••••••"
+                    className="mobile-input"
                     style={{
                       width: '100%',
                       padding: '14px 16px',
                       border: '2px solid #e9ecef',
                       borderRadius: '10px',
-                      fontSize: '15px',
+                      fontSize: '16px',
                       boxSizing: 'border-box',
                       transition: 'border-color 0.3s',
                       outline: 'none'
@@ -1242,7 +1170,8 @@ function Home() {
               position: 'fixed',
               top: 0,
               right: 0,
-              width: '50vw',
+              width: '100vw',
+          maxWidth: '500px',
               height: '100vh',
               backgroundColor: '#fff',
               zIndex: 1000,

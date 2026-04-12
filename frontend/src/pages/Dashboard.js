@@ -438,42 +438,43 @@ function Dashboard() {
     <div style={styles.page}>
       <div style={styles.decorCircle1}></div>
       <div style={styles.decorCircle2}></div>
-      <header style={styles.header}>
-        <div style={styles.logoWrap}>
+      <header className="mobile-nav" style={styles.header}>
+        <div className="mobile-stack" style={styles.logoWrap}>
           <img src="/siet.png" alt="SIET Logo" style={styles.logo} />
-          <div>
+          <div className="mobile-center">
             <h1 style={styles.title}>Student Dashboard</h1>
             <div style={styles.statusText}>Welcome back, {user?.fullName || 'Student'}</div>
           </div>
         </div>
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-          <button style={{ ...styles.btn, backgroundColor: '#ff4757', color: '#fff' }} onClick={logout}>Logout</button>
+        <div className="mobile-nav-buttons" style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+          <button className="mobile-full-width" style={{ ...styles.btn, backgroundColor: '#ff4757', color: '#fff' }} onClick={logout}>Logout</button>
         </div>
       </header>
 
-      <nav style={styles.nav}>
-        <div style={styles.navTabs}>
+      <nav className="mobile-stack" style={styles.nav}>
+        <div className="mobile-grid-2" style={styles.navTabs}>
           {['profile', 'skills', 'certificates', 'projects', 'journal', 'analytics', 'settings'].map(tab => (
-            <button key={tab} style={styles.navItem(activeTab === tab)} onClick={() => setActiveTab(tab)}>
+            <button key={tab} className="mobile-full-width" style={styles.navItem(activeTab === tab)} onClick={() => setActiveTab(tab)}>
               {tab}
             </button>
           ))}
         </div>
-        <div style={styles.navActions}>
-          <button style={styles.btn} onClick={() => setShowQR(true)}>Show QR</button>
-          <button style={{ ...styles.btn, backgroundColor: 'transparent', border: '1px solid #0b4f00', color: '#0b4f00' }}>Export Data</button>
+        <div className="mobile-stack mobile-nav-buttons" style={styles.navActions}>
+          <button className="mobile-full-width" style={styles.btn} onClick={() => setShowQR(true)}>Show QR</button>
+          <button className="mobile-full-width" style={{ ...styles.btn, backgroundColor: 'transparent', border: '1px solid #0b4f00', color: '#0b4f00' }}>Export Data</button>
         </div>
       </nav>
 
       <main style={styles.main}>
         {activeTab === 'profile' && (
           isProfileEditing ? (
-            <div style={{ ...styles.card, padding: '24px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', borderBottom: '1px solid #e2e8f0', paddingBottom: '14px' }}>
-                <h2 style={{ margin: 0, fontSize: '30px', color: '#173828', fontWeight: '800' }}>Edit Profile</h2>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <button style={styles.btn} onClick={handleSaveProfile} disabled={isSavingProfile}>{isSavingProfile ? 'Saving...' : 'Save'}</button>
+            <div className="mobile-super-card" style={{ ...styles.card, padding: '16px' }}>
+              <div className="mobile-stack mobile-tight-spacing" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', borderBottom: '1px solid #e2e8f0', paddingBottom: '8px' }}>
+                <h2 className="mobile-tiny-header" style={{ margin: 0, fontSize: '20px', color: '#173828', fontWeight: '800' }}>Edit Profile</h2>
+                <div className="mobile-stack mobile-nav-buttons" style={{ display: 'flex', gap: '6px' }}>
+                  <button className="mobile-tiny-btn" style={styles.btn} onClick={handleSaveProfile} disabled={isSavingProfile}>{isSavingProfile ? 'Saving...' : 'Save'}</button>
                   <button
+                    className="mobile-tiny-btn"
                     style={{ ...styles.btn, backgroundColor: 'transparent', border: '1px solid #0b4f00', color: '#0b4f00' }}
                     onClick={() => {
                       resetProfileForm();
@@ -492,15 +493,16 @@ function Dashboard() {
                 </p>
               )}
 
-              <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '18px', marginBottom: '18px' }}>
-                <div>
+              <div className="mobile-stack mobile-grid-1" style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '18px', marginBottom: '18px' }}>
+                <div className="mobile-center">
                   <div style={{ width: '200px', height: '200px', backgroundColor: '#f8fafc', border: '2px solid #0b4f00', borderRadius: '50%', overflow: 'hidden', marginBottom: '10px' }}>
-                    {profileForm.profilePhoto ? <img src={profileForm.profilePhoto} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ fontSize: '100px', textAlign: 'center', lineHeight: '200px' }}>👤</div>}
+                    {profileForm.profilePhoto ? <img src={profileForm.profilePhoto} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ fontSize: '100px', textAlign: 'center', lineHeight: '200px' }}>???</div>}
                   </div>
                   <input id="profile-photo-input" type="file" accept="image/*" onChange={handleProfilePhotoChange} style={{ display: 'none' }} />
-                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  <div className="mobile-stack mobile-nav-buttons" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                     <button
                       type="button"
+                      className="mobile-tiny-btn"
                       style={styles.btn}
                       onClick={() => document.getElementById('profile-photo-input')?.click()}
                     >
@@ -508,6 +510,7 @@ function Dashboard() {
                     </button>
                     <button
                       type="button"
+                      className="mobile-tiny-btn"
                       style={{ ...styles.btn, backgroundColor: 'transparent', border: '1px solid #dc2626', color: '#dc2626' }}
                       onClick={handleRemoveProfilePhoto}
                     >
@@ -516,7 +519,7 @@ function Dashboard() {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '12px' }}>
+                <div className="mobile-grid-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '12px' }}>
                   {[
                     { key: 'fullName', label: 'Full Name' },
                     { key: 'email', label: 'Email', readOnly: true },
@@ -534,12 +537,13 @@ function Dashboard() {
                     { key: 'specialization', label: 'Specialization' }
                   ].map((field) => (
                     <div key={field.key}>
-                      <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '6px', fontWeight: '700' }}>{field.label}</div>
+                      <div className="mobile-compact-text" style={{ fontSize: '12px', color: '#64748b', marginBottom: '6px', fontWeight: '700' }}>{field.label}</div>
                       <input
                         name={field.key}
                         value={profileForm[field.key] || ''}
                         readOnly={field.readOnly}
                         onChange={handleProfileInputChange}
+                        className="mobile-tiny-input"
                         style={{ width: '100%', padding: '10px', borderRadius: '9px', border: '1px solid #cbd5e1', boxSizing: 'border-box', backgroundColor: field.readOnly ? '#f1f5f9' : '#fff' }}
                       />
                     </div>
@@ -547,12 +551,13 @@ function Dashboard() {
                 </div>
               </div>
 
-              <div>
-                <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '6px', fontWeight: '700' }}>Bio</div>
+              <div className="mobile-full-width">
+                <div className="mobile-compact-text" style={{ fontSize: '12px', color: '#64748b', marginBottom: '6px', fontWeight: '700' }}>Bio</div>
                 <textarea
                   name="bio"
                   value={profileForm.bio || ''}
                   onChange={handleProfileInputChange}
+                  className="mobile-tiny-input"
                   style={{ width: '100%', minHeight: '120px', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1', boxSizing: 'border-box', resize: 'vertical' }}
                 />
               </div>

@@ -198,21 +198,21 @@ function Admin() {
             <div style={styles.main}>
                 <AnalyticsDashboard />
                 
-                <div style={styles.statsRow}>
-                    <div style={styles.statCard}>
+                <div className="mobile-grid-2" style={styles.statsRow}>
+                    <div className="mobile-card" style={styles.statCard}>
                         <span style={styles.statValue}>{stats.totalStudents}</span>
                         <span style={styles.statLabel}>Total Students</span>
                     </div>
-                    <div style={styles.statCard}>
+                    <div className="mobile-card" style={styles.statCard}>
                         <span style={styles.statValue}>{stats.totalStaff}</span>
                         <span style={styles.statLabel}>Total Staff</span>
                     </div>
-                    <div style={styles.statCard}>
+                    <div className="mobile-card" style={styles.statCard}>
                         <span style={styles.statValue}>{stats.totalPortfolios}</span>
                         <span style={styles.statLabel}>Active Portfolios</span>
                     </div>
-                    <div style={styles.statCard}>
-                        <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', height: '100%', gap: '10px', minHeight: '50px' }}>
+                    <div className="mobile-card mobile-grid-1" style={styles.statCard}>
+                        <div className="mobile-stack" style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', height: '100%', gap: '10px', minHeight: '50px' }}>
                             {Object.entries(stats.sections).sort().map(([sec, count]) => (
                                 <div key={sec}>
                                     <span style={{ ...styles.statValue, fontSize: '24px' }}>{count}</span>
@@ -224,14 +224,14 @@ function Admin() {
                     </div>
                 </div>
 
-                <div style={styles.tableContainer} className="admin-table-container">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                        <h2>Student Management (Database)</h2>
-                        <button 
+                <div className="mobile-super-card admin-table-container" style={styles.tableContainer}>
+                    <div className="mobile-stack mobile-tight-spacing" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                        <h2 className="mobile-tiny-header">Student Management (Database)</h2>
+                        <button className="mobile-tiny-btn"
                             style={{ ...styles.logoutBtn, backgroundColor: '#ff4757', color: 'white' }}
                             onClick={deleteAllStudents}
                         >
-                            🗑️ Delete All from DB
+                            ?? Delete All from DB
                         </button>
                     </div>
                     {['A', 'B', 'C', 'D'].map(sectionKey => {
@@ -250,11 +250,12 @@ function Admin() {
                                     overflow: 'hidden'
                                 }}
                             >
-                                <div 
+                                <div
                                     onClick={() => setExpandedSection(isExpanded ? null : sectionKey)}
-                                    style={{ 
-                                        padding: '20px', 
-                                        backgroundColor: isExpanded ? '#1e5631' : '#fff', 
+                                    className="mobile-compact-card"
+                                    style={{
+                                        padding: '20px',
+                                        backgroundColor: isExpanded ? '#1e5631' : '#fff',
                                         color: isExpanded ? '#fff' : '#1e5631',
                                         cursor: 'pointer',
                                         display: 'flex',
@@ -265,47 +266,48 @@ function Admin() {
                                         fontSize: '18px'
                                     }}
                                 >
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                                        <span style={{ 
-                                            backgroundColor: isExpanded ? '#ffc107' : '#1e5631', 
-                                            color: isExpanded ? '#1e5631' : '#fff', 
-                                            width: '35px', 
-                                            height: '35px', 
-                                            borderRadius: '50%', 
-                                            display: 'flex', 
-                                            alignItems: 'center', 
-                                            justifyContent: 'center' 
+                                    <div className="mobile-stack" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                        <span style={{
+                                            backgroundColor: isExpanded ? '#ffc107' : '#1e5631',
+                                            color: isExpanded ? '#1e5631' : '#fff',
+                                            width: '35px',
+                                            height: '35px',
+                                            borderRadius: '50%',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
                                         }}>
                                             {sectionKey}
                                         </span>
-                                        Section {sectionKey} Management
+                                        <span className="mobile-compact-text">Section {sectionKey} Management</span>
                                     </div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                                        <span style={{ fontSize: '14px', opacity: 0.8 }}>{sectionStudents.length} Students</span>
+                                    <div className="mobile-stack" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                        <span className="mobile-compact-text" style={{ fontSize: '14px', opacity: 0.8 }}>{sectionStudents.length} Students</span>
                                         <span>{isExpanded ? '▲' : '▼'}</span>
                                     </div>
                                 </div>
 
                                 {isExpanded && (
-                                    <div style={{ padding: '20px', borderTop: '1px solid #eee', backgroundColor: '#fcfcfc' }}>
-                                        <table style={styles.table}>
+                                    <div className="mobile-card" style={{ padding: '20px', borderTop: '1px solid #eee', backgroundColor: '#fcfcfc' }}>
+                                        <table className="mobile-table" style={styles.table}>
                                             <thead>
                                                 <tr>
-                                                    <th style={styles.th}>Full Name</th>
-                                                    <th style={styles.th}>Email</th>
-                                                    <th style={styles.th}>Department</th>
-                                                    <th style={styles.th}>Actions</th>
+                                                    <th className="mobile-compact-text" style={styles.th}>Full Name</th>
+                                                    <th className="mobile-compact-text" style={styles.th}>Email</th>
+                                                    <th className="mobile-compact-text" style={styles.th}>Department</th>
+                                                    <th className="mobile-compact-text" style={styles.th}>Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {sectionStudents.length > 0 ? (
                                                     sectionStudents.map((s, idx) => (
                                                         <tr key={idx}>
-                                                            <td style={styles.td}>{s.fullName}</td>
-                                                            <td style={styles.td}>{s.email}</td>
-                                                            <td style={styles.td}>{s.department}</td>
+                                                            <td className="mobile-compact-text mobile-name-wrap" style={styles.td}>{s.fullName}</td>
+                                                            <td className="mobile-compact-text" style={styles.td}>{s.email}</td>
+                                                            <td className="mobile-compact-text" style={styles.td}>{s.department}</td>
                                                             <td style={styles.td}>
                                                                 <button
+                                                                    className="mobile-tiny-btn"
                                                                     style={{ ...styles.logoutBtn, backgroundColor: '#ff4757', color: 'white', padding: '5px 12px' }}
                                                                     onClick={(e) => {
                                                                         e.stopPropagation();

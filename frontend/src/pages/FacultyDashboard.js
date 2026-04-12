@@ -500,7 +500,90 @@ function FacultyDashboard() {
         flex-wrap: wrap !important;
       }
       .student-cards-grid {
-        grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+        grid-template-columns: repeat(2, minmax(150px, 1fr)) !important;
+        gap: 10px !important;
+      }
+      .student-card {
+        padding: 16px !important;
+        border-radius: 12px !important;
+        font-size: 14px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+      }
+      .student-card-header {
+        gap: 12px !important;
+      }
+      .student-card-avatar {
+        width: 48px !important;
+        height: 48px !important;
+        font-size: 18px !important;
+      }
+      .student-card-name {
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        line-height: 1.4 !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        word-break: break-word !important;
+        white-space: normal !important;
+      }
+      .student-card-id {
+        font-size: 12px !important;
+        opacity: 0.8 !important;
+      }
+      .student-card-badges {
+        font-size: 11px !important;
+        padding: 4px 8px !important;
+        border-radius: 6px !important;
+      }
+      .student-card-details {
+        font-size: 13px !important;
+        line-height: 1.5 !important;
+      }
+      .student-card-actions {
+        gap: 8px !important;
+      }
+      .student-card-actions button {
+        padding: 8px 12px !important;
+        font-size: 12px !important;
+        min-height: 36px !important;
+      }
+    }
+    @media (max-width: 480px) {
+      .student-cards-grid {
+        grid-template-columns: repeat(2, minmax(140px, 1fr)) !important;
+        gap: 8px !important;
+      }
+      .student-card {
+        padding: 12px !important;
+        font-size: 13px !important;
+        border-radius: 10px !important;
+      }
+      .student-card-avatar {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 16px !important;
+      }
+      .student-card-name {
+        font-size: 14px !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        word-break: break-word !important;
+        white-space: normal !important;
+      }
+      .student-card-id {
+        font-size: 11px !important;
+      }
+      .student-card-badges {
+        font-size: 10px !important;
+        padding: 3px 6px !important;
+      }
+      .student-card-details {
+        font-size: 12px !important;
+      }
+      .student-card-actions button {
+        padding: 6px 10px !important;
+        font-size: 11px !important;
+        min-height: 32px !important;
       }
     }
   `;
@@ -512,27 +595,27 @@ function FacultyDashboard() {
       <div style={styles.wrapper}>
         <img src="/siet.png" alt="" aria-hidden="true" style={styles.watermark} />
         <div style={styles.mainContent}>
-          <header style={styles.header} className="dashboard-header">
-            <div style={styles.headerBrand}>
-              <div style={styles.headerLogoWrap}>
+          <header className="mobile-nav dashboard-header" style={styles.header}>
+            <div className="mobile-stack" style={styles.headerBrand}>
+              <div className="mobile-center" style={styles.headerLogoWrap}>
                 <img src="/siet.png" alt="SIET Logo" style={styles.headerLogo} />
               </div>
-              <div>
+              <div className="mobile-center">
                 <h1 style={styles.title}>Student Dashboard</h1>
                 <p style={styles.subtitle}>Welcome back, {staff?.fullName?.split(' ')[0]?.toLowerCase() || 'staff'}</p>
               </div>
             </div>
-            <div style={styles.headerActions}>
-              <button style={styles.topActionPrimaryBtn} onClick={toggleDarkMode}>
+            <div className="mobile-stack mobile-nav-buttons" style={styles.headerActions}>
+              <button className="mobile-full-width" style={styles.topActionPrimaryBtn} onClick={toggleDarkMode}>
                 {darkMode ? 'Light' : 'Dark'}
               </button>
-              <button style={styles.topActionBtn} onClick={() => navigate('/faculty-analytics')}>Analytics</button>
-              <button style={styles.topActionBtn} onClick={() => navigate('/faculty-settings')}>Settings</button>
-              <button style={styles.topActionBtn} onClick={() => navigate('/faculty-reports')}>Reports</button>
+              <button className="mobile-full-width" style={styles.topActionBtn} onClick={() => navigate('/faculty-analytics')}>Analytics</button>
+              <button className="mobile-full-width" style={styles.topActionBtn} onClick={() => navigate('/faculty-settings')}>Settings</button>
+              <button className="mobile-full-width" style={styles.topActionBtn} onClick={() => navigate('/faculty-reports')}>Reports</button>
             </div>
           </header>
 
-          <div style={styles.summaryGrid}>
+          <div className="mobile-grid-2" style={styles.summaryGrid}>
             <div style={styles.summaryCard}>
               <div style={styles.summaryLabel}>Total Students</div>
               <div style={styles.summaryValue}>{students.length}</div>
@@ -551,15 +634,15 @@ function FacultyDashboard() {
             </div>
           </div>
 
-          <div style={styles.filterSection}>
+          <div className="mobile-form" style={styles.filterSection}>
             <h2 style={styles.filterTitle}>Filter Students</h2>
-            <div style={styles.filterRow} className="dashboard-filters">
-              <input style={styles.input} placeholder="Search students..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
-              <select style={styles.select} value={filterDept} onChange={e => setFilterDept(e.target.value)}>
+            <div className="mobile-stack mobile-nav-buttons dashboard-filters" style={styles.filterRow}>
+              <input className="mobile-input" style={styles.input} placeholder="Search students..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+              <select className="mobile-full-width" style={styles.select} value={filterDept} onChange={e => setFilterDept(e.target.value)}>
                 <option value="">All Departments</option>
                 {uniqueDepartments.map(d => <option key={d} value={d}>{d}</option>)}
               </select>
-              <select style={styles.select} value={filterSection} onChange={e => setFilterSection(e.target.value)}>
+              <select className="mobile-full-width" style={styles.select} value={filterSection} onChange={e => setFilterSection(e.target.value)}>
                 <option value="">All Sections</option>
                 {uniqueSections.map(s => <option key={s} value={s}>Section {s}</option>)}
               </select>
