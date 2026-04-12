@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from '../config/api';
+import StudentSidebar from '../components/StudentSidebar';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -442,34 +443,42 @@ function Dashboard() {
       fontSize: '13px',
       cursor: 'pointer'
     },
-    statusText: { fontSize: '12px', fontWeight: '700', color: '#eaffd2', letterSpacing: '0.5px', marginTop: '4px' }
+    statusText: { fontSize: '12px', fontWeight: '700', color: '#eaffd2', letterSpacing: '0.5px', marginTop: '4px' },
+    layout: {
+      display: 'flex',
+      minHeight: '100vh',
+      flexDirection: 'row'
+    },
+    contentArea: {
+      flex: 1,
+      minHeight: '100vh',
+      maxWidth: '100%'
+    }
   };
 
   const logout = () => { localStorage.clear(); navigate('/'); };
 
   const responsiveStyles = `
-    @media (max-width: 1024px) {
+    @media (max-width: 850px) {
+      .dashboard-layout { flex-direction: column !important; }
+      .dashboard-sidebar-wrap { display: none; }
       .dashboard-main { padding: 20px !important; }
+      .dashboard-header { padding: 20px !important; }
+      .dashboard-nav-desktop { display: none !important; }
+    }
+    @media (min-width: 851px) {
+      .dashboard-header-mobile { display: none !important; }
     }
     @media (max-width: 768px) {
       .dashboard-header { flex-direction: column; gap: 15px; text-align: center; padding: 20px !important; height: auto !important; }
-      .dashboard-nav { flex-direction: column !important; padding: 10px !important; height: auto !important; }
-      .dashboard-nav-tabs { width: 100%; display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
-      .dashboard-nav-tabs button { width: 100% !important; padding: 10px !important; font-size: 11px !important; }
-      .dashboard-nav-actions { width: 100%; justify-content: space-between; padding: 10px 0 !important; }
-      .dashboard-nav-actions button { flex: 1; }
-      
       .profile-info-grid { grid-template-columns: 1fr !important; }
       .profile-header { flex-direction: column !important; text-align: center !important; gap: 20px !important; }
       .profile-photo-wrap { margin: 0 auto !important; }
-      
       .edit-profile-grid { grid-template-columns: 1fr !important; }
       .edit-profile-left { display: flex; flex-direction: column; align-items: center; }
-      
       .stats-summary-grid { grid-template-columns: 1fr !important; }
     }
     @media (max-width: 480px) {
-      .dashboard-nav-tabs { grid-template-columns: 1fr !important; }
       .dashboard-title { font-size: 24px !important; }
       .profile-name { font-size: 28px !important; }
       .form-grid-3 { grid-template-columns: 1fr !important; }
@@ -478,36 +487,43 @@ function Dashboard() {
   `;
 
   return (
-    <div style={styles.page}>
+    <div style={styles.page} className="dashboard-page">
       <style>{responsiveStyles}</style>
       <div style={styles.decorCircle1}></div>
       <div style={styles.decorCircle2}></div>
-      <header className="mobile-nav dashboard-header" style={styles.header}>
-        <div className="mobile-stack" style={styles.logoWrap}>
-          <img src="/siet.png" alt="SIET Logo" style={styles.logo} />
-          <div className="mobile-center">
-            <h1 style={styles.title} className="dashboard-title">Student Dashboard</h1>
-            <div style={styles.statusText}>Welcome back, {user?.fullName || 'Student'}</div>
-          </div>
-        </div>
-        <div className="mobile-nav-buttons" style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-          <button className="mobile-full-width" style={{ ...styles.btn, backgroundColor: '#ff4757', color: '#fff' }} onClick={logout}>Logout</button>
-        </div>
-      </header>
+      
+      <div style={styles.layout} className="dashboard-layout">
+        <StudentSidebar 
+          activeTab={activeTab} 
+          setActiveTab={setActiveTab} 
+          darkMode={isDarkMode} 
+          onLogout={logout} 
+          user={user} 
+        />
 
-      <nav className="mobile-stack dashboard-nav" style={styles.nav}>
-        <div className="mobile-grid-2 dashboard-nav-tabs" style={styles.navTabs}>
-          {['profile', 'skills', 'certificates', 'projects', 'journal', 'analytics', 'settings'].map(tab => (
-            <button key={tab} className="mobile-full-width" style={styles.navItem(activeTab === tab)} onClick={() => setActiveTab(tab)}>
-              {tab}
-            </button>
-          ))}
-        </div>
-        <div className="mobile-stack mobile-nav-buttons dashboard-nav-actions" style={styles.navActions}>
-          <button className="mobile-full-width" style={styles.btn} onClick={() => setShowQR(true)}>Show QR</button>
-          <button className="mobile-full-width" style={{ ...styles.btn, backgroundColor: 'transparent', border: '1px solid #0b4f00', color: '#0b4f00' }}>Export Data</button>
-        </div>
-      </nav>
+        <div style={styles.contentArea}>
+          <header className="mobile-nav dashboard-header dashboard-header-mobile" style={styles.header}>
+            <div className="mobile-stack" style={styles.logoWrap}>
+              <img src="/siet.png" alt="SIET Logo" style={styles.logo} />
+              <div className="mobile-center">
+                <h1 style={styles.title} className="dashboard-title">Dashboard</h1>
+                <div style={styles.statusText}>Welcome, {user?.fullName || 'Student'}</div>
+              </div>
+            </div>
+          </header>
+
+          <nav className="mobile-stack dashboard-nav-desktop" style={styles.nav}>
+            <div className="mobile-grid-2 dashboard-nav-tabs" style={styles.navTabs}>
+              {['profile', 'skills', 'certificates', 'projects', 'journal', 'analytics', 'settings'].map(tab => (
+                <button key={tab} className="mobile-full-width" style={styles.navItem(activeTab === tab)} onClick={() => setActiveTab(tab)}>
+                  {tab}
+                </button>
+              ))}
+            </div>
+            <div className="mobile-stack mobile-nav-buttons dashboard-nav-actions" style={styles.navActions}>
+              <button className="mobile-full-width" style={styles.btn} onClick={() => setShowQR(true)}>Show QR</button>
+            </div>
+          </nav>
 
       <main style={styles.main} className="dashboard-main">
         {activeTab === 'profile' && (
@@ -1109,6 +1125,8 @@ function Dashboard() {
           </div>
         </div>
       )}
+        </div>
+      </div>
     </div>
   );
 }
