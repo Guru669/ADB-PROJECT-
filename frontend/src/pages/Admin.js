@@ -93,7 +93,7 @@ function Admin() {
     };
 
     const deleteAllStudents = async () => {
-        if (!confirm('Are you sure you want to delete all students? This action cannot be undone.')) return;
+        if (!window.confirm('Are you sure you want to delete all students? This action cannot be undone.')) return;
         try {
             const response = await fetch(`${API_URL}/api/auth/students`, {
                 method: 'DELETE'
