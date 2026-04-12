@@ -556,7 +556,7 @@ function Dashboard() {
               <div className="mobile-stack mobile-grid-1 edit-profile-grid" style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '18px', marginBottom: '18px' }}>
                 <div className="mobile-center edit-profile-left">
                   <div style={{ width: '200px', height: '200px', backgroundColor: '#f8fafc', border: '2px solid #0b4f00', borderRadius: '50%', overflow: 'hidden', marginBottom: '10px' }}>
-                    {profileForm.profilePhoto ? <img src={profileForm.profilePhoto} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ fontSize: '100px', textAlign: 'center', lineHeight: '200px' }}>???</div>}
+                    {profileForm.profilePhoto ? <img src={profileForm.profilePhoto} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ fontSize: '100px', textAlign: 'center', lineHeight: '200px' }}>{user?.fullName?.charAt(0) || 'S'}</div>}
                   </div>
                   <input 
                     id="profile-photo-input" 

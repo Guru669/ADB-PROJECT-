@@ -355,7 +355,7 @@ function StudentDetails() {
                                     {student.portfolio.projects.map((p, i) => (
                                         <div key={i} className="mobile-card" style={{ backgroundColor: '#fff', padding: '15px', borderRadius: '12px', border: '1px solid #eef0f2', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
                                             <div className="mobile-compact-text" style={{ fontWeight: 'bold', fontSize: '16px', color: '#0b4f00', marginBottom: '8px' }}>{p.title}</div>
-                                            <div className="mobile-compact-text" style={{ color: '#1e5631', fontSize: '13px', fontWeight: '600', marginBottom: '8px' }}>🛠 {p.technologies}</div>
+                                            <div className="mobile-compact-text" style={{ color: '#1e5631', fontSize: '13px', fontWeight: '600', marginBottom: '8px' }}>STACK: {p.technologies}</div>
                                             <p className="mobile-compact-text" style={{ fontSize: '14px', color: '#666', lineHeight: '1.5' }}>{p.description}</p>
                                             <div className="mobile-stack mobile-nav-buttons" style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
                                                 {p.journalFile && (
@@ -383,7 +383,7 @@ function StudentDetails() {
                                 <div className="mobile-grid-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginTop: '10px' }}>
                                     {student.portfolio.achievements.map((a, i) => (
                                         <div key={i} className="mobile-card" style={{ backgroundColor: '#fff', padding: '15px', borderRadius: '12px', border: '1px solid #eef0f2', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
-                                            <div className="mobile-compact-text" style={{ fontWeight: 'bold', color: '#0b4f00' }}>🏆 {a.title}</div>
+                                            <div className="mobile-compact-text" style={{ fontWeight: 'bold', color: '#0b4f00' }}>{a.title}</div>
                                             <p className="mobile-compact-text" style={{ fontSize: '14px', color: '#666', marginTop: '5px' }}>{a.description}</p>
                                         </div>
                                     ))}

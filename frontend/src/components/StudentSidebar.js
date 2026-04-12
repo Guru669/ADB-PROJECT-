@@ -6,13 +6,13 @@ function StudentSidebar({ activeTab, setActiveTab, darkMode, onLogout, user }) {
   const navigate = useNavigate();
 
   const menuItems = [
-    { id: 'profile', label: 'Profile', icon: '👤' },
-    { id: 'skills', label: 'Skills', icon: '⚡' },
-    { id: 'certificates', label: 'Certificates', icon: '📜' },
-    { id: 'projects', label: 'Projects', icon: '🚀' },
-    { id: 'journal', label: 'Journal', icon: '📝' },
-    { id: 'analytics', label: 'Analytics', icon: '📊' },
-    { id: 'settings', label: 'Settings', icon: '⚙️' },
+    { id: 'profile', label: 'Profile' },
+    { id: 'skills', label: 'Skills' },
+    { id: 'certificates', label: 'Certificates' },
+    { id: 'projects', label: 'Projects' },
+    { id: 'journal', label: 'Journal' },
+    { id: 'analytics', label: 'Analytics' },
+    { id: 'settings', label: 'Settings' },
   ];
 
   const styles = {
@@ -133,8 +133,7 @@ function StudentSidebar({ activeTab, setActiveTab, darkMode, onLogout, user }) {
                 setIsOpen(false);
               }}
             >
-              <span style={{ fontSize: '18px' }}>{item.icon}</span>
-              <span style={{ fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{item.label}</span>
+              <span style={{ fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.8px', flex: 1 }}>{item.label}</span>
             </div>
           ))}
         </nav>
