@@ -667,7 +667,7 @@ function Home() {
           animation: isLoaded ? 'slideDown 0.6s ease-out forwards' : 'none',
           opacity: isLoaded ? 1 : 0
         }}>
-          <div style={styles.logo} className="mobile-center">SIET Student Portfolio</div>
+          <div style={styles.logo} className="mobile-center">Sri Shakthi Institute of Engineering</div>
           <div className="mobile-nav-buttons" style={styles.navButtons}>
             {dashboardPath ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
