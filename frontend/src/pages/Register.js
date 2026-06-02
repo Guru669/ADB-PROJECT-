@@ -199,10 +199,52 @@ function Register() {
             backdropFilter: 'blur(8px)',
             boxShadow: '0 4px 15px rgba(0,0,0,0.15)',
             transition: 'all 0.3s ease'
+        },
+        loadingPage: {
+            minHeight: '100vh',
+            background: 'linear-gradient(140deg, #f8fafc 0%, #eef2ff 55%, #f3f4f6 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: "'Inter', sans-serif",
+            padding: '24px'
+        },
+        loadingCard: {
+            width: 'min(460px, 94vw)',
+            backgroundColor: '#fff',
+            borderRadius: '18px',
+            border: '1px solid #e5e7eb',
+            boxShadow: '0 18px 46px rgba(15, 23, 42, 0.10)',
+            padding: '36px 28px',
+            textAlign: 'center'
+        },
+        spinner: {
+            width: '54px',
+            height: '54px',
+            margin: '0 auto 16px',
+            border: '5px solid #d1d5db',
+            borderTop: '5px solid #14532d',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite'
+        },
+        loadingTitle: {
+            margin: 0,
+            color: '#173828',
+            fontSize: '22px',
+            fontWeight: '800'
+        },
+        loadingText: {
+            marginTop: '10px',
+            color: '#64748b',
+            fontSize: '14px'
         }
     };
 
     const responsiveStyles = `
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
       @media (max-width: 850px) {
         body { background: #fff !important; }
         .register-wrapper {
@@ -237,6 +279,19 @@ function Register() {
         }
       }
     `;
+
+    if (isLoading) {
+        return (
+            <div style={styles.loadingPage}>
+                <style>{responsiveStyles}</style>
+                <div style={styles.loadingCard}>
+                    <div style={styles.spinner} />
+                    <h2 style={styles.loadingTitle}>Creating your account</h2>
+                    <p style={styles.loadingText}>Please wait while we set up your profile.</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div style={styles.page}>
