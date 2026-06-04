@@ -183,8 +183,8 @@ function StudentProfileModal({ student, isOpen, onClose, darkMode }) {
             overflow: 'hidden',
             flexShrink: 0
           }}>
-            {student.portfolio?.profilePhoto ? (
-              <img src={student.portfolio.profilePhoto} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            {student.portfolio?.profilePhoto || student.profilePhoto ? (
+              <img src={student.portfolio?.profilePhoto || student.profilePhoto} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             ) : (
               student.fullName.charAt(0)
             )}

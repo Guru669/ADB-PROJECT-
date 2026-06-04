@@ -345,8 +345,8 @@ function FacultyDashboard() {
             <div key={s._id} style={styles.studentCard} className="student-card">
               <div style={styles.badge}>Section {s.section}</div>
               <div style={styles.avatar}>
-                {s.portfolio?.profilePhoto ? (
-                  <img src={s.portfolio.profilePhoto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                {s.portfolio?.profilePhoto || s.profilePhoto ? (
+                  <img src={s.portfolio?.profilePhoto || s.profilePhoto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
                   s.fullName?.[0] || 'S'
                 )}
