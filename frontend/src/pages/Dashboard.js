@@ -73,7 +73,8 @@ function Dashboard() {
       profilePhoto: parsedPortfolio.profilePhoto || parsedUser.profilePhoto || ''
     });
     
-    setTimeout(() => setIsLoaded(true), 100);
+    // No artificial delay — let CSS opacity handle the fade-in naturally
+    setIsLoaded(true);
   }, [navigate]);
 
   useEffect(() => {
@@ -132,42 +133,47 @@ function Dashboard() {
     setIsSavingProfile(true);
     setProfileMessage('');
     try {
-      const profResponse = await fetch(`${API_URL}/api/auth/update-profile`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: user.email,
-          fullName: profileForm.fullName,
-          department: profileForm.department,
-          section: profileForm.section,
-          phone: profileForm.phone,
-          address: profileForm.address,
-          currentYear: profileForm.currentYear,
-          currentSemester: profileForm.currentSemester,
-          cgpa: profileForm.cgpa,
-          specialization: profileForm.specialization,
-          dateOfBirth: profileForm.dateOfBirth,
-          gender: profileForm.gender,
-          umisNumber: profileForm.umisNumber
+      // Fire both requests IN PARALLEL — cuts round-trip latency in half
+      const [profResponse, portResponse] = await Promise.all([
+        fetch(`${API_URL}/api/auth/update-profile`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: user.email,
+            fullName: profileForm.fullName,
+            department: profileForm.department,
+            section: profileForm.section,
+            phone: profileForm.phone,
+            address: profileForm.address,
+            currentYear: profileForm.currentYear,
+            currentSemester: profileForm.currentSemester,
+            cgpa: profileForm.cgpa,
+            specialization: profileForm.specialization,
+            dateOfBirth: profileForm.dateOfBirth,
+            gender: profileForm.gender,
+            umisNumber: profileForm.umisNumber
+          })
+        }),
+        fetch(`${API_URL}/api/auth/update-portfolio`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: user.email,
+            portfolio: {
+              ...(user.portfolio || {}),
+              ...(portfolio || {}),
+              bio: profileForm.bio,
+              profilePhoto: profileForm.profilePhoto
+            }
+          })
         })
-      });
+      ]);
 
-      const portResponse = await fetch(`${API_URL}/api/auth/update-portfolio`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: user.email,
-          portfolio: {
-            ...(user.portfolio || {}),
-            ...(portfolio || {}),
-            bio: profileForm.bio,
-            profilePhoto: profileForm.profilePhoto
-          }
-        })
-      });
+      const [profData, portData] = await Promise.all([
+        profResponse.json(),
+        portResponse.json()
+      ]);
 
-      const profData = await profResponse.json();
-      const portData = await portResponse.json();
       if (!profResponse.ok || !portResponse.ok) {
         throw new Error(profData?.message || portData?.message || 'Failed to update profile');
       }
@@ -180,17 +186,17 @@ function Dashboard() {
 
       setUser(updatedUser);
       setPortfolio(portData.user?.portfolio || {});
-      
+
       // Slim sync for localStorage (avoid QuotaExceededError)
       const slimUser = { ...updatedUser };
       if (slimUser.portfolio) {
-          slimUser.portfolio = { 
-            ...slimUser.portfolio, 
-            profilePhoto: '', 
-            certificates: (slimUser.portfolio.certificates || []).map(c => ({ ...c, file: '' })),
-            projects: (slimUser.portfolio.projects || []).map(p => ({ ...p, file: '', presentationPhoto: '', journalFile: '', certificateFile: '' })),
-            achievements: (slimUser.portfolio.achievements || []).map(a => ({ ...a, file: '' }))
-          };
+        slimUser.portfolio = {
+          ...slimUser.portfolio,
+          profilePhoto: '',
+          certificates: (slimUser.portfolio.certificates || []).map(c => ({ ...c, file: '' })),
+          projects: (slimUser.portfolio.projects || []).map(p => ({ ...p, file: '', presentationPhoto: '', journalFile: '', certificateFile: '' })),
+          achievements: (slimUser.portfolio.achievements || []).map(a => ({ ...a, file: '' }))
+        };
       }
       localStorage.setItem('user', JSON.stringify(slimUser));
       localStorage.setItem('portfolio', JSON.stringify(slimUser.portfolio || {}));
@@ -205,6 +211,16 @@ function Dashboard() {
 
   const savePortfolioUpdates = async (updatedPortfolio) => {
     if (!user?.email) return false;
+
+    // Optimistic update — reflect the change in UI immediately
+    const previousPortfolio = portfolio;
+    const previousUser = user;
+    const optimisticUser = { ...user, portfolio: updatedPortfolio };
+    setPortfolio(updatedPortfolio);
+    setUser(optimisticUser);
+    localStorage.setItem('portfolio', JSON.stringify(updatedPortfolio));
+    localStorage.setItem('user', JSON.stringify(optimisticUser));
+
     try {
       const response = await fetch(`${API_URL}/api/auth/update-portfolio`, {
         method: 'PUT',
@@ -218,6 +234,7 @@ function Dashboard() {
       if (!response.ok) {
         throw new Error(data?.message || 'Failed to update records');
       }
+      // Reconcile with server response (server may have merged or sanitised data)
       const nextPortfolio = data.user?.portfolio || updatedPortfolio;
       const updatedUser = { ...user, portfolio: nextPortfolio };
       setPortfolio(nextPortfolio);
@@ -226,6 +243,11 @@ function Dashboard() {
       localStorage.setItem('user', JSON.stringify(updatedUser));
       return true;
     } catch (error) {
+      // Rollback optimistic update on failure
+      setPortfolio(previousPortfolio);
+      setUser(previousUser);
+      localStorage.setItem('portfolio', JSON.stringify(previousPortfolio));
+      localStorage.setItem('user', JSON.stringify(previousUser));
       setProfileMessage(error.message || 'Unable to update records.');
       return false;
     }
