@@ -6,8 +6,6 @@ import { API_URL } from '../config/api';
 function FacultyReports() {
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState(false);
-  const staff = JSON.parse(localStorage.getItem('staff') || '{}');
-  const staffName = (staff.fullName || 'staff').split(' ')[0].toLowerCase();
   
   const [reports, setReports] = useState([]);
   const [reportType, setReportType] = useState('all');
@@ -32,8 +30,6 @@ function FacultyReports() {
       const response = await fetch(`${API_URL}/api/auth/students`);
       if (!response.ok) throw new Error('Failed to fetch data');
       const students = await response.json();
-      
-      const loginLogs = JSON.parse(localStorage.getItem('loginLogs') || '[]');
       
       // 1. Comprehensive Student Ledger
       const enrollmentReport = {

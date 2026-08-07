@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 function StudentSidebar({ activeTab, setActiveTab, darkMode, onLogout, user }) {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
 
   const menuItems = [
     { id: 'profile', label: 'Profile' },

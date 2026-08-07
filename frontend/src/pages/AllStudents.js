@@ -8,7 +8,6 @@ function AllStudents() {
   const [filterDept, setFilterDept] = useState('');
   const [filterSection, setFilterSection] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const [isLoaded, setIsLoaded] = useState(false);
   const [sortBy, setSortBy] = useState('name-asc');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -37,7 +36,6 @@ function AllStudents() {
             setStudents(local);
         } finally {
             setIsLoading(false);
-            setTimeout(() => setIsLoaded(true), 100);
         }
     };
     fetchStudents();

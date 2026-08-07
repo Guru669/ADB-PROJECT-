@@ -8,7 +8,7 @@ function Admin() {
     const [admin, setAdmin] = useState(null);
     const [students, setStudents] = useState([]);
     const [expandedSection, setExpandedSection] = useState(null);
-    const [stats, setStats] = useState({
+    const [, setStats] = useState({
         totalStudents: 0,
         totalStaff: 0,
         totalPortfolios: 0,
@@ -132,19 +132,6 @@ function Admin() {
         document.body.appendChild(downloadAnchorNode);
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
-    };
-
-    const handleRestore = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const restoredData = JSON.parse(event.target.result);
-                console.log("Restored data length:", restoredData.length);
-                alert(`Backup containing ${restoredData.length} students loaded. (Simulated)`);
-            };
-            reader.readAsText(file);
-        }
     };
 
     const styles = {

@@ -94,7 +94,6 @@ function FacultySidebar({ darkMode, onLogout }) {
     }
   };
 
-  const [isOpen, setIsOpen] = React.useState(false);
 
   const responsiveStyles = `
     @media (max-width: 850px) {

@@ -13,7 +13,6 @@ function FacultyDashboard() {
   const [filterSection, setFilterSection] = useState('');
   const [darkMode, setDarkMode] = useState(false);
   const [isLoadingStudents, setIsLoadingStudents] = useState(true);
-  const [loadError, setLoadError] = useState('');
 
   // Analytics calculated from state
   const [stats, setStats] = useState({
@@ -36,7 +35,6 @@ function FacultyDashboard() {
 
     const loadStudents = async () => {
       setIsLoadingStudents(true);
-      setLoadError('');
       try {
         const response = await fetch(`${API_URL}/api/auth/students`);
         if (!response.ok) throw new Error('Fetch failed');
@@ -60,7 +58,6 @@ function FacultyDashboard() {
         setStudents(liveStudents);
       } catch (error) {
         setStudents(JSON.parse(localStorage.getItem('allStudents') || '[]'));
-        setLoadError('Working with cached data.');
       } finally {
         setIsLoadingStudents(false);
       }
