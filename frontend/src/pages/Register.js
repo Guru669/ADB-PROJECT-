@@ -268,14 +268,27 @@ function Register() {
           grid-template-columns: 1fr !important;
         }
         .mobile-home-btn {
-          top: auto !important;
-          bottom: 20px !important;
-          left: 20px !important;
-          right: auto !important;
-          padding: 12px 24px !important;
-          font-size: 15px !important;
-          box-shadow: 0 8px 24px rgba(0,0,0,0.2) !important;
-          border: 1px solid rgba(255, 230, 0, 0.4) !important;
+            position: absolute;
+    top: 15px;
+    left: 15px; /* better than right for back button */
+    
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 8px 16px;
+    width: auto;          /* important */
+    max-width: fit-content;
+
+    background: #18442f;
+    color: #ffe600;
+    border: 1px solid rgba(255, 230, 0, 0.3);
+    border-radius: 30px;
+
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    z-index: 100;
         }
       }
     `;
