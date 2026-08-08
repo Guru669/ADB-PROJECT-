@@ -1,11 +1,24 @@
+# Dependencies
 node_modules/
+
+# Environment configurations (Keep local only)
 .env
 .env.*
-!.env.example
 *.env
+!.env.example
 frontend/.env
 backend/.env
-.idea/
-.vscode/
+
+# Temporary and Scratch Directories
+scratch/
+main
+
+# Data Dumps & Seeding Files
+students_mongodb.json
+*mongodb*.json
 backend/seed.js
 
+# IDE and OS Metadata
+.idea/
+.vscode/
+.DS_Store
