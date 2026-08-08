@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 
 const router = express.Router();
 
+const JWT_SECRET = process.env.JWT_SECRET || 'development_jwt_secret_key_change_in_production';
+
 router.post("/register", async (req, res) => {
   console.log("--- REGISTRATION ATTEMPT ---");
   console.log("Body:", req.body);
@@ -70,7 +72,7 @@ router.post("/register", async (req, res) => {
       }
     });
 
-    const token = jwt.sign({ id: newUser._id, role: newUser.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '24h' });
+    const token = jwt.sign({ id: newUser._id, role: newUser.role }, JWT_SECRET, { expiresIn: '24h' });
     const userToReturn = newUser.toObject();
     delete userToReturn.password;
     res.json({ message: 'User Registered', user: userToReturn, token });
@@ -99,7 +101,7 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json("Wrong password");
 
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '24h' });
+    const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '24h' });
     const userToReturn = user.toObject();
     delete userToReturn.password;
     res.json({ token, user: userToReturn });
